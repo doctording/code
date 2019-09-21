@@ -1,0 +1,11 @@
+*.DS_Store
+*.bak
+*.swp
+*.*~
+~*.*
+*.pyc
+*.class
+*py2env
+*py3env
+*.vscode
+output/
