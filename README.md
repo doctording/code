@@ -12,11 +12,11 @@
 
 ```bash
 $ simiki g # 生成output
-$ simiki p # 本地运行：http://127.0.0.1:8000/sword_at_offer/
+$ simiki p # 本地运行：http://127.0.0.1:8000/code/
 ```
 
 ```bash
-# 部署到 https://doctording.github.io/sword_at_offer/
+# 部署到 https://doctording.github.io/code/
 $ ghp-import -p -m "Update output documentation" -r origin -b gh-pages output
 ```
 
