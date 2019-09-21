@@ -1,10 +1,10 @@
-请访问: <a href="https://doctording.github.io/code/" target='_blank'>解题代码</a>
+请访问: <a href="https://doctording.github.io/code/" target="_blank">解题代码</a>
 
 ---
 
 # 学习目的
 
-* 《程序员代码面试指南》: <a href="https://www.nowcoder.com/ta/programmer-code-interview-guide?page=1" target='_blank'>牛客网刷题地址</a>
+* 《程序员代码面试指南》: <a href="https://www.nowcoder.com/ta/programmer-code-interview-guide?page=1" target="_blank">牛客网刷题地址</a>
 
 # 解题思路(全)
 
