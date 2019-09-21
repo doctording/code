@@ -8,3 +8,4 @@
 *py2env
 *py3env
 *.vscode
+output/
