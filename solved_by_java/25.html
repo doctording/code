@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>25 最长递增子序列 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;25 最长递增子序列
+    <span class="updated">Page Updated&nbsp;
+      2019-11-07 23:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">25 最长递增子序列</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<ul>
+<li>时间复杂度O(N*logN)</li>
+<li>空间复杂度O(N)</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+
+    <span class="c1">// 最左边大于等于val的数</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">bsearch</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">ends</span><span class="o">,</span> <span class="kt">int</span> <span class="n">left</span><span class="o">,</span> <span class="kt">int</span> <span class="n">right</span><span class="o">,</span> <span class="kt">int</span> <span class="n">val</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">ends</span><span class="o">[</span><span class="n">right</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">val</span><span class="o">){</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">left</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="o">(</span><span class="n">left</span> <span class="o">+</span> <span class="n">right</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">ends</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="n">val</span><span class="o">){</span>
+                <span class="n">left</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">right</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">left</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span> <span class="o">++){</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="c1">// ends[b] = c 表示遍历到目前为止 长度为b+1的递增序列中，最小的结尾数 c</span>
+        <span class="c1">// ends[] 是一个递增的数组，适合二分法</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">ends</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="c1">// dp[i] 以 i 位置结束的最长递增长度</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="n">ends</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+        <span class="c1">// 有效区域[0, right]; right + 1 为 最长递增</span>
+        <span class="kt">int</span> <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="kt">int</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">bsearch</span><span class="o">(</span><span class="n">ends</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span> <span class="n">right</span><span class="o">,</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">pos</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">){</span> <span class="c1">//  arr[i] 当前最大</span>
+                <span class="n">right</span> <span class="o">=</span> <span class="n">right</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="n">ends</span><span class="o">[</span><span class="n">right</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+                <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">right</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="n">right</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">right</span><span class="o">,</span> <span class="n">pos</span><span class="o">);</span>
+                <span class="n">ends</span><span class="o">[</span><span class="n">pos</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+                <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">maxLen</span> <span class="o">=</span> <span class="n">right</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">lastDpVal</span> <span class="o">=</span> <span class="n">maxLen</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">ans</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">maxLen</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">ansIndex</span> <span class="o">=</span> <span class="n">maxLen</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="c1">// dp值相同的话，显然最右边的值最小；否则dp值就不该相等</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">--){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">lastDpVal</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="n">lastDpVal</span> <span class="o">-</span> <span class="mi">1</span><span class="o">){</span>
+                <span class="n">ans</span><span class="o">[</span><span class="n">ansIndex</span><span class="o">--]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+                <span class="n">lastDpVal</span> <span class="o">--;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">maxLen</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">ans</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">ans</span><span class="o">[</span><span class="n">maxLen</span><span class="o">-</span><span class="mi">1</span><span class="o">]);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">9</span>
+<span class="cm">2 1 5 3 6 4 8 9 7</span>
+
+<span class="cm">5</span>
+<span class="cm">1 2 8 6 4</span>
+<span class="cm">*/</span>
+</pre></div>
+
+
+<hr />
+<ul>
+<li>输入</li>
+</ul>
+<div class="hlcode"><pre><span class="mi">5</span>
+<span class="mi">1</span> <span class="mi">2</span> <span class="mi">8</span> <span class="mi">6</span> <span class="mi">4</span>
+</pre></div>
+
+
+<ul>
+<li>输出</li>
+</ul>
+<div class="hlcode"><pre><span class="mi">1</span> <span class="mi">2</span> <span class="mi">4</span>
+</pre></div>
+
+
+<ul>
+<li>说明</li>
+</ul>
+<div class="hlcode"><pre><span class="err">其最长递增子序列有</span><span class="mi">3</span><span class="err">个，（</span><span class="mi">1</span><span class="err">，</span><span class="mi">2</span><span class="err">，</span><span class="mi">8</span><span class="err">）、（</span><span class="mi">1</span><span class="err">，</span><span class="mi">2</span><span class="err">，</span><span class="mi">6</span><span class="err">）、（</span><span class="mi">1</span><span class="err">，</span><span class="mi">2</span><span class="err">，</span><span class="mi">4</span><span class="err">）其中第三个字典序最小，故答案为（</span><span class="mi">1</span><span class="err">，</span><span class="mi">2</span><span class="err">，</span><span class="mi">4</span><span class="err">）</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-11-08 22:08:31</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
