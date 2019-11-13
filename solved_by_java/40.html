@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>40 数组排序之后相邻数的最大差值 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;40 数组排序之后相邻数的最大差值
+    <span class="updated">Page Updated&nbsp;
+      2019-11-13 11:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">40 数组排序之后相邻数的最大差值</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac (桶排序)</a></li>
+</ul>
+</div>
+<h1 id="ac">ac (桶排序)</h1>
+<ul>
+<li>时间复杂度<code>O(n)</code>， 常数倍的<code>O(n)</code></li>
+<li>额外空间复杂度<code>O(n)</code></li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.LinkedList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Queue</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="o">}</span>
+<span class="c1">//        int n = 4;</span>
+<span class="c1">//        int[] arr = {9, 3, 1, 10};</span>
+<span class="c1">//        int[] arr = {5,5,5,5};</span>
+        <span class="c1">// O(n) 求出整体的最大最小值</span>
+        <span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">max</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MIN_VALUE</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">max</span><span class="o">){</span>
+                <span class="n">max</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">min</span><span class="o">){</span>
+                <span class="n">min</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">max</span> <span class="o">==</span> <span class="n">min</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 构造 桶 的区间, 桶个数是 n</span>
+        <span class="kt">int</span> <span class="n">span</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span> <span class="o">(</span><span class="n">max</span> <span class="o">-</span> <span class="n">min</span><span class="o">)</span> <span class="o">%</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="n">span</span> <span class="o">=</span> <span class="o">(</span><span class="n">max</span> <span class="o">-</span> <span class="n">min</span><span class="o">)</span> <span class="o">/</span> <span class="n">n</span><span class="o">;</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="n">span</span> <span class="o">=</span> <span class="o">(</span><span class="n">max</span> <span class="o">-</span> <span class="n">min</span><span class="o">)</span> <span class="o">/</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="c1">// 每个buckets内部，buckets 之间</span>
+        <span class="c1">// 初始化 buckets</span>
+        <span class="kt">long</span><span class="o">[][]</span> <span class="n">buckets</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">long</span><span class="o">[</span><span class="n">n</span><span class="o">][</span><span class="mi">3</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">buckets</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">Long</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">;</span> <span class="c1">// 最小</span>
+            <span class="n">buckets</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">Long</span><span class="o">.</span><span class="na">MIN_VALUE</span><span class="o">;</span> <span class="c1">// 最大</span>
+            <span class="n">buckets</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="c1">// 0 表示bucket中的数量</span>
+        <span class="o">}</span>
+
+        <span class="kt">long</span> <span class="n">ans</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MIN_VALUE</span><span class="o">;</span> <span class="c1">// 最后结果</span>
+        <span class="c1">// 求出每个 buckets, 同时可以求出：桶内部相差的最大值</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+<span class="c1">//            int pos = indexOf(range, n+1, arr[i]);</span>
+            <span class="kt">int</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">indexOfBuckets</span><span class="o">(</span><span class="n">min</span><span class="o">,</span> <span class="n">max</span><span class="o">,</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="n">span</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">buckets</span><span class="o">[</span><span class="n">pos</span><span class="o">][</span><span class="mi">0</span><span class="o">]){</span>
+                <span class="n">buckets</span><span class="o">[</span><span class="n">pos</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">buckets</span><span class="o">[</span><span class="n">pos</span><span class="o">][</span><span class="mi">1</span><span class="o">]){</span>
+                <span class="n">buckets</span><span class="o">[</span><span class="n">pos</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="o">}</span>
+            <span class="c1">// 最大 - 最小</span>
+            <span class="k">if</span><span class="o">((</span><span class="n">buckets</span><span class="o">[</span><span class="n">pos</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">-</span> <span class="n">buckets</span><span class="o">[</span><span class="n">pos</span><span class="o">][</span><span class="mi">0</span><span class="o">])</span> <span class="o">&gt;</span> <span class="n">ans</span><span class="o">){</span>
+                <span class="n">ans</span> <span class="o">=</span> <span class="n">buckets</span><span class="o">[</span><span class="n">pos</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">-</span> <span class="n">buckets</span><span class="o">[</span><span class="n">pos</span><span class="o">][</span><span class="mi">0</span><span class="o">];</span>
+            <span class="o">}</span>
+            <span class="n">buckets</span><span class="o">[</span><span class="n">pos</span><span class="o">][</span><span class="mi">2</span><span class="o">]</span> <span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="c1">// 查看构造的 buckets</span>
+<span class="c1">//        for(int i=0;i&lt;n;i++){</span>
+<span class="c1">//            System.out.println(buckets[i][0] + &quot; &quot; + buckets[i][1] + &quot; &quot; + buckets[i][2]);</span>
+<span class="c1">//        }</span>
+        <span class="c1">// 再求buckets之间</span>
+        <span class="kt">int</span> <span class="n">bi</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">bj</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">bj</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">buckets</span><span class="o">[</span><span class="n">bi</span><span class="o">][</span><span class="mi">2</span><span class="o">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="o">){</span>
+                <span class="n">bi</span><span class="o">++;</span>
+                <span class="n">bj</span><span class="o">++;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">buckets</span><span class="o">[</span><span class="n">bj</span><span class="o">][</span><span class="mi">2</span><span class="o">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="o">){</span>
+                    <span class="n">bj</span><span class="o">++;</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="k">if</span><span class="o">(</span> <span class="o">(</span><span class="n">buckets</span><span class="o">[</span><span class="n">bj</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">-</span> <span class="n">buckets</span><span class="o">[</span><span class="n">bi</span><span class="o">][</span><span class="mi">1</span><span class="o">])</span> <span class="o">&gt;</span> <span class="n">ans</span><span class="o">){</span>
+                        <span class="n">ans</span> <span class="o">=</span> <span class="o">(</span><span class="n">buckets</span><span class="o">[</span><span class="n">bj</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">-</span> <span class="n">buckets</span><span class="o">[</span><span class="n">bi</span><span class="o">][</span><span class="mi">1</span><span class="o">]);</span>
+                    <span class="o">}</span>
+                    <span class="n">bi</span> <span class="o">=</span> <span class="n">bj</span><span class="o">;</span>
+                    <span class="n">bj</span> <span class="o">=</span> <span class="n">bj</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">ans</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 算出桶号</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">indexOfBuckets</span><span class="o">(</span><span class="kt">int</span> <span class="n">min</span><span class="o">,</span> <span class="kt">int</span> <span class="n">max</span><span class="o">,</span> <span class="kt">int</span> <span class="n">val</span><span class="o">,</span> <span class="kt">int</span> <span class="n">span</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">cha</span> <span class="o">=</span> <span class="n">val</span> <span class="o">-</span> <span class="n">min</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">cha</span> <span class="o">/</span> <span class="n">span</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">i</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">4</span>
+<span class="cm">9 3 1 10</span>
+<span class="cm">6</span>
+
+<span class="cm">4</span>
+<span class="cm">5 5 5 5</span>
+<span class="cm">0</span>
+<span class="cm">*/</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-11-13 22:20:00</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
