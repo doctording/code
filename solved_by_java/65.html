@@ -1,0 +1,212 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>65 LFU缓存结构设计 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;65 LFU缓存结构设计
+    <span class="updated">Page Updated&nbsp;
+      2019-11-23 16:22
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">65 LFU缓存结构设计</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<ul>
+<li>最小频率要保存</li>
+<li>map存 key val,frequent</li>
+<li>map存 frequent, keyList(双向链表)</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.LinkedList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * key 增删</span>
+<span class="cm"> * 1. 新增key capacity满了才会需要删除key</span>
+<span class="cm"> * 2. 访问 或 修改key，只需要增加出现频率，不涉及key的删除问题</span>
+<span class="cm"> *</span>
+<span class="cm"> * 关于最小频率：</span>
+<span class="cm"> * 1. 新增key，那么显然最小频率是1</span>
+<span class="cm"> * 2. 访问 或 修改key 导致频率发生变化，需要更新最小频率</span>
+<span class="cm"> *</span>
+<span class="cm"> * 结论：</span>
+<span class="cm"> * 1. 新增key，需要重置最小频率为1</span>
+<span class="cm"> * 2. 访问或修改key，重置val，调整最小频率</span>
+<span class="cm"> */</span>
+<span class="kd">class</span> <span class="nc">LfuMap</span><span class="o">{</span>
+    <span class="c1">// 最大容量</span>
+    <span class="kt">int</span> <span class="n">capacity</span><span class="o">;</span>
+
+    <span class="c1">// 有效的key</span>
+    <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">KeyInfo</span><span class="o">&gt;</span> <span class="n">keyValMap</span><span class="o">;</span>
+
+    <span class="c1">// 出现次数 与 key的映射, 双向链表头部就是最久的要删除的</span>
+    <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">frequentlyKeyMap</span><span class="o">;</span>
+
+    <span class="kt">int</span> <span class="n">minFrequent</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">LfuMap</span><span class="o">(</span><span class="kt">int</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">capacity</span> <span class="o">=</span> <span class="n">size</span><span class="o">;</span>
+        <span class="n">minFrequent</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="n">keyValMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">frequentlyKeyMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="kt">int</span> <span class="n">key</span><span class="o">,</span> <span class="kt">int</span> <span class="n">val</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">keyValMap</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">KeyInfo</span> <span class="n">keyInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KeyInfo</span><span class="o">(</span><span class="n">val</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="n">keyValMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">keyInfo</span><span class="o">);</span>
+
+            <span class="n">minFrequent</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+
+            <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">linkedList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+            <span class="n">linkedList</span><span class="o">.</span><span class="na">addFirst</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+            <span class="n">frequentlyKeyMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">linkedList</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="c1">// 原来出现过的key，此次cnt要加1</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">keyValMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">key</span><span class="o">)){</span>
+                <span class="c1">// 更新值和频率，借用了一下get方法</span>
+                <span class="n">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+                <span class="n">KeyInfo</span> <span class="n">keyInfo</span> <span class="o">=</span> <span class="n">keyValMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+                <span class="n">keyInfo</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+                <span class="n">keyValMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">keyInfo</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="c1">// 新增的key</span>
+                <span class="c1">// 需要先判断是不是满了</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">keyValMap</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="n">capacity</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="c1">// 删除最小出现的，且是最早的那个key</span>
+                    <span class="n">Integer</span> <span class="n">removeKey</span> <span class="o">=</span> <span class="n">frequentlyKeyMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">minFrequent</span><span class="o">).</span><span class="na">removeFirst</span><span class="o">();</span>
+                    <span class="n">keyValMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">removeKey</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="n">KeyInfo</span> <span class="n">keyInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KeyInfo</span><span class="o">(</span><span class="n">val</span><span class="o">,</span><span class="mi">1</span><span class="o">);</span>
+                <span class="c1">// 1。 新增key</span>
+                <span class="n">keyValMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">keyInfo</span><span class="o">);</span>
+                <span class="c1">// 2。频率列表改变</span>
+                <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">linkedList</span><span class="o">;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">frequentlyKeyMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="mi">1</span><span class="o">)){</span>
+                   <span class="n">linkedList</span> <span class="o">=</span> <span class="n">frequentlyKeyMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                   <span class="n">linkedList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+                <span class="o">}</span>
+                <span class="n">linkedList</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+                <span class="c1">// 3. 最小次数更新</span>
+                <span class="n">minFrequent</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">get</span><span class="o">(</span><span class="kt">int</span> <span class="n">key</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">keyValMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">key</span><span class="o">)){</span>
+            <span class="c1">// 原来就存在, 那么此次出现的次数肯定要加1</span>
+            <span class="n">KeyInfo</span> <span class="n">keyInfo</span> <span class="o">=</span> <span class="n">keyValMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">keyInfo</span><span class="o">.</span><span class="na">value</span><span class="o">;</span>
+            <span class="kt">int</span> <span class="n">oldFrequent</span> <span class="o">=</span> <span class="n">keyInfo</span><span class="o">.</span><span class="na">frequent</span><span class="o">;</span>
+            <span class="n">Integer</span> <span class="n">linkedKey</span> <span class="o">=</span> <span class="n">key</span><span class="o">;</span>
+
+            <span class="c1">// 1. occurCntKeyMap 的 oldOccurCnt 的链表要删除 linkedKey</span>
+            <span class="n">frequentlyKeyMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">oldFrequent</span><span class="o">).</span><span class="na">remove</span><span class="o">(</span><span class="n">linkedKey</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span> <span class="n">frequentlyKeyMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">oldFrequent</span><span class="o">).</span><span class="na">isEmpty</span><span class="o">()){</span>
+                <span class="c1">// 因为最小次数是由于这次新访问导致的</span>
+                <span class="n">minFrequent</span> <span class="o">++;</span>
+            <span class="o">}</span>
+            <span class="c1">// 2. occurCntKeyMap 的 oldOccurCnt + 1 的链表尾部新增元素</span>
+            <span class="n">KeyInfo</span> <span class="n">keyInfo1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KeyInfo</span><span class="o">(</span><span class="n">val</span><span class="o">,</span> <span class="n">oldFrequent</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">frequentlyKeyMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">keyInfo1</span><span class="o">.</span><span class="na">frequent</span><span class="o">)){</span>
+                <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">linkedList</span> <span class="o">=</span> <span class="n">frequentlyKeyMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">keyInfo1</span><span class="o">.</span><span class="na">frequent</span><span class="o">);</span>
+                <span class="n">linkedList</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">linkedKey</span><span class="o">);</span>
+                <span class="n">frequentlyKeyMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">keyInfo1</span><span class="o">.</span><span class="na">frequent</span><span class="o">,</span> <span class="n">linkedList</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">linkedList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+                <span class="n">linkedList</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">linkedKey</span><span class="o">);</span>
+                <span class="n">frequentlyKeyMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">keyInfo1</span><span class="o">.</span><span class="na">frequent</span><span class="o">,</span> <span class="n">linkedList</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="c1">// 3. 更新keyInfo</span>
+            <span class="n">keyValMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">keyInfo1</span><span class="o">);</span>
+            <span class="k">return</span> <span class="n">val</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+    <span class="kd">class</span> <span class="nc">KeyInfo</span><span class="o">{</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="n">value</span><span class="o">;</span> <span class="c1">// 值</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="n">frequent</span><span class="o">;</span> <span class="c1">// 当前频率</span>
+        <span class="kd">public</span> <span class="nf">KeyInfo</span><span class="o">(</span><span class="kt">int</span> <span class="n">value</span><span class="o">,</span> <span class="kt">int</span> <span class="n">frequent</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">frequent</span> <span class="o">=</span> <span class="n">frequent</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="n">LfuMap</span> <span class="n">lruMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LfuMap</span><span class="o">(</span><span class="n">k</span><span class="o">);</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">op</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">op</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span>
+                <span class="c1">// set</span>
+                <span class="kt">int</span> <span class="n">key</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+                <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+                <span class="n">lruMap</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">val</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">op</span> <span class="o">==</span> <span class="mi">2</span><span class="o">){</span>
+                <span class="c1">// get</span>
+                <span class="kt">int</span> <span class="n">key</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">lruMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">));</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">8 3</span>
+<span class="cm">1 1 1</span>
+<span class="cm">1 2 2</span>
+<span class="cm">1 3 2</span>
+<span class="cm">1 2 4</span>
+<span class="cm">1 3 5</span>
+<span class="cm">2 2</span>
+<span class="cm">1 4 4</span>
+<span class="cm">2 1</span>
+
+<span class="cm">4</span>
+<span class="cm">-1</span>
+<span class="cm"> */</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-11-24 22:05:56</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
