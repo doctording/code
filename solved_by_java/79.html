@@ -30,14 +30,147 @@
 </ul>
 </div>
 <h1 id="ac">ac</h1>
-<div class="hlcode"><pre>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+
+
+<span class="kd">class</span> <span class="nc">MessageBox</span><span class="o">{</span>
+
+    <span class="kd">public</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Node</span><span class="o">&gt;</span> <span class="n">headMap</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Node</span><span class="o">&gt;</span> <span class="n">tailMap</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="n">lastPrintVal</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">MessageBox</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">headMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">tailMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">lastPrintVal</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">receiveMsg</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="o">){</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">Node</span> <span class="n">node</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="c1">// 判断区间是否可以合并</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">tailMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">num</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">tailMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)){</span> <span class="c1">// 首尾都有,连接两个区间</span>
+            <span class="n">Node</span> <span class="n">tailNode</span> <span class="o">=</span> <span class="n">tailMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="n">Node</span> <span class="n">headNode</span> <span class="o">=</span> <span class="n">headMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="n">tailNode</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">node</span><span class="o">;</span>
+            <span class="n">node</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">headNode</span><span class="o">;</span>
+            <span class="c1">// 删除老的区间节点</span>
+            <span class="n">tailMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="n">headMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">tailMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)){</span> <span class="c1">// 某个的尾部</span>
+            <span class="n">tailMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="o">).</span><span class="na">next</span> <span class="o">=</span> <span class="n">node</span><span class="o">;</span>
+            <span class="n">tailMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">node</span><span class="o">);</span>
+            <span class="c1">// 删除老的尾部</span>
+            <span class="n">tailMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">headMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)){</span> <span class="c1">// 某个的头部</span>
+            <span class="n">node</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">headMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="n">headMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">node</span><span class="o">);</span>
+            <span class="c1">// 删除老的头部</span>
+            <span class="n">headMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span> <span class="c1">// 自己成为一个区间</span>
+            <span class="n">headMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">node</span><span class="o">);</span>
+            <span class="n">tailMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">node</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="c1">// 最后判断打印与否</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">headMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">lastPrintVal</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)){</span>
+            <span class="n">printMsg</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">printMsg</span><span class="o">(){</span>
+        <span class="n">Node</span> <span class="n">headNode</span> <span class="o">=</span> <span class="n">headMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">lastPrintVal</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="n">lastPrintVal</span> <span class="o">++;</span>
+        <span class="n">headMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">headNode</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">headNode</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">headNode</span><span class="o">.</span><span class="na">val</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
+            <span class="n">headNode</span> <span class="o">=</span> <span class="n">headNode</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">lastPrintVal</span> <span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="n">tailMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">lastPrintVal</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="n">lastPrintVal</span> <span class="o">--;</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">printMsg</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">){</span>
+        <span class="n">Node</span> <span class="n">headNode</span> <span class="o">=</span> <span class="n">headMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">lastPrintVal</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="n">lastPrintVal</span> <span class="o">++;</span>
+        <span class="n">headMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">headNode</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">headNode</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">headNode</span><span class="o">.</span><span class="na">val</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">num</span><span class="o">);</span>
+            <span class="n">headNode</span> <span class="o">=</span> <span class="n">headNode</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
+            <span class="n">lastPrintVal</span> <span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="n">tailMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">lastPrintVal</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="n">lastPrintVal</span> <span class="o">--;</span>
+    <span class="o">}</span>
+
+    <span class="kd">class</span> <span class="nc">Node</span><span class="o">{</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="n">val</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="n">Node</span> <span class="n">next</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">Node</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">,</span> <span class="n">Node</span> <span class="n">next</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">next</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kd">public</span> <span class="nf">Node</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="n">MessageBox</span> <span class="n">messageBox</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MessageBox</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+            <span class="n">messageBox</span><span class="o">.</span><span class="na">receiveMsg</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">9</span>
+<span class="cm">2 1 4 5 7 3 9 8 6</span>
+
+<span class="cm">1 1</span>
+<span class="cm">2 1</span>
+<span class="cm">3 3</span>
+<span class="cm">4 3</span>
+<span class="cm">5 3</span>
+<span class="cm">6 6</span>
+<span class="cm">7 6</span>
+<span class="cm">8 6</span>
+<span class="cm">9 6</span>
+<span class="cm">消息流吐出2，一种结构接收而不打印2，因为1还没出现。</span>
+<span class="cm">消息流吐出1，一种结构接收1，并且打印：1, 2。</span>
+<span class="cm">消息流吐出4，一种结构接收而不打印4，因为3还没出现。</span>
+<span class="cm">消息流吐出5，一种结构接收而不打印5，因为3还没出现。</span>
+<span class="cm">消息流吐出7，一种结构接收而不打印7，因为3还没出现。</span>
+<span class="cm">消息流吐出3，一种结构接收3，并且打印：3, 4, 5。</span>
+<span class="cm">消息流吐出9，一种结构接收而不打印9，因为6还没出现。</span>
+<span class="cm">消息流吐出8，一种结构接收而不打印8，因为6还没出现。</span>
+<span class="cm">消息流吐出6，一种结构接收6，并且打印：6, 7, 8, 9。</span>
+<span class="cm"> */</span>
 </pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-12-01 22:28:13</p>
+        <p>Site Generated 2019-12-02 22:14:32</p>
       </span>
     </div>
 
