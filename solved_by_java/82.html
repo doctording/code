@@ -26,18 +26,221 @@
 <div class="page_title">82 在两个排序数组中找到第k小的数</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#ac">ac</a></li>
+<li><a href="#ac">ac</a><ul>
+<li><a href="#k-l">k &gt; l 的几种情况</a></li>
+<li><a href="#k-s">k &lt;= s 转换位求中位数</a></li>
+<li><a href="#k-s-k-l">k &gt; s &amp;&amp; k &lt;= l</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <h1 id="ac">ac</h1>
-<div class="hlcode"><pre>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">a1</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">a2</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">a1</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">m</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">a2</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">minK</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="n">m</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">minK</span> <span class="o">=</span> <span class="n">getMinK</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">a1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">a2</span><span class="o">,</span> <span class="n">k</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+            <span class="n">minK</span> <span class="o">=</span> <span class="n">getMinK</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">a2</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">a1</span><span class="o">,</span> <span class="n">k</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">minK</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">getMinK</span><span class="o">(</span><span class="kt">int</span> <span class="n">left1</span><span class="o">,</span> <span class="kt">int</span> <span class="n">right1</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">sArr</span><span class="o">,</span>
+                       <span class="kt">int</span> <span class="n">left2</span><span class="o">,</span> <span class="kt">int</span> <span class="n">right2</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">lArr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">s</span> <span class="o">=</span> <span class="n">right1</span> <span class="o">-</span> <span class="n">left1</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="n">right2</span> <span class="o">-</span> <span class="n">left2</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">k</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="o">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">l</span><span class="o">)){</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">sArr</span><span class="o">[</span><span class="n">right1</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="n">lArr</span><span class="o">[</span><span class="n">left2</span><span class="o">]){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">k</span> <span class="o">&lt;=</span> <span class="n">s</span><span class="o">){</span>
+                <span class="k">return</span> <span class="n">sArr</span><span class="o">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">lArr</span><span class="o">[</span><span class="n">k</span> <span class="o">-</span> <span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">lArr</span><span class="o">[</span><span class="n">right2</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="n">sArr</span><span class="o">[</span><span class="n">left1</span><span class="o">]){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">k</span> <span class="o">&lt;=</span> <span class="n">l</span><span class="o">){</span>
+                <span class="k">return</span> <span class="n">lArr</span><span class="o">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">sArr</span><span class="o">[</span><span class="n">k</span> <span class="o">-</span> <span class="n">l</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+        <span class="k">if</span><span class="o">(</span><span class="n">k</span> <span class="o">&lt;=</span> <span class="n">s</span><span class="o">){</span>
+            <span class="k">return</span> <span class="nf">getUpMedian</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">sArr</span><span class="o">,</span>
+            <span class="mi">0</span><span class="o">,</span> <span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">lArr</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="k">if</span><span class="o">(</span><span class="n">k</span> <span class="o">&gt;</span> <span class="n">l</span><span class="o">){</span>
+            <span class="c1">// lArr 最大的 小于 sArr[k - l - 1]</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">sArr</span><span class="o">[</span><span class="n">k</span> <span class="o">-</span> <span class="n">l</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">&gt;=</span> <span class="n">lArr</span><span class="o">[</span><span class="n">l</span><span class="o">-</span><span class="mi">1</span><span class="o">]){</span>
+                <span class="k">return</span> <span class="n">sArr</span><span class="o">[</span><span class="n">k</span><span class="o">-</span><span class="n">l</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+            <span class="o">}</span>
+            <span class="c1">// sArr 最大的 小于 lArr[k-s-1]</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">sArr</span><span class="o">[</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="n">lArr</span><span class="o">[</span><span class="n">k</span><span class="o">-</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="o">]){</span>
+                <span class="k">return</span> <span class="n">lArr</span><span class="o">[</span><span class="n">k</span><span class="o">-</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="nf">getUpMedian</span><span class="o">(</span><span class="n">k</span><span class="o">-</span><span class="n">l</span><span class="o">,</span> <span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">sArr</span><span class="o">,</span>
+                    <span class="n">k</span><span class="o">-</span><span class="n">s</span><span class="o">,</span> <span class="n">l</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">lArr</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="c1">// k &gt; s &amp;&amp; k &lt;= l</span>
+        <span class="c1">// sArr 最大的 小于 lArr[k-s-1]</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">sArr</span><span class="o">[</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">lArr</span><span class="o">[</span><span class="n">k</span><span class="o">-</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="o">]){</span>
+            <span class="k">return</span> <span class="n">lArr</span><span class="o">[</span><span class="n">k</span><span class="o">-</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="nf">getUpMedian</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">sArr</span><span class="o">,</span>
+                <span class="n">k</span><span class="o">-</span><span class="n">s</span><span class="o">,</span> <span class="n">k</span><span class="o">-</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">s</span><span class="o">,</span> <span class="n">lArr</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 是否奇数</span>
+    <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isOdd</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">val</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">getUpMedian</span><span class="o">(</span><span class="kt">int</span> <span class="n">left1</span><span class="o">,</span> <span class="kt">int</span> <span class="n">right1</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">a1</span><span class="o">,</span>
+                           <span class="kt">int</span> <span class="n">left2</span><span class="o">,</span> <span class="kt">int</span> <span class="n">right2</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">a2</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">left1</span> <span class="o">==</span> <span class="n">right1</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">a1</span><span class="o">[</span><span class="n">left1</span><span class="o">],</span> <span class="n">a2</span><span class="o">[</span><span class="n">left2</span><span class="o">]);</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">a1</span><span class="o">[</span><span class="n">right1</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">a2</span><span class="o">[</span><span class="n">left2</span><span class="o">]){</span>
+            <span class="k">return</span> <span class="n">a1</span><span class="o">[</span><span class="n">right1</span><span class="o">];</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">a2</span><span class="o">[</span><span class="n">right2</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">a1</span><span class="o">[</span><span class="n">left1</span><span class="o">]){</span>
+            <span class="k">return</span> <span class="n">a2</span><span class="o">[</span><span class="n">right2</span><span class="o">];</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">left1</span> <span class="o">&lt;</span> <span class="n">right1</span><span class="o">)</span> <span class="o">{</span>
+                <span class="kt">int</span> <span class="n">mid1</span> <span class="o">=</span> <span class="o">(</span><span class="n">right1</span> <span class="o">+</span> <span class="n">left1</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+                <span class="kt">int</span> <span class="n">mid2</span> <span class="o">=</span> <span class="o">(</span><span class="n">right2</span> <span class="o">+</span> <span class="n">left2</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">a1</span><span class="o">[</span><span class="n">mid1</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">a2</span><span class="o">[</span><span class="n">mid2</span><span class="o">])</span> <span class="o">{</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">isOdd</span><span class="o">(</span><span class="n">right1</span> <span class="o">-</span> <span class="n">left1</span> <span class="o">+</span> <span class="mi">1</span><span class="o">))</span> <span class="o">{</span>
+                        <span class="c1">// 包括mid在内</span>
+                        <span class="n">left1</span> <span class="o">=</span> <span class="n">mid1</span><span class="o">;</span>
+                        <span class="n">right2</span> <span class="o">=</span> <span class="n">mid2</span><span class="o">;</span>
+                    <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                        <span class="n">left1</span> <span class="o">=</span> <span class="n">mid1</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+                        <span class="n">right2</span> <span class="o">=</span> <span class="n">mid2</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span><span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">a1</span><span class="o">[</span><span class="n">mid1</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">a2</span><span class="o">[</span><span class="n">mid2</span><span class="o">])</span> <span class="o">{</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">isOdd</span><span class="o">(</span><span class="n">right1</span> <span class="o">-</span> <span class="n">left1</span> <span class="o">+</span> <span class="mi">1</span><span class="o">))</span> <span class="o">{</span>
+                        <span class="c1">// 包括mid在内</span>
+                        <span class="n">left2</span> <span class="o">=</span> <span class="n">mid2</span><span class="o">;</span>
+                        <span class="n">right1</span> <span class="o">=</span> <span class="n">mid1</span><span class="o">;</span>
+                    <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                        <span class="n">left2</span> <span class="o">=</span> <span class="n">mid2</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+                        <span class="n">right1</span> <span class="o">=</span> <span class="n">mid1</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="k">return</span> <span class="n">a1</span><span class="o">[</span><span class="n">mid1</span><span class="o">];</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">a1</span><span class="o">[</span><span class="n">left1</span><span class="o">],</span> <span class="n">a2</span><span class="o">[</span><span class="n">left2</span><span class="o">]);</span>
+        <span class="o">}</span>
+    <span class="o">}</span> 
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">5 3 1</span>
+<span class="cm">1 2 3 4 5</span>
+<span class="cm">3 4 5</span>
+
+<span class="cm">1</span>
+
+<span class="cm">3 4 4</span>
+<span class="cm">1 2 3</span>
+<span class="cm">3 4 5 6</span>
+
+<span class="cm">3</span>
+<span class="cm"> */</span>
+</pre></div>
+
+
+<p>s，l 分别为短数组和长数组的长度</p>
+<h3 id="k-l">k &gt; l 的几种情况</h3>
+<ul>
+<li>情况1</li>
+</ul>
+<div class="hlcode"><pre><span class="mi">1</span> <span class="mi">8</span> <span class="o">[</span><span class="mi">28</span><span class="o">]</span> <span class="mi">29</span> <span class="mi">30</span> <span class="o">(</span><span class="mi">5</span><span class="o">)</span>
+
+<span class="mi">1</span> <span class="mi">2</span> <span class="mi">9</span> <span class="mi">10</span> <span class="mi">12</span> <span class="mi">18</span> <span class="mi">20</span> <span class="mi">22</span> <span class="mi">26</span> <span class="o">(</span><span class="mi">9</span><span class="o">)</span>
+
+<span class="err">求</span> <span class="mi">12</span><span class="n">th</span>
+</pre></div>
+
+
+<ul>
+<li>情况2</li>
+</ul>
+<div class="hlcode"><pre><span class="mi">1</span> <span class="mi">8</span> <span class="mi">28</span> <span class="mi">29</span> <span class="mi">30</span> <span class="o">(</span><span class="mi">5</span><span class="o">)</span>
+
+<span class="mi">1</span> <span class="mi">2</span> <span class="mi">9</span> <span class="mi">10</span> <span class="mi">12</span> <span class="mi">18</span> <span class="o">[</span><span class="mi">31</span><span class="o">]</span> <span class="mi">32</span> <span class="mi">33</span> <span class="o">(</span><span class="mi">9</span><span class="o">)</span>
+
+<span class="err">求</span> <span class="mi">12</span><span class="n">th</span>
+</pre></div>
+
+
+<ul>
+<li>情况3</li>
+</ul>
+<div class="hlcode"><pre><span class="mi">1</span> <span class="mi">8</span> <span class="mi">28</span> <span class="mi">29</span> <span class="mi">30</span> <span class="o">(</span><span class="mi">5</span><span class="o">)</span>
+
+<span class="mi">1</span> <span class="mi">2</span> <span class="mi">9</span> <span class="mi">10</span> <span class="mi">12</span> <span class="mi">18</span> <span class="mi">29</span> <span class="mi">32</span> <span class="mi">33</span> <span class="o">(</span><span class="mi">9</span><span class="o">)</span>
+
+<span class="err">求</span> <span class="mi">12</span><span class="n">th</span>
+<span class="mi">29</span> <span class="mi">30</span><span class="o">(</span><span class="err">前</span> <span class="mi">12</span><span class="o">-</span><span class="mi">9</span> <span class="err">不可能是第</span><span class="n">k</span><span class="err">个</span><span class="o">)</span>
+
+<span class="mi">32</span> <span class="mi">33</span><span class="o">(</span><span class="err">前</span> <span class="mi">12</span><span class="o">-</span><span class="mi">5</span> <span class="err">不可能是第</span><span class="n">k</span><span class="err">个</span><span class="o">)</span>
+
+<span class="err">去掉了</span> <span class="n">k</span> <span class="o">-</span> <span class="n">l</span><span class="o">,</span> <span class="n">k</span> <span class="o">-</span> <span class="n">s</span> <span class="err">个了，</span> <span class="err">再求</span> <span class="n">s</span> <span class="o">-</span> <span class="o">(</span><span class="n">k</span><span class="o">-</span><span class="n">l</span><span class="o">)</span>  <span class="err">和</span> <span class="n">l</span> <span class="o">-</span> <span class="o">(</span><span class="n">k</span><span class="o">-</span><span class="n">s</span><span class="o">)</span> <span class="err">的中位数</span>
+
+<span class="o">(</span><span class="n">k</span><span class="o">-</span><span class="n">l</span><span class="o">)</span> <span class="o">+</span> <span class="o">(</span><span class="n">k</span><span class="o">-</span><span class="n">s</span><span class="o">)</span> <span class="o">+</span> <span class="o">[(</span><span class="n">s</span> <span class="o">-</span> <span class="o">(</span><span class="n">k</span><span class="o">-</span><span class="n">l</span><span class="o">))</span> <span class="o">+</span> <span class="n">l</span> <span class="o">-</span> <span class="o">(</span><span class="n">k</span><span class="o">-</span><span class="n">s</span><span class="o">)]</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">=</span> <span class="n">k</span>
+</pre></div>
+
+
+<h3 id="k-s">k &lt;= s 转换位求中位数</h3>
+<h3 id="k-s-k-l">k &gt; s &amp;&amp; k &lt;= l</h3>
+<div class="hlcode"><pre><span class="mi">1</span> <span class="mi">8</span> <span class="mi">28</span> <span class="mi">29</span> <span class="mi">30</span> <span class="o">(</span><span class="mi">5</span><span class="o">)</span>
+
+<span class="mi">1</span> <span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="mi">9</span> <span class="mi">10</span> <span class="mi">12</span> <span class="mi">18</span> <span class="mi">29</span> <span class="mi">32</span> <span class="mi">33</span> <span class="o">(</span><span class="mi">9</span><span class="o">)</span>
+
+<span class="err">求</span> <span class="mi">7</span><span class="n">th</span>
+
+<span class="n">lArr</span><span class="err">的前两个肯定不是了</span>
+
+<span class="mi">1</span> <span class="mi">8</span> <span class="mi">28</span> <span class="mi">29</span> <span class="mi">30</span>
+<span class="mi">9</span> <span class="mi">10</span> <span class="mi">12</span> <span class="mi">18</span> <span class="mi">29</span>
 </pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-12-02 22:14:32</p>
+        <p>Site Generated 2019-12-03 09:38:23</p>
       </span>
     </div>
 
