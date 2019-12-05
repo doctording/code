@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>85 Manacher算法进阶问题 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;85 Manacher算法进阶问题
+    <span class="updated">Page Updated&nbsp;
+      2019-12-05 12:59
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">85 Manacher算法进阶问题</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<ul>
+<li><code>pR = arr.length</code>表示包含最后一个字符的回文串已经找到,则</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * https://blog.csdn.net/qq_26437925/article/details/52181738</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">ch</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="o">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ch</span><span class="o">.</span><span class="na">length</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">chi</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">len</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="o">(</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">i</span><span class="o">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span><span class="sc">&#39;#&#39;</span> <span class="o">:</span> <span class="n">ch</span><span class="o">[</span><span class="n">chi</span><span class="o">++];</span>
+        <span class="o">}</span>
+        <span class="c1">//  p[i] 表示 以i位置为中心的回文半径长（其长度减去1，表示在原字符串中以i为中心的回文长度）</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">len</span><span class="o">];</span>
+        <span class="c1">// 表示 回文半径最长的位置的下一个位置（pR总是比上一个pR值要大的）</span>
+        <span class="kt">int</span> <span class="n">pR</span><span class="o">;</span>
+        <span class="c1">// 表示 回文中心点，pR更新时index要跟着更新，否则index不用更新</span>
+        <span class="kt">int</span> <span class="n">index</span><span class="o">;</span>
+
+        <span class="c1">// index = 0 的情况</span>
+        <span class="n">p</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">pR</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="c1">// index = 1 的情况</span>
+        <span class="n">p</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="n">index</span> <span class="o">=</span><span class="mi">1</span><span class="o">;</span>
+        <span class="n">pR</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+
+        <span class="kt">int</span> <span class="n">includeEndIndex</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">len</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="kt">int</span> <span class="n">_i</span> <span class="o">=</span> <span class="n">index</span> <span class="o">-</span> <span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">index</span><span class="o">);</span>   <span class="c1">//i的对称位置i&#39;</span>
+            <span class="kt">int</span> <span class="n">index_left</span> <span class="o">=</span> <span class="n">index</span> <span class="o">-</span> <span class="n">p</span><span class="o">[</span><span class="n">index</span><span class="o">]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>  <span class="c1">// index的左大</span>
+            <span class="kt">int</span> <span class="n">index_right</span> <span class="o">=</span> <span class="n">pR</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>    <span class="c1">// index的右大</span>
+            <span class="kt">int</span> <span class="n">_i_left</span> <span class="o">=</span> <span class="n">_i</span> <span class="o">-</span> <span class="n">p</span><span class="o">[</span><span class="n">_i</span><span class="o">]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>    <span class="c1">//i的对称位置i&#39;的左大</span>
+
+            <span class="k">if</span> <span class="o">(</span><span class="n">_i</span> <span class="o">&lt;</span> <span class="n">index_left</span><span class="o">)</span> <span class="o">{</span>
+                <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="kt">int</span> <span class="n">_j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="k">while</span> <span class="o">(</span><span class="n">_j</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">len</span> <span class="o">&amp;&amp;</span> <span class="n">arr</span><span class="o">[</span><span class="n">_j</span><span class="o">]</span> <span class="o">==</span> <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">])</span>
+                <span class="o">{</span>
+                    <span class="n">_j</span><span class="o">--;</span>
+                    <span class="n">j</span><span class="o">++;</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">_j</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="n">len</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="k">break</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+                <span class="n">p</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="n">i</span><span class="o">;</span>
+                <span class="n">pR</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span> <span class="c1">// 更新pR 和 index</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">_i_left</span> <span class="o">&lt;</span> <span class="n">index_left</span><span class="o">){</span>
+                    <span class="n">p</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">index_right</span> <span class="o">-</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">index_left</span> <span class="o">&lt;</span> <span class="n">_i_left</span><span class="o">){</span>
+                    <span class="n">p</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">[</span><span class="n">_i</span><span class="o">];</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="c1">// 往外扩</span>
+                    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">pR</span><span class="o">;</span>
+                    <span class="kt">int</span> <span class="n">_j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="o">(</span><span class="n">pR</span> <span class="o">-</span> <span class="n">i</span><span class="o">);</span>
+                    <span class="k">while</span> <span class="o">(</span> <span class="n">_j</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span>  <span class="n">j</span> <span class="o">&lt;</span> <span class="n">len</span> <span class="o">&amp;&amp;</span> <span class="n">arr</span><span class="o">[</span><span class="n">_j</span><span class="o">]</span> <span class="o">==</span> <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">])</span>
+                    <span class="o">{</span>
+                        <span class="n">_j</span><span class="o">--;</span>
+                        <span class="n">j</span><span class="o">++;</span>
+                        <span class="k">if</span> <span class="o">(</span><span class="n">_j</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="n">len</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="k">break</span><span class="o">;</span>
+                        <span class="o">}</span>
+                    <span class="o">}</span>
+                    <span class="n">p</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">j</span> <span class="o">-</span> <span class="n">i</span><span class="o">;</span>
+                    <span class="n">pR</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span> <span class="c1">// 更新pR 和 index</span>
+                    <span class="n">index</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="c1">// 扩展到到位置已经包含了最后一个字符了</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">pR</span> <span class="o">==</span> <span class="n">len</span><span class="o">){</span>
+                <span class="n">includeEndIndex</span> <span class="o">=</span> <span class="n">p</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">res</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="o">[</span><span class="n">ch</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="o">(</span><span class="n">includeEndIndex</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">res</span><span class="o">.</span><span class="na">length</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">res</span><span class="o">[</span><span class="n">res</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">ch</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">res</span><span class="o">));</span>
+    <span class="o">}</span>
+
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">abcd123321</span>
+<span class="cm">dcba</span>
+
+<span class="cm">ababab</span>
+<span class="cm">a</span>
+<span class="cm"> */</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-05 22:30:52</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
