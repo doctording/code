@@ -26,7 +26,14 @@
 <div class="page_title">87 KMP算法</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#ac">ac</a></li>
+<li><a href="#ac">ac</a><ul>
+<li><a href="#nexttodo">求next数组(TODO)</a><ul>
+<li><a href="#eg">eg</a></li>
+<li><a href="#next">next 求解说明</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 <h1 id="ac">ac</h1>
@@ -60,9 +67,7 @@
 </pre></div>
 
 
-<ul>
-<li>求next数组(TODO)</li>
-</ul>
+<h2 id="nexttodo">求next数组(TODO)</h2>
 <p>next[i]定义</p>
 <p>i之前的字符串match[0...i-1]中，必须以match[i-1]结尾的后缀(不能包括mathc[0]),与 必须以match[0]开头的前缀子串(不能包含match[i-1])最大匹配长度是多少？</p>
 <ul>
@@ -164,9 +169,7 @@
 </pre></div>
 
 
-<ul>
-<li>gg</li>
-</ul>
+<h3 id="eg">eg</h3>
 <div class="hlcode"><pre><span class="n">BBC</span> <span class="n">ABCDAB</span> <span class="n">ABCDABCDABDE</span>
     <span class="n">ABCDABD</span>
 </pre></div>
@@ -175,12 +178,37 @@
 <p><code>mi = 6</code>的时候出现了不相等，此时<code>next[mi] = 2</code>, <code>si = 10</code><br />
 令<code>mi = 2</code>，再比较<code>ss[si]</code>和<code>ms[mi]</code><br />
 相当于将字符串后移动了<code>m - next[mi]</code>个位置</p>
+<h3 id="next">next 求解说明</h3>
+<div class="hlcode"><pre><span class="o">+--------------------------------------------+</span>
+<span class="o">|</span>  <span class="n">pre</span>  <span class="err">｜</span><span class="n">C</span>              <span class="err">｜</span>  <span class="n">suffix</span>  <span class="err">｜</span><span class="n">B</span><span class="err">｜</span><span class="n">pos</span> <span class="o">|</span>
+<span class="o">+--------------------------------------------+</span>
+</pre></div>
+
+
+<p>当前所求位置是pos,pos前一个紧挨着的字符是B，next[B]已经求出，它的前缀和后缀相等部分为pre和suffix区域，pre区域紧挨着字符C</p>
+<p>如果<code>B=C</code>，那么<code>pre + C = suffix + B</code>,则有</p>
+<p>next[pos] = next[B] + 1</p>
+<p>否则</p>
+<div class="hlcode"><pre><span class="o">+------------------------------------------------------+</span>
+<span class="o">|</span>      <span class="n">pre</span>        <span class="err">｜</span><span class="n">C</span>          <span class="err">｜</span>  <span class="n">suffix</span>       <span class="err">｜</span><span class="n">B</span><span class="err">｜</span><span class="n">pos</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">preC</span><span class="o">|</span><span class="n">D</span>   <span class="n">suffixC</span><span class="err">｜</span>                   <span class="n">suffixC</span> <span class="err">｜</span>       <span class="o">|</span>
+<span class="o">+------------------------------------------------------+</span>
+</pre></div>
+
+
+<p>C的next的前缀分别是 preC 和 suffixC, 因为B的next前缀是pre和suffix,那么有个对称区域是的suffix里面的后面部分包含suffixC;preC紧挨着的字符是D</p>
+<p>如果<code>B=D</code>，那么<code>preC + D = suffixC + B</code>,则有</p>
+<p>next[pos] = next[D] + 1</p>
+<p>否则，类似这样继续递归的操作，如果跳到了最左，那么</p>
+<p>next[pos] = 0</p>
+<hr />
+<p>编码时记C位置为cn,cn会根据起next跳到D,递归到往前跳</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-12-12 11:39:44</p>
+        <p>Site Generated 2019-12-12 22:18:45</p>
       </span>
     </div>
 
