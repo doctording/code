@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>94 N皇后问题 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;94 N皇后问题
+    <span class="updated">Page Updated&nbsp;
+      2019-12-11 14:59
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">94 N皇后问题</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a><ul>
+<li><a href="#dfs">dfs回溯超时代码</a></li>
+<li><a href="#todo">位运算 TODO</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="n">N</span><span class="err">皇后问题是指在</span><span class="n">N</span><span class="o">*</span><span class="n">N</span><span class="err">的棋盘上要摆</span><span class="n">N</span><span class="err">个皇后，要求任何两个皇后不同行，不同列也不再同一条斜线上，求给一个整数</span><span class="n">n</span><span class="err">，返回</span><span class="n">n</span><span class="err">皇后的摆法。</span>
+
+<span class="err">时间复杂度</span><span class="n">O</span><span class="err">（</span><span class="mi">2</span><span class="o">^</span><span class="n">n</span><span class="err">），空间复杂度</span><span class="n">O</span><span class="err">（</span><span class="mi">1</span><span class="err">）</span>
+</pre></div>
+
+
+<h2 id="dfs">dfs回溯超时代码</h2>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="kt">boolean</span><span class="o">[]</span> <span class="n">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+            <span class="c1">// 每一行放置的元素</span>
+            <span class="kt">int</span><span class="o">[]</span> <span class="n">columnNum</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">k</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">k</span><span class="o">++){</span>
+                <span class="n">columnNum</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">vis</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="n">columnNum</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+            <span class="n">dfs</span><span class="o">(</span><span class="n">vis</span><span class="o">,</span> <span class="n">columnNum</span><span class="o">,</span> <span class="n">n</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+            <span class="n">ans</span> <span class="o">+=</span> <span class="n">cnt</span><span class="o">;</span>
+            <span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">ans</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">cnt</span>  <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">dfs</span><span class="o">(</span><span class="kt">boolean</span><span class="o">[]</span> <span class="n">vis</span><span class="o">,</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">columnNum</span><span class="o">,</span> <span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="kt">int</span> <span class="n">step</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">step</span> <span class="o">==</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">){</span>
+<span class="c1">//            for(int i =0;i&lt;n;i++){</span>
+<span class="c1">//                System.out.print(columnNum[i] + &quot; &quot;);</span>
+<span class="c1">//            }</span>
+<span class="c1">//            System.out.println();</span>
+            <span class="n">cnt</span><span class="o">++;</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+           <span class="k">if</span><span class="o">(!</span><span class="n">vis</span><span class="o">[</span><span class="n">i</span><span class="o">]){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">isRightPos</span><span class="o">(</span><span class="n">columnNum</span><span class="o">,</span> <span class="n">n</span><span class="o">,</span> <span class="n">step</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">i</span><span class="o">)){</span>
+                    <span class="n">vis</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+                    <span class="n">columnNum</span><span class="o">[</span><span class="n">step</span> <span class="o">+</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+                    <span class="n">dfs</span><span class="o">(</span><span class="n">vis</span><span class="o">,</span> <span class="n">columnNum</span><span class="o">,</span> <span class="n">n</span><span class="o">,</span><span class="n">step</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+                    <span class="n">vis</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="o">}</span>
+           <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isRightPos</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">columnNum</span><span class="o">,</span> <span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="kt">int</span> <span class="n">step</span><span class="o">,</span> <span class="kt">int</span> <span class="n">pos</span><span class="o">){</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">step</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+            <span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="n">columnNum</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">columnNum</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">){</span>
+                <span class="k">continue</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="kt">int</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">step</span><span class="o">;</span>
+            <span class="kt">int</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">pos</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(!</span><span class="n">isOk</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">x2</span><span class="o">,</span> <span class="n">y2</span><span class="o">)){</span>
+                <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+    <span class="c1">// 是否同行，同列，同斜线</span>
+    <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isOk</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y</span><span class="o">,</span> <span class="kt">int</span> <span class="n">x2</span><span class="o">,</span> <span class="kt">int</span> <span class="n">y2</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">x2</span> <span class="o">||</span> <span class="n">y</span> <span class="o">==</span> <span class="n">y2</span><span class="o">){</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">xCha</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">abs</span><span class="o">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">yCha</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">abs</span><span class="o">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">xCha</span> <span class="o">==</span> <span class="n">yCha</span><span class="o">){</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">8</span>
+
+<span class="cm">92</span>
+<span class="cm"> */</span>
+</pre></div>
+
+
+<h2 id="todo">位运算 TODO</h2>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-12 11:39:44</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
