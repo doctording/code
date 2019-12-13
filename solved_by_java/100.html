@@ -1,0 +1,575 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>100 猫狗队列 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;100 猫狗队列
+    <span class="updated">Page Updated&nbsp;
+      2019-12-13 15:59
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">100 猫狗队列</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a><ul>
+<li><a href="#_1">三个双向链表</a><ul>
+<li><a href="#_2">一个队列（每次遍历，遍历删除）</a></li>
+</ul>
+</li>
+<li><a href="#_3">两个队列，节点加时间戳</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<h2 id="_1">三个双向链表</h2>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 猫狗队列</span>
+<span class="cm"> */</span>
+<span class="kd">class</span> <span class="nc">CatDogQueue</span><span class="o">{</span>
+
+    <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="n">catQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+    <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="n">dogQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+    <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="n">totalQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pollDog</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Node</span> <span class="n">node</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">((</span><span class="n">node</span> <span class="o">=</span> <span class="n">dogQueue</span><span class="o">.</span><span class="na">pollFirst</span><span class="o">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">type</span><span class="o">.</span><span class="na">getStr</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="na">no</span><span class="o">);</span>
+            <span class="n">totalQueue</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pollCat</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Node</span> <span class="n">node</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">((</span><span class="n">node</span> <span class="o">=</span> <span class="n">catQueue</span><span class="o">.</span><span class="na">pollFirst</span><span class="o">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">type</span><span class="o">.</span><span class="na">getStr</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="na">no</span><span class="o">);</span>
+            <span class="n">totalQueue</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pollAll</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">dogQueue</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
+        <span class="n">catQueue</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
+        <span class="n">Node</span> <span class="n">node</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">((</span><span class="n">node</span> <span class="o">=</span> <span class="n">totalQueue</span><span class="o">.</span><span class="na">pollFirst</span><span class="o">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">type</span><span class="o">.</span><span class="na">getStr</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="na">no</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">totalQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isDogEmpty</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">dogQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isCatEmpty</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">catQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addDog</span><span class="o">(</span><span class="kt">int</span> <span class="n">no</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Node</span> <span class="n">animal</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">(</span><span class="n">Animal</span><span class="o">.</span><span class="na">DOG</span><span class="o">,</span> <span class="n">no</span><span class="o">);</span>
+        <span class="n">dogQueue</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">animal</span><span class="o">);</span>
+        <span class="n">totalQueue</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">animal</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addCat</span><span class="o">(</span><span class="kt">int</span> <span class="n">no</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Node</span> <span class="n">animal</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">(</span><span class="n">Animal</span><span class="o">.</span><span class="na">CAT</span><span class="o">,</span> <span class="n">no</span><span class="o">);</span>
+        <span class="n">catQueue</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">animal</span><span class="o">);</span>
+        <span class="n">totalQueue</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">animal</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">unixTime</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+    <span class="kd">class</span> <span class="nc">Node</span><span class="o">{</span>
+        <span class="kd">public</span> <span class="n">Animal</span> <span class="n">type</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="n">no</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="n">time</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">Node</span><span class="o">(</span><span class="n">Animal</span> <span class="n">type</span><span class="o">,</span> <span class="kt">int</span> <span class="n">no</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">type</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">no</span> <span class="o">=</span> <span class="n">no</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">time</span> <span class="o">=</span> <span class="n">unixTime</span> <span class="o">++;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">enum</span> <span class="n">Animal</span><span class="o">{</span>
+        <span class="n">DOG</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;dog&quot;</span><span class="o">),</span>
+        <span class="n">CAT</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">&quot;cat&quot;</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">type</span><span class="o">;</span>
+        <span class="n">String</span> <span class="n">str</span><span class="o">;</span>
+
+        <span class="n">Animal</span><span class="o">(</span><span class="kt">int</span> <span class="n">type</span><span class="o">,</span> <span class="n">String</span> <span class="n">str</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">type</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">str</span> <span class="o">=</span> <span class="n">str</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getStr</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">str</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">nStr</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">nStr</span><span class="o">);</span>
+
+        <span class="n">CatDogQueue</span> <span class="n">catDogQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CatDogQueue</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;pollDog&quot;</span><span class="o">)){</span>
+                <span class="n">catDogQueue</span><span class="o">.</span><span class="na">pollDog</span><span class="o">();</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;pollCat&quot;</span><span class="o">)){</span>
+                <span class="n">catDogQueue</span><span class="o">.</span><span class="na">pollCat</span><span class="o">();</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;pollAll&quot;</span><span class="o">)){</span>
+                <span class="n">catDogQueue</span><span class="o">.</span><span class="na">pollAll</span><span class="o">();</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;isEmpty&quot;</span><span class="o">)){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">catDogQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;yes&quot;</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;no&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;isDogEmpty&quot;</span><span class="o">)){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">catDogQueue</span><span class="o">.</span><span class="na">isDogEmpty</span><span class="o">()){</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;yes&quot;</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;no&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;isCatEmpty&quot;</span><span class="o">))</span> <span class="o">{</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">catDogQueue</span><span class="o">.</span><span class="na">isCatEmpty</span><span class="o">()){</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;yes&quot;</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;no&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">String</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+                <span class="kt">int</span> <span class="n">animalNo</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="mi">2</span><span class="o">]);</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;cat&quot;</span><span class="o">)){</span>
+                    <span class="n">catDogQueue</span><span class="o">.</span><span class="na">addCat</span><span class="o">(</span><span class="n">animalNo</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span> <span class="c1">// dog</span>
+                    <span class="n">catDogQueue</span><span class="o">.</span><span class="na">addDog</span><span class="o">(</span><span class="n">animalNo</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">11</span>
+<span class="cm">add cat 1</span>
+<span class="cm">add dog 2</span>
+<span class="cm">pollAll</span>
+<span class="cm">isEmpty</span>
+<span class="cm">add cat 5</span>
+<span class="cm">isDogEmpty</span>
+<span class="cm">pollCat</span>
+<span class="cm">add dog 10</span>
+<span class="cm">add cat 199</span>
+<span class="cm">pollDog</span>
+<span class="cm">pollAll</span>
+
+<span class="cm">cat 1</span>
+<span class="cm">dog 2</span>
+<span class="cm">yes</span>
+<span class="cm">yes</span>
+<span class="cm">cat 5</span>
+<span class="cm">dog 10</span>
+<span class="cm">cat 199</span>
+<span class="cm"> */</span>
+</pre></div>
+
+
+<h3 id="_2">一个队列（每次遍历，遍历删除）</h3>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.LinkedList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * 猫狗队列</span>
+<span class="cm"> */</span>
+<span class="kd">class</span> <span class="nc">CatDogQueue</span><span class="o">{</span>
+    <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="n">totalQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+    <span class="kt">int</span> <span class="n">catSize</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">dogSize</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">printNode</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">type</span><span class="o">.</span><span class="na">str</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="na">no</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pollDog</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="n">tmpList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">Node</span> <span class="nl">node1:</span> <span class="n">totalQueue</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">node1</span><span class="o">.</span><span class="na">type</span><span class="o">.</span><span class="na">type</span> <span class="o">==</span> <span class="n">Animal</span><span class="o">.</span><span class="na">DOG</span><span class="o">.</span><span class="na">type</span><span class="o">){</span>
+                <span class="n">printNode</span><span class="o">(</span><span class="n">node1</span><span class="o">);</span>
+                <span class="n">tmpList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">node1</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">Node</span> <span class="nl">node1:</span> <span class="n">tmpList</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">totalQueue</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">node1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">dogSize</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pollCat</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="n">tmpList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">Node</span> <span class="nl">node1:</span> <span class="n">totalQueue</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">node1</span><span class="o">.</span><span class="na">type</span><span class="o">.</span><span class="na">type</span> <span class="o">==</span> <span class="n">Animal</span><span class="o">.</span><span class="na">CAT</span><span class="o">.</span><span class="na">type</span><span class="o">){</span>
+                <span class="n">printNode</span><span class="o">(</span><span class="n">node1</span><span class="o">);</span>
+                <span class="n">tmpList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">node1</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">Node</span> <span class="nl">node1:</span> <span class="n">tmpList</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">totalQueue</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">node1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">catSize</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pollAll</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Node</span> <span class="n">node</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">((</span><span class="n">node</span> <span class="o">=</span> <span class="n">totalQueue</span><span class="o">.</span><span class="na">pollFirst</span><span class="o">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">printNode</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">catSize</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">dogSize</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">totalQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isDogEmpty</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">dogSize</span> <span class="o">==</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isCatEmpty</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">catSize</span> <span class="o">==</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addDog</span><span class="o">(</span><span class="kt">int</span> <span class="n">no</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Node</span> <span class="n">animal</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">(</span><span class="n">Animal</span><span class="o">.</span><span class="na">DOG</span><span class="o">,</span> <span class="n">no</span><span class="o">);</span>
+        <span class="n">totalQueue</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">animal</span><span class="o">);</span>
+        <span class="n">dogSize</span><span class="o">++;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addCat</span><span class="o">(</span><span class="kt">int</span> <span class="n">no</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Node</span> <span class="n">animal</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">(</span><span class="n">Animal</span><span class="o">.</span><span class="na">CAT</span><span class="o">,</span> <span class="n">no</span><span class="o">);</span>
+        <span class="n">totalQueue</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">animal</span><span class="o">);</span>
+        <span class="n">catSize</span><span class="o">++;</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">unixTime</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+    <span class="kd">class</span> <span class="nc">Node</span><span class="o">{</span>
+        <span class="kd">public</span> <span class="n">Animal</span> <span class="n">type</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="n">no</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="n">time</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">Node</span><span class="o">(</span><span class="n">Animal</span> <span class="n">type</span><span class="o">,</span> <span class="kt">int</span> <span class="n">no</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">type</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">no</span> <span class="o">=</span> <span class="n">no</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">time</span> <span class="o">=</span> <span class="n">unixTime</span> <span class="o">++;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">enum</span> <span class="n">Animal</span><span class="o">{</span>
+        <span class="n">DOG</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;dog&quot;</span><span class="o">),</span>
+        <span class="n">CAT</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">&quot;cat&quot;</span><span class="o">);</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="n">type</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="n">str</span><span class="o">;</span>
+
+        <span class="n">Animal</span><span class="o">(</span><span class="kt">int</span> <span class="n">type</span><span class="o">,</span> <span class="n">String</span> <span class="n">str</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">type</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">str</span> <span class="o">=</span> <span class="n">str</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">nStr</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">nStr</span><span class="o">);</span>
+
+        <span class="n">CatDogQueue</span> <span class="n">catDogQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CatDogQueue</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;pollDog&quot;</span><span class="o">)){</span>
+                <span class="n">catDogQueue</span><span class="o">.</span><span class="na">pollDog</span><span class="o">();</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;pollCat&quot;</span><span class="o">)){</span>
+                <span class="n">catDogQueue</span><span class="o">.</span><span class="na">pollCat</span><span class="o">();</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;pollAll&quot;</span><span class="o">)){</span>
+                <span class="n">catDogQueue</span><span class="o">.</span><span class="na">pollAll</span><span class="o">();</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;isEmpty&quot;</span><span class="o">)){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">catDogQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;yes&quot;</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;no&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;isDogEmpty&quot;</span><span class="o">)){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">catDogQueue</span><span class="o">.</span><span class="na">isDogEmpty</span><span class="o">()){</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;yes&quot;</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;no&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;isCatEmpty&quot;</span><span class="o">))</span> <span class="o">{</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">catDogQueue</span><span class="o">.</span><span class="na">isCatEmpty</span><span class="o">()){</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;yes&quot;</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;no&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">String</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+                <span class="kt">int</span> <span class="n">animalNo</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="mi">2</span><span class="o">]);</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;cat&quot;</span><span class="o">)){</span>
+                    <span class="n">catDogQueue</span><span class="o">.</span><span class="na">addCat</span><span class="o">(</span><span class="n">animalNo</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span> <span class="c1">// dog</span>
+                    <span class="n">catDogQueue</span><span class="o">.</span><span class="na">addDog</span><span class="o">(</span><span class="n">animalNo</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">11</span>
+<span class="cm">add cat 1</span>
+<span class="cm">add dog 2</span>
+<span class="cm">pollAll</span>
+<span class="cm">isEmpty</span>
+<span class="cm">add cat 5</span>
+<span class="cm">isDogEmpty</span>
+<span class="cm">pollCat</span>
+<span class="cm">add dog 10</span>
+<span class="cm">add cat 199</span>
+<span class="cm">pollDog</span>
+<span class="cm">pollAll</span>
+
+<span class="cm">cat 1</span>
+<span class="cm">dog 2</span>
+<span class="cm">yes</span>
+<span class="cm">yes</span>
+<span class="cm">cat 5</span>
+<span class="cm">dog 10</span>
+<span class="cm">cat 199</span>
+<span class="cm"> */</span>
+</pre></div>
+
+
+<h2 id="_3">两个队列，节点加时间戳</h2>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">CatDogQueue</span><span class="o">{</span>
+
+    <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="n">catQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+    <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span> <span class="n">dogQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">printNode</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">type</span><span class="o">.</span><span class="na">str</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="na">no</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pollDog</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Node</span> <span class="n">node</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">((</span><span class="n">node</span> <span class="o">=</span> <span class="n">dogQueue</span><span class="o">.</span><span class="na">pollFirst</span><span class="o">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">printNode</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pollCat</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Node</span> <span class="n">node</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">((</span><span class="n">node</span> <span class="o">=</span> <span class="n">catQueue</span><span class="o">.</span><span class="na">pollFirst</span><span class="o">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">printNode</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pollAll</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">while</span> <span class="o">(!</span><span class="n">catQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">dogQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">Node</span> <span class="n">dog</span> <span class="o">=</span> <span class="n">dogQueue</span><span class="o">.</span><span class="na">getFirst</span><span class="o">();</span>
+            <span class="n">Node</span> <span class="n">cat</span> <span class="o">=</span> <span class="n">catQueue</span><span class="o">.</span><span class="na">getFirst</span><span class="o">();</span>
+            <span class="c1">// 时间越小，表示进入队列的越早</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">dog</span><span class="o">.</span><span class="na">time</span> <span class="o">&lt;</span> <span class="n">cat</span><span class="o">.</span><span class="na">time</span><span class="o">){</span>
+                <span class="n">printNode</span><span class="o">(</span><span class="n">dog</span><span class="o">);</span>
+                <span class="n">dogQueue</span><span class="o">.</span><span class="na">pollFirst</span><span class="o">();</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">printNode</span><span class="o">(</span><span class="n">cat</span><span class="o">);</span>
+                <span class="n">catQueue</span><span class="o">.</span><span class="na">pollFirst</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(!</span><span class="n">catQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">pollCat</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(!</span><span class="n">dogQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">pollDog</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">isCatEmpty</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">isDogEmpty</span><span class="o">()){</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isDogEmpty</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">dogQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isCatEmpty</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">catQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addDog</span><span class="o">(</span><span class="kt">int</span> <span class="n">no</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Node</span> <span class="n">animal</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">(</span><span class="n">Animal</span><span class="o">.</span><span class="na">DOG</span><span class="o">,</span> <span class="n">no</span><span class="o">);</span>
+        <span class="n">dogQueue</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">animal</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">addCat</span><span class="o">(</span><span class="kt">int</span> <span class="n">no</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Node</span> <span class="n">animal</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">(</span><span class="n">Animal</span><span class="o">.</span><span class="na">CAT</span><span class="o">,</span> <span class="n">no</span><span class="o">);</span>
+        <span class="n">catQueue</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">animal</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">unixTime</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+    <span class="kd">class</span> <span class="nc">Node</span><span class="o">{</span>
+        <span class="kd">public</span> <span class="n">Animal</span> <span class="n">type</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="n">no</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="n">time</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">Node</span><span class="o">(</span><span class="n">Animal</span> <span class="n">type</span><span class="o">,</span> <span class="kt">int</span> <span class="n">no</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">type</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">no</span> <span class="o">=</span> <span class="n">no</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">time</span> <span class="o">=</span> <span class="n">unixTime</span> <span class="o">++;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">enum</span> <span class="n">Animal</span><span class="o">{</span>
+        <span class="n">DOG</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">&quot;dog&quot;</span><span class="o">),</span>
+        <span class="n">CAT</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">&quot;cat&quot;</span><span class="o">);</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="n">type</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="n">str</span><span class="o">;</span>
+
+        <span class="n">Animal</span><span class="o">(</span><span class="kt">int</span> <span class="n">type</span><span class="o">,</span> <span class="n">String</span> <span class="n">str</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">type</span><span class="o">;</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">str</span> <span class="o">=</span> <span class="n">str</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">nStr</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">nStr</span><span class="o">);</span>
+
+        <span class="n">CatDogQueue</span> <span class="n">catDogQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CatDogQueue</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;pollDog&quot;</span><span class="o">)){</span>
+                <span class="n">catDogQueue</span><span class="o">.</span><span class="na">pollDog</span><span class="o">();</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;pollCat&quot;</span><span class="o">)){</span>
+                <span class="n">catDogQueue</span><span class="o">.</span><span class="na">pollCat</span><span class="o">();</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;pollAll&quot;</span><span class="o">)){</span>
+                <span class="n">catDogQueue</span><span class="o">.</span><span class="na">pollAll</span><span class="o">();</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;isEmpty&quot;</span><span class="o">)){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">catDogQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;yes&quot;</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;no&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;isDogEmpty&quot;</span><span class="o">)){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">catDogQueue</span><span class="o">.</span><span class="na">isDogEmpty</span><span class="o">()){</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;yes&quot;</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;no&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;isCatEmpty&quot;</span><span class="o">))</span> <span class="o">{</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">catDogQueue</span><span class="o">.</span><span class="na">isCatEmpty</span><span class="o">()){</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;yes&quot;</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;no&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">String</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+                <span class="kt">int</span> <span class="n">animalNo</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="mi">2</span><span class="o">]);</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;cat&quot;</span><span class="o">)){</span>
+                    <span class="n">catDogQueue</span><span class="o">.</span><span class="na">addCat</span><span class="o">(</span><span class="n">animalNo</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span> <span class="c1">// dog</span>
+                    <span class="n">catDogQueue</span><span class="o">.</span><span class="na">addDog</span><span class="o">(</span><span class="n">animalNo</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">11</span>
+<span class="cm">add cat 1</span>
+<span class="cm">add dog 2</span>
+<span class="cm">pollAll</span>
+<span class="cm">isEmpty</span>
+<span class="cm">add cat 5</span>
+<span class="cm">isDogEmpty</span>
+<span class="cm">pollCat</span>
+<span class="cm">add dog 10</span>
+<span class="cm">add cat 199</span>
+<span class="cm">pollDog</span>
+<span class="cm">pollAll</span>
+
+<span class="cm">cat 1</span>
+<span class="cm">dog 2</span>
+<span class="cm">yes</span>
+<span class="cm">yes</span>
+<span class="cm">cat 5</span>
+<span class="cm">dog 10</span>
+<span class="cm">cat 199</span>
+<span class="cm"> */</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-13 21:56:43</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
