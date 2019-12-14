@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>107  - 程序员代码面试指南</title>
+    <title>107 反转单向/双向链表 - 程序员代码面试指南</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,28 +16,155 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;107 
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;107 反转单向/双向链表
     <span class="updated">Page Updated&nbsp;
       2019-12-14 15:59
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">107 </div>
+<div class="page_title">107 反转单向/双向链表</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ac">ac</a></li>
 </ul>
 </div>
 <h1 id="ac">ac</h1>
-<div class="hlcode"><pre>
+<div class="hlcode"><pre><span class="err">#</span> <span class="n">include</span> <span class="o">&lt;</span><span class="n">bits</span><span class="o">/</span><span class="n">stdc</span><span class="o">++.</span><span class="na">h</span><span class="o">&gt;</span>
+<span class="n">using</span> <span class="n">namespace</span> <span class="n">std</span><span class="o">;</span>
+
+<span class="n">struct</span> <span class="n">list_node</span><span class="o">{</span>
+    <span class="kt">int</span> <span class="n">val</span><span class="o">;</span>
+    <span class="n">struct</span> <span class="n">list_node</span> <span class="o">*</span> <span class="n">next</span><span class="o">;</span>
+<span class="o">};</span>
+<span class="n">struct</span> <span class="n">double_list_node</span><span class="o">{</span>
+    <span class="kt">int</span> <span class="n">val</span><span class="o">;</span>
+    <span class="n">struct</span> <span class="n">double_list_node</span> <span class="o">*</span> <span class="n">pre</span><span class="o">,</span> <span class="o">*</span> <span class="n">next</span><span class="o">;</span>
+<span class="o">};</span>
+
+<span class="n">list_node</span> <span class="o">*</span> <span class="n">input_list</span><span class="o">(</span><span class="kt">void</span><span class="o">)</span>
+<span class="o">{</span>
+    <span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="n">val</span><span class="o">;</span>
+    <span class="n">list_node</span> <span class="o">*</span> <span class="n">phead</span> <span class="o">=</span> <span class="k">new</span> <span class="n">list_node</span><span class="o">();</span>
+    <span class="n">list_node</span> <span class="o">*</span> <span class="n">cur_pnode</span> <span class="o">=</span> <span class="n">phead</span><span class="o">;</span>
+    <span class="n">scanf</span><span class="o">(</span><span class="s">&quot;%d&quot;</span><span class="o">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="o">);</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">scanf</span><span class="o">(</span><span class="s">&quot;%d&quot;</span><span class="o">,</span> <span class="o">&amp;</span><span class="n">val</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">cur_pnode</span><span class="o">-&gt;</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+            <span class="n">cur_pnode</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">NULL</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">else</span> <span class="o">{</span>
+            <span class="n">list_node</span> <span class="o">*</span> <span class="n">new_pnode</span> <span class="o">=</span> <span class="k">new</span> <span class="n">list_node</span><span class="o">();</span>
+            <span class="n">new_pnode</span><span class="o">-&gt;</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+            <span class="n">new_pnode</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">NULL</span><span class="o">;</span>
+            <span class="n">cur_pnode</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">new_pnode</span><span class="o">;</span>
+            <span class="n">cur_pnode</span> <span class="o">=</span> <span class="n">new_pnode</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">phead</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="n">double_list_node</span> <span class="o">*</span> <span class="n">input_double_list</span><span class="o">(</span><span class="kt">void</span><span class="o">)</span>
+<span class="o">{</span>
+    <span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="n">val</span><span class="o">;</span>
+    <span class="n">double_list_node</span> <span class="o">*</span> <span class="n">phead</span> <span class="o">=</span> <span class="k">new</span> <span class="n">double_list_node</span><span class="o">();</span>
+    <span class="n">double_list_node</span> <span class="o">*</span> <span class="n">cur_pnode</span> <span class="o">=</span> <span class="n">phead</span><span class="o">;</span>
+    <span class="n">scanf</span><span class="o">(</span><span class="s">&quot;%d&quot;</span><span class="o">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="o">);</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">scanf</span><span class="o">(</span><span class="s">&quot;%d&quot;</span><span class="o">,</span> <span class="o">&amp;</span><span class="n">val</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">cur_pnode</span><span class="o">-&gt;</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+            <span class="n">cur_pnode</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">NULL</span><span class="o">;</span>
+            <span class="n">cur_pnode</span><span class="o">-&gt;</span><span class="n">pre</span> <span class="o">=</span> <span class="n">NULL</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">else</span> <span class="o">{</span>
+            <span class="n">double_list_node</span> <span class="o">*</span> <span class="n">new_pnode</span> <span class="o">=</span> <span class="k">new</span> <span class="n">double_list_node</span><span class="o">();</span>
+            <span class="n">new_pnode</span><span class="o">-&gt;</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+            <span class="n">new_pnode</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">NULL</span><span class="o">;</span>
+            <span class="n">new_pnode</span><span class="o">-&gt;</span><span class="n">pre</span> <span class="o">=</span> <span class="n">cur_pnode</span><span class="o">;</span>
+            <span class="n">cur_pnode</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">new_pnode</span><span class="o">;</span>
+            <span class="n">cur_pnode</span> <span class="o">=</span> <span class="n">new_pnode</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">phead</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="n">list_node</span> <span class="o">*</span> <span class="n">reverse_list</span><span class="o">(</span><span class="n">list_node</span> <span class="o">*</span> <span class="n">head</span><span class="o">)</span>
+<span class="o">{</span>
+    <span class="c1">//////在下面完成代码</span>
+    <span class="c1">// 无头节点</span>
+    <span class="n">list_node</span> <span class="o">*</span><span class="n">pHead</span> <span class="o">=</span> <span class="k">new</span> <span class="n">list_node</span><span class="o">();</span>
+    <span class="n">list_node</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+    <span class="k">while</span><span class="o">(</span><span class="n">p</span> <span class="o">!=</span> <span class="n">NULL</span><span class="o">){</span>
+        <span class="n">list_node</span> <span class="o">*</span><span class="n">pNext</span> <span class="o">=</span> <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">;</span>
+
+        <span class="n">p</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">pHead</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">;</span>
+        <span class="n">pHead</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">p</span><span class="o">;</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="n">pNext</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="n">delete</span> <span class="n">pHead</span><span class="o">;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">pHead</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">;</span>
+    <span class="k">return</span> <span class="n">p</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="n">double_list_node</span> <span class="o">*</span> <span class="n">reverse_double_list</span><span class="o">(</span><span class="n">double_list_node</span> <span class="o">*</span> <span class="n">head</span><span class="o">)</span>
+<span class="o">{</span>
+    <span class="c1">//////在下面完成代码</span>
+    <span class="n">double_list_node</span> <span class="o">*</span><span class="n">p2Pre</span> <span class="o">=</span> <span class="n">head</span><span class="o">;</span>
+    <span class="n">double_list_node</span> <span class="o">*</span><span class="n">p2</span> <span class="o">=</span> <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">;</span>
+
+    <span class="n">p2Pre</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">NULL</span><span class="o">;</span>
+
+    <span class="k">while</span><span class="o">(</span><span class="n">p2</span> <span class="o">!=</span> <span class="n">NULL</span><span class="o">){</span>
+        <span class="n">double_list_node</span> <span class="o">*</span><span class="n">p2Tmp</span> <span class="o">=</span> <span class="n">p2</span><span class="o">;</span>
+        <span class="n">double_list_node</span> <span class="o">*</span><span class="n">p2Next</span> <span class="o">=</span> <span class="n">p2</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">;</span>
+
+        <span class="n">p2</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">p2Pre</span><span class="o">;</span>
+        <span class="n">p2Pre</span><span class="o">-&gt;</span><span class="n">pre</span> <span class="o">=</span> <span class="n">p2</span><span class="o">;</span>
+
+        <span class="n">p2Pre</span> <span class="o">=</span> <span class="n">p2</span><span class="o">;</span>
+        <span class="n">p2</span> <span class="o">=</span> <span class="n">p2Next</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">p2Pre</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="kt">void</span> <span class="nf">print_list</span><span class="o">(</span><span class="n">list_node</span> <span class="o">*</span> <span class="n">head</span><span class="o">)</span>
+<span class="o">{</span>
+    <span class="k">while</span> <span class="o">(</span><span class="n">head</span> <span class="o">!=</span> <span class="n">NULL</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">printf</span><span class="o">(</span><span class="s">&quot;%d &quot;</span><span class="o">,</span> <span class="n">head</span><span class="o">-&gt;</span><span class="n">val</span><span class="o">);</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="n">puts</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="kt">void</span> <span class="nf">print_double_list</span><span class="o">(</span><span class="n">double_list_node</span> <span class="o">*</span> <span class="n">head</span><span class="o">)</span>
+<span class="o">{</span>
+    <span class="k">while</span> <span class="o">(</span><span class="n">head</span> <span class="o">!=</span> <span class="n">NULL</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">printf</span><span class="o">(</span><span class="s">&quot;%d &quot;</span><span class="o">,</span> <span class="n">head</span><span class="o">-&gt;</span><span class="n">val</span><span class="o">);</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="n">puts</span><span class="o">(</span><span class="s">&quot;&quot;</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span> <span class="o">()</span>
+<span class="o">{</span>
+    <span class="n">list_node</span> <span class="o">*</span> <span class="n">head</span> <span class="o">=</span> <span class="n">input_list</span><span class="o">();</span>
+    <span class="n">double_list_node</span> <span class="o">*</span> <span class="n">double_head</span> <span class="o">=</span> <span class="n">input_double_list</span><span class="o">();</span>
+    <span class="n">list_node</span> <span class="o">*</span> <span class="n">new_head</span> <span class="o">=</span> <span class="n">reverse_list</span><span class="o">(</span><span class="n">head</span><span class="o">);</span>
+    <span class="n">double_list_node</span> <span class="o">*</span> <span class="n">new_double_head</span> <span class="o">=</span> <span class="n">reverse_double_list</span><span class="o">(</span><span class="n">double_head</span><span class="o">);</span>
+    <span class="n">print_list</span><span class="o">(</span><span class="n">new_head</span><span class="o">);</span>
+    <span class="n">print_double_list</span><span class="o">(</span><span class="n">new_double_head</span><span class="o">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+<span class="o">}</span>
 </pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-12-14 14:26:06</p>
+        <p>Site Generated 2019-12-14 14:57:49</p>
       </span>
     </div>
 
