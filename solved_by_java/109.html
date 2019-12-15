@@ -30,10 +30,10 @@
 </ul>
 </div>
 <h1 id="ac">ac</h1>
-<div class="hlcode"><pre><span class="o">*</span> <span class="n">N</span><span class="err">个人报数，每报到</span><span class="n">M</span><span class="err">时杀掉那个人，最终胜利者的编号</span>
-
-<span class="err">```</span><span class="n">java</span>
-<span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<ul>
+<li>N个人报数，每报到M时杀掉那个人，最终胜利者的编号</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
 
@@ -58,13 +58,19 @@
 </pre></div>
 
 
-<p>0  1  ...  M-3  M-2  【M-1】  M  M+1 ... n-2  n-1</p>
-<p>第一次M-1出局，剩下从M开始</p>
-<p>M M+1 ...  n-2  n-1  0  1  ...  M-3   M-2</p>
-<p>对应<br />
-0  1  ...  M-3  M-2  【M-1】 M  M+1  ...  n-2  n-1</p>
-<p>相当于移动了M个位置<br />
-```</p>
+<div class="hlcode"><pre><span class="mi">0</span>  <span class="mi">1</span>  <span class="o">...</span>  <span class="n">M</span><span class="o">-</span><span class="mi">3</span>  <span class="n">M</span><span class="o">-</span><span class="mi">2</span>  <span class="err">【</span><span class="n">M</span><span class="o">-</span><span class="mi">1</span><span class="err">】</span>  <span class="n">M</span>  <span class="n">M</span><span class="o">+</span><span class="mi">1</span> <span class="o">...</span> <span class="n">n</span><span class="o">-</span><span class="mi">2</span>  <span class="n">n</span><span class="o">-</span><span class="mi">1</span>
+
+<span class="err">第一次</span><span class="n">M</span><span class="o">-</span><span class="mi">1</span><span class="err">出局，剩下从</span><span class="n">M</span><span class="err">开始</span>
+
+<span class="n">M</span> <span class="n">M</span><span class="o">+</span><span class="mi">1</span> <span class="o">...</span>  <span class="n">n</span><span class="o">-</span><span class="mi">2</span>  <span class="n">n</span><span class="o">-</span><span class="mi">1</span>  <span class="mi">0</span>  <span class="mi">1</span>  <span class="o">...</span>  <span class="n">M</span><span class="o">-</span><span class="mi">3</span>   <span class="n">M</span><span class="o">-</span><span class="mi">2</span>
+
+<span class="err">对应</span>
+<span class="mi">0</span>  <span class="mi">1</span>  <span class="o">...</span>  <span class="n">M</span><span class="o">-</span><span class="mi">3</span>  <span class="n">M</span><span class="o">-</span><span class="mi">2</span>  <span class="err">【</span><span class="n">M</span><span class="o">-</span><span class="mi">1</span><span class="err">】</span> <span class="n">M</span>  <span class="n">M</span><span class="o">+</span><span class="mi">1</span>  <span class="o">...</span>  <span class="n">n</span><span class="o">-</span><span class="mi">2</span>  <span class="n">n</span><span class="o">-</span><span class="mi">1</span>
+
+<span class="err">相当于移动了</span><span class="n">M</span><span class="err">个位置</span>
+</pre></div>
+
+
 <p>【M-1】 对应 ？</p>
 <p>假设<code>f(n-1, m)</code>是<code>n-1</code>个数要出局的那个数，那么<code>n</code>个数，要出局的数为<br />
 <code>(f(n-1, m) + m) % n</code></p>
@@ -73,7 +79,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-12-14 21:49:45</p>
+        <p>Site Generated 2019-12-15 22:30:05</p>
       </span>
     </div>
 
