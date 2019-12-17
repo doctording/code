@@ -1,0 +1,382 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>119 完美洗牌问题（1） - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;119 完美洗牌问题（1）
+    <span class="updated">Page Updated&nbsp;
+      2019-12-16 10:59
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">119 完美洗牌问题（1）</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a><ul>
+<li><a href="#_1">环形思路</a></li>
+<li><a href="#ac_1">ac代码</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<ul>
+<li>完美洗牌</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原始</td>
+<td>a1</td>
+<td>a2</td>
+<td>a3</td>
+<td>a4</td>
+<td>b1</td>
+<td>b2</td>
+<td>b3</td>
+<td>b4</td>
+</tr>
+<tr>
+<td>洗牌后</td>
+<td>b1</td>
+<td>a1</td>
+<td>b2</td>
+<td>a2</td>
+<td>b3</td>
+<td>a3</td>
+<td>b4</td>
+<td>a4</td>
+</tr>
+</tbody>
+</table>
+<div class="hlcode"><pre><span class="n">a1</span><span class="err">：</span><span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">2</span>
+<span class="n">a2</span><span class="err">：</span><span class="mi">2</span> <span class="o">-&gt;</span> <span class="mi">4</span>
+<span class="n">a3</span><span class="err">：</span><span class="mi">3</span> <span class="o">-&gt;</span> <span class="mi">6</span>
+<span class="n">a4</span><span class="err">：</span><span class="mi">4</span> <span class="o">-&gt;</span> <span class="mi">8</span>
+<span class="n">b1</span><span class="err">：</span><span class="mi">5</span> <span class="o">-&gt;</span> <span class="mi">1</span>
+<span class="n">b2</span><span class="err">：</span><span class="mi">6</span> <span class="o">-&gt;</span> <span class="mi">3</span>
+<span class="n">b3</span><span class="err">：</span><span class="mi">7</span> <span class="o">-&gt;</span> <span class="mi">5</span>
+<span class="n">b4</span><span class="err">：</span><span class="mi">8</span> <span class="o">-&gt;</span> <span class="mi">7</span>
+</pre></div>
+
+
+<p>前一半位置i 变成<code>2 * i</code><br />
+后一半位置i 便成<code>(i - n/2) * 2 -1</code> 即 <code>2*i - n - 1</code><br />
+或者 <code>(2 * i) % (n + 1)</code></p>
+<ul>
+<li>
+<p>如果有一个辅助空间，那么直接根据映射关系即可解决</p>
+</li>
+<li>
+<p>考虑<code>O(1)</code>时间复杂度，就地置换，即原址洗牌的困难的不是寻找元素在新数组中的位置，而是如何在原数组中为该元素<strong>腾位置</strong></p>
+</li>
+</ul>
+<h2 id="_1">环形思路</h2>
+<div class="hlcode"><pre><span class="err">从</span><span class="mi">1</span><span class="err">出发的环</span>
+<span class="err">【</span><span class="mi">1</span><span class="err">】</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">8</span> <span class="mi">7</span> <span class="mi">5</span> <span class="mi">1</span>
+<span class="err">还剩下从</span><span class="mi">3</span><span class="err">出发的环</span>
+<span class="err">【</span><span class="mi">3</span><span class="err">】</span> <span class="mi">6</span> <span class="mi">3</span>
+</pre></div>
+
+
+<p>论文 《A Simple In-Place Algorithm for In-Shuffle》,结论</p>
+<p><code>2*n = 3^k-1</code>这种长度的数组，恰好只有k个环，且每个环的起始位置分别是<code>1,3,9，…3^(k-1)</code></p>
+<p>若<code>2n != 3^k-1</code>，则总可以找到最大的整数m，使得m &lt; n，并且2m =（3^k-1）。我们的做法是使用循环左移算法将[m+1……n]之间的元素移动到m+n之后，将[1……m] 和[n+1……n+m]合并成为一个长度为2*m的数组进行环操作，这个2m数组是可以被完整移动的，我们直接找到所有的环，进行环操作,如此递归</p>
+<p>参考博文：https://blog.csdn.net/sunnyyoona/article/details/43795243</p>
+<ul>
+<li>完美洗牌部分</li>
+<li>拆分成子问题，递归</li>
+<li>就地置换</li>
+</ul>
+<p>实际例子：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+<th>11</th>
+<th>12</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>原始</td>
+<td>a1</td>
+<td>a2</td>
+<td>a3</td>
+<td>a4</td>
+<td>a5</td>
+<td>a6</td>
+<td>b1</td>
+<td>b2</td>
+<td>b3</td>
+<td>b4</td>
+<td>b5</td>
+<td>b6</td>
+</tr>
+<tr>
+<td>第一次移动</td>
+<td>a1</td>
+<td>a2</td>
+<td>a3</td>
+<td>a4</td>
+<td>b1</td>
+<td>b2</td>
+<td>b3</td>
+<td>b4</td>
+<td>a5</td>
+<td>a6</td>
+<td>b5</td>
+<td>b6</td>
+</tr>
+<tr>
+<td>前8个洗牌好</td>
+<td>b1</td>
+<td>a1</td>
+<td>b2</td>
+<td>a2</td>
+<td>b3</td>
+<td>a3</td>
+<td>b4</td>
+<td>a4</td>
+<td>a5</td>
+<td>a6</td>
+<td>b5</td>
+<td>b6</td>
+</tr>
+<tr>
+<td>再移动一次</td>
+<td>b1</td>
+<td>a1</td>
+<td>b2</td>
+<td>a2</td>
+<td>b3</td>
+<td>a3</td>
+<td>b4</td>
+<td>a4</td>
+<td>a5</td>
+<td>b5</td>
+<td>a6</td>
+<td>b6</td>
+</tr>
+<tr>
+<td>再洗好2个</td>
+<td>b1</td>
+<td>a1</td>
+<td>b2</td>
+<td>a2</td>
+<td>b3</td>
+<td>a3</td>
+<td>b4</td>
+<td>a4</td>
+<td>b5</td>
+<td>a5</td>
+<td>a6</td>
+<td>b6</td>
+</tr>
+<tr>
+<td>最好剩下两个洗好 ｜</td>
+<td>b1</td>
+<td>a1</td>
+<td>b2</td>
+<td>a2</td>
+<td>b3</td>
+<td>a3</td>
+<td>b4</td>
+<td>a4</td>
+<td>b5</td>
+<td>a5</td>
+<td>b6</td>
+<td>a6</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ac_1">ac代码</h2>
+<div class="hlcode"><pre><span class="err">【</span><span class="mi">1</span><span class="err">】</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">8</span> <span class="mi">7</span> <span class="mi">5</span> <span class="mi">1</span>
+
+<span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">7</span> <span class="mi">8</span>
+<span class="mi">5</span> <span class="mi">1</span>   <span class="mi">2</span> <span class="mi">7</span>   <span class="mi">8</span> <span class="mi">4</span>
+
+<span class="err">【</span><span class="mi">3</span><span class="err">】</span> <span class="mi">6</span> <span class="mi">3</span>
+
+<span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">7</span> <span class="mi">8</span>
+    <span class="mi">6</span>     <span class="mi">3</span>
+
+<span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">7</span> <span class="mi">8</span> <span class="mi">9</span> <span class="mi">10</span>
+<span class="mi">7</span> <span class="mi">1</span> <span class="mi">8</span> <span class="mi">2</span> <span class="mi">9</span> <span class="mi">3</span> <span class="mi">10</span> <span class="mi">4</span>
+</pre></div>
+
+
+<ul>
+<li>牛客网</li>
+</ul>
+<p>运行时间：2198ms，占用内存：114620k</p>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="o">}</span>
+
+        <span class="c1">// 自测</span>
+<span class="c1">//        int n = 10000;</span>
+<span class="c1">//        int[] arr = new int[n];</span>
+<span class="c1">//        for(int i=0;i&lt;n;i++){</span>
+<span class="c1">//            arr[i] = i +1;</span>
+<span class="c1">//        }</span>
+
+        <span class="n">perfectShuffle</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">n</span><span class="o">);</span>
+        <span class="c1">// print</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]);</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">reverse</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">chars</span><span class="o">,</span> <span class="kt">int</span> <span class="n">l</span><span class="o">,</span> <span class="kt">int</span> <span class="n">r</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">temp</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(</span><span class="n">l</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="n">chars</span><span class="o">[</span><span class="n">l</span><span class="o">];</span>
+            <span class="n">chars</span><span class="o">[</span><span class="n">l</span><span class="o">]</span> <span class="o">=</span> <span class="n">chars</span><span class="o">[</span><span class="n">r</span><span class="o">];</span>
+            <span class="n">chars</span><span class="o">[</span><span class="n">r</span><span class="o">]</span> <span class="o">=</span> <span class="n">temp</span><span class="o">;</span>
+            <span class="n">l</span><span class="o">++;</span>
+            <span class="n">r</span><span class="o">--;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">swap</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+        <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
+        <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">cycle</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">startIndex</span><span class="o">,</span> <span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="kt">int</span> <span class="n">firstPos</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">pre</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">startIndex</span> <span class="o">+</span> <span class="n">firstPos</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">firstIndex</span> <span class="o">=</span> <span class="n">firstPos</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">next</span> <span class="o">=</span> <span class="o">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">firstIndex</span><span class="o">)</span> <span class="o">%</span> <span class="o">(</span><span class="mi">2</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">next</span> <span class="o">!=</span> <span class="n">firstPos</span><span class="o">){</span>
+<span class="c1">//            System.out.print(next + &quot; &quot;);</span>
+<span class="c1">//            swap(arr, startIndex + firstIndex - 1, startIndex + next - 1);</span>
+            <span class="kt">int</span> <span class="n">tmp</span> <span class="o">=</span>  <span class="n">arr</span><span class="o">[</span><span class="n">startIndex</span> <span class="o">+</span> <span class="n">next</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">startIndex</span> <span class="o">+</span> <span class="n">next</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">pre</span><span class="o">;</span>
+            <span class="n">pre</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">;</span>
+            <span class="n">next</span> <span class="o">=</span> <span class="o">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">next</span><span class="o">)</span> <span class="o">%</span> <span class="o">(</span><span class="mi">2</span><span class="o">*</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">arr</span><span class="o">[</span><span class="n">startIndex</span> <span class="o">+</span> <span class="n">firstPos</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">pre</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">move</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">startIndex</span><span class="o">,</span> <span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="kt">int</span> <span class="n">m</span><span class="o">){</span>
+        <span class="c1">// startIndex   startIndex + m  startIndex + n</span>
+        <span class="c1">// startIndex + n   startIndex + n + n - m startIndex + 2n</span>
+        <span class="n">reverse</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">startIndex</span> <span class="o">+</span> <span class="n">m</span><span class="o">,</span> <span class="n">startIndex</span> <span class="o">+</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="n">reverse</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">startIndex</span> <span class="o">+</span> <span class="n">n</span><span class="o">,</span> <span class="n">startIndex</span> <span class="o">+</span> <span class="n">n</span> <span class="o">+</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="n">reverse</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">startIndex</span> <span class="o">+</span> <span class="n">m</span><span class="o">,</span> <span class="n">startIndex</span> <span class="o">+</span> <span class="n">n</span> <span class="o">+</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">perfectShuffle</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">len</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">len</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">startIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">r</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="o">){</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="mi">3</span><span class="o">;</span>
+                <span class="n">k</span><span class="o">++;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">r</span><span class="o">-</span><span class="mi">1</span> <span class="o">==</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="o">){</span>
+                    <span class="k">break</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">r</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n</span><span class="o">){</span> <span class="c1">// 刚刚好 3^k - 1</span>
+                <span class="c1">// 再cycle, 开始位置依次是 3^(k-1)</span>
+                <span class="kt">int</span> <span class="n">firPost</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">k</span><span class="o">;</span><span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                    <span class="n">cycle</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">startIndex</span><span class="o">,</span> <span class="o">(</span><span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">,</span> <span class="n">firPost</span><span class="o">);</span>
+                    <span class="n">firPost</span> <span class="o">*=</span> <span class="mi">3</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="kt">int</span> <span class="n">m</span> <span class="o">=</span> <span class="o">(</span><span class="n">r</span><span class="o">/</span> <span class="mi">3</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+                <span class="n">k</span><span class="o">--;</span>
+                <span class="c1">// 字符串内块移动，三步翻转即可</span>
+                <span class="n">move</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">startIndex</span><span class="o">,</span> <span class="n">n</span><span class="o">,</span> <span class="n">m</span><span class="o">);</span>
+                <span class="c1">// 再cycle, 开始位置依次是 3^(k-1)</span>
+                <span class="kt">int</span> <span class="n">firPost</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">k</span><span class="o">;</span><span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                    <span class="n">cycle</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">startIndex</span><span class="o">,</span> <span class="n">m</span><span class="o">,</span> <span class="n">firPost</span><span class="o">);</span>
+                    <span class="n">firPost</span> <span class="o">*=</span> <span class="mi">3</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="c1">// 最后递归</span>
+                <span class="n">startIndex</span> <span class="o">=</span> <span class="n">startIndex</span> <span class="o">+</span> <span class="n">r</span><span class="o">/</span><span class="mi">3</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="kt">int</span> <span class="n">left</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">m</span><span class="o">;</span>
+                <span class="n">n</span> <span class="o">=</span> <span class="n">left</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">12</span>
+<span class="cm">1 2 3 4 5 6 7 8 9 10 11 12</span>
+
+<span class="cm">18</span>
+<span class="cm">1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18</span>
+<span class="cm">*/</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-17 10:36:15</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
