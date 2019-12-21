@@ -1,0 +1,283 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>129 公式字符串求值 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;129 公式字符串求值
+    <span class="updated">Page Updated&nbsp;
+      2019-12-20 23:06
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">129 公式字符串求值</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a><ul>
+<li><a href="#_1">后缀表达式 &amp; 中缀记法</a></li>
+<li><a href="#ac_1">ac</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="err">给定一个字符串</span><span class="n">str</span><span class="err">，</span><span class="n">str</span><span class="err">表示一个公式，公式里可以有整数，加减乘除和左右括号，返回公式的计算结果（注意：题目中所有运算都是整型运算，向下取整</span><span class="o">,</span><span class="err">且保证数据合法，不会出现除</span><span class="mi">0</span><span class="err">等情况）。</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="mi">48</span><span class="o">*((</span><span class="mi">70</span><span class="o">-</span><span class="mi">65</span><span class="o">)-</span><span class="mi">43</span><span class="o">)+</span><span class="mi">8</span><span class="o">*</span><span class="mi">1</span>
+<span class="o">-</span><span class="mi">1816</span>
+              <span class="o">+</span>
+           <span class="o">/</span>    <span class="err">\</span>
+        <span class="o">*</span>         <span class="o">*</span>
+       <span class="o">/</span>  <span class="err">\</span>      <span class="o">/</span>  <span class="err">\</span>
+    <span class="mi">48</span>     <span class="o">-</span>    <span class="mi">8</span>    <span class="mi">1</span>
+          <span class="o">/</span> <span class="err">\</span>
+         <span class="o">-</span>  <span class="mi">43</span>
+       <span class="o">/</span> <span class="err">\</span>
+     <span class="mi">70</span> <span class="mi">65</span>
+</pre></div>
+
+
+<ul>
+<li>处理流程</li>
+</ul>
+<div class="hlcode"><pre><span class="err">数字栈：</span><span class="mi">48</span>  <span class="mi">70</span> <span class="mi">65</span>
+<span class="err">符号栈：</span><span class="o">*</span> <span class="err">（</span> <span class="err">（</span>  <span class="o">-</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="err">数字栈：</span><span class="mi">48</span>  <span class="o">-</span><span class="mi">38</span>
+<span class="err">符号栈：</span><span class="o">*</span> <span class="o">+</span>
+</pre></div>
+
+
+<p>遇到高，低优先级操作符号的处理</p>
+<h2 id="_1">后缀表达式 &amp; 中缀记法</h2>
+<ul>
+<li>中缀记法</li>
+</ul>
+<p><code>3 + 5 * (2 - 4)</code></p>
+<ul>
+<li>后缀或逆波兰记法</li>
+</ul>
+<div class="hlcode"><pre><span class="mi">3</span> <span class="mi">5</span> <span class="mi">2</span> <span class="mi">4</span> <span class="o">-</span> <span class="o">*</span> <span class="o">+</span>
+</pre></div>
+
+
+<p>中缀表达式:<code>48*((70-65)-43)+8*1</code><br />
+其转换成后缀表达式则为:<code>48 70 65 - 43 - * 8 1 * +</code></p>
+<p>中缀表达式:<code>a + b*c + (d * e + f) * g</code><br />
+其转换成后缀表达式则为:<code>a b c * + d e * f  + g * +</code></p>
+<div class="hlcode"><pre><span class="n">a</span> <span class="n">b</span> <span class="n">c</span>       <span class="o">=&gt;</span>  <span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="o">*</span> <span class="o">+</span>   <span class="o">=&gt;</span>  <span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="o">*</span> <span class="o">+</span> <span class="n">d</span> <span class="n">e</span>  <span class="o">=&gt;</span>  <span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="o">*</span> <span class="o">+</span> <span class="n">d</span> <span class="n">e</span> <span class="o">*</span> <span class="n">f</span> <span class="o">+</span> <span class="n">g</span> <span class="o">*</span> <span class="o">+</span>
+<span class="o">+</span> <span class="o">*</span> <span class="err">遇到</span><span class="o">+</span>        <span class="o">+</span>              <span class="o">+</span> <span class="o">(</span> <span class="o">*</span>               <span class="o">+</span> <span class="o">*</span>
+</pre></div>
+
+
+<h2 id="ac_1">ac</h2>
+<p>可参考学习：<br />
+https://www.cnblogs.com/lanhaicode/p/10776166.html</p>
+<p>https://blog.csdn.net/weixin_44260779/article/details/90695746</p>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+<span class="c1">//        String str = &quot;48*((70-65)-43)+8*1&quot;; // -1816</span>
+<span class="c1">//        String str = &quot;3+1*4&quot;; // 7</span>
+<span class="c1">//        String str = &quot;((11+10-13)+4-11+13-9+15+5*1+11-10-11-(4+10)-17+12+20+(6+20-10))&quot;; // 32</span>
+<span class="c1">//        String str = &quot;((1-4+9+7*19)/18-(1-16+(11+17-18)))&quot;; // 12</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">chars</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+
+        <span class="n">Stack</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">operatorSta</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+        <span class="n">Stack</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">integerStack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+
+        <span class="n">String</span> <span class="n">tmp</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;(&#39;</span><span class="o">){</span>
+                <span class="n">operatorSta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s">&quot;(&quot;</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;)&#39;</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(!</span><span class="n">tmp</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+                    <span class="n">integerStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">tmp</span><span class="o">);</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">while</span> <span class="o">(!</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;(&quot;</span><span class="o">)){</span>
+                    <span class="n">integerStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">pop</span><span class="o">());</span>
+                <span class="o">}</span>
+                <span class="n">operatorSta</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;*&#39;</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(!</span><span class="n">tmp</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+                    <span class="n">integerStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">tmp</span><span class="o">);</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">if</span><span class="o">(!</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;(&quot;</span><span class="o">)){</span>
+                        <span class="c1">// ( 优先级最高</span>
+                        <span class="n">operatorSta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s">&quot;*&quot;</span> <span class="o">);</span>
+                    <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;+&quot;</span><span class="o">)</span> <span class="o">||</span> <span class="n">operatorSta</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-&quot;</span><span class="o">)){</span>
+                        <span class="c1">// 优先级高于栈顶运算符则压入堆栈</span>
+                        <span class="n">operatorSta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s">&quot;*&quot;</span><span class="o">);</span>
+                    <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                        <span class="c1">// 将栈中优先级高的先弹出，直到优先级大于栈顶运算符或者栈空,再将该运算符入栈</span>
+                        <span class="k">while</span> <span class="o">(!</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;*&quot;</span><span class="o">)</span> <span class="o">||</span> <span class="n">operatorSta</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">))){</span>
+                            <span class="n">integerStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">pop</span><span class="o">());</span>
+                        <span class="o">}</span>
+                        <span class="n">operatorSta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s">&quot;*&quot;</span> <span class="o">);</span>
+                    <span class="o">}</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="n">operatorSta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s">&quot;*&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;/&#39;</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(!</span><span class="n">tmp</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+                    <span class="n">integerStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">tmp</span><span class="o">);</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">if</span><span class="o">(!</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;(&quot;</span><span class="o">)){</span>
+                        <span class="c1">// ( 优先级最高</span>
+                        <span class="n">operatorSta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s">&quot;/&quot;</span> <span class="o">);</span>
+                    <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;+&quot;</span><span class="o">)</span> <span class="o">||</span> <span class="n">operatorSta</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-&quot;</span><span class="o">)){</span>
+                        <span class="n">operatorSta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">);</span>
+                    <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                        <span class="k">while</span> <span class="o">(!</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;*&quot;</span><span class="o">)</span> <span class="o">||</span> <span class="n">operatorSta</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">))){</span>
+                            <span class="n">integerStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">pop</span><span class="o">());</span>
+                        <span class="o">}</span>
+                        <span class="n">operatorSta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s">&quot;/&quot;</span> <span class="o">);</span>
+                    <span class="o">}</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="n">operatorSta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;+&#39;</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(!</span><span class="n">tmp</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+                    <span class="n">integerStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">tmp</span><span class="o">);</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">if</span><span class="o">(!</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+                    <span class="k">while</span> <span class="o">(!</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">operatorSta</span><span class="o">.</span><span class="na">peek</span><span class="o">()</span> <span class="o">!=</span> <span class="s">&quot;(&quot;</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="n">integerStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">pop</span><span class="o">());</span>
+                    <span class="o">}</span>
+                    <span class="n">operatorSta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s">&quot;+&quot;</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                    <span class="n">operatorSta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s">&quot;+&quot;</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;-&#39;</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                    <span class="n">tmp</span> <span class="o">+=</span> <span class="s">&quot;-&quot;</span><span class="o">;</span>
+                <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">==</span> <span class="sc">&#39;(&#39;</span><span class="o">){</span>
+                    <span class="n">tmp</span> <span class="o">+=</span> <span class="s">&quot;-&quot;</span><span class="o">;</span>
+                <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                    <span class="k">if</span><span class="o">(!</span><span class="n">tmp</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+                        <span class="n">integerStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">tmp</span><span class="o">);</span>
+                        <span class="n">tmp</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+                    <span class="o">}</span>
+                    <span class="k">if</span><span class="o">(!</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+                        <span class="k">while</span> <span class="o">(!</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">operatorSta</span><span class="o">.</span><span class="na">peek</span><span class="o">()</span> <span class="o">!=</span> <span class="s">&quot;(&quot;</span><span class="o">)</span> <span class="o">{</span>
+                            <span class="n">integerStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">pop</span><span class="o">());</span>
+                        <span class="o">}</span>
+                        <span class="n">operatorSta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s">&quot;-&quot;</span><span class="o">);</span>
+                    <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                        <span class="n">operatorSta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="s">&quot;-&quot;</span><span class="o">);</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&gt;=</span> <span class="sc">&#39;0&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="sc">&#39;9&#39;</span><span class="o">){</span>
+                <span class="n">tmp</span> <span class="o">+=</span> <span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(!</span><span class="n">tmp</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">integerStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">tmp</span><span class="o">);</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">while</span> <span class="o">(!</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">integerStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">operatorSta</span><span class="o">.</span><span class="na">pop</span><span class="o">());</span>
+        <span class="o">}</span>
+        <span class="n">Integer</span> <span class="n">ans</span> <span class="o">=</span> <span class="n">calInfix</span><span class="o">(</span><span class="n">integerStack</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">ans</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 计算中缀表达式</span>
+    <span class="kd">static</span> <span class="n">Integer</span> <span class="nf">calInfix</span><span class="o">(</span><span class="n">Stack</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">sta</span><span class="o">){</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;(</span><span class="n">sta</span><span class="o">);</span>
+        <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">ansStack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">();</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;+&quot;</span><span class="o">)</span> <span class="o">||</span>
+                    <span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-&quot;</span><span class="o">)</span> <span class="o">||</span>
+                    <span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;*&quot;</span><span class="o">)</span> <span class="o">||</span>
+                    <span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">).</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)){</span>
+                <span class="n">Integer</span> <span class="n">v2</span> <span class="o">=</span> <span class="n">ansStack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+                <span class="n">Integer</span> <span class="n">v1</span> <span class="o">=</span> <span class="n">ansStack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+                <span class="n">Integer</span> <span class="n">v</span> <span class="o">=</span> <span class="n">operator</span><span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">),</span> <span class="n">v1</span><span class="o">,</span> <span class="n">v2</span><span class="o">);</span>
+                <span class="n">ansStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">v</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">ansStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">)));</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">ansStack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="n">Integer</span> <span class="nf">operator</span><span class="o">(</span><span class="n">String</span> <span class="n">operate</span><span class="o">,</span> <span class="n">Integer</span> <span class="n">v1</span><span class="o">,</span> <span class="n">Integer</span> <span class="n">v2</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">operate</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;+&quot;</span><span class="o">)){</span>
+            <span class="k">return</span> <span class="n">v1</span> <span class="o">+</span> <span class="n">v2</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">operate</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-&quot;</span><span class="o">)){</span>
+            <span class="k">return</span> <span class="n">v1</span> <span class="o">-</span> <span class="n">v2</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">operate</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;*&quot;</span><span class="o">)){</span>
+            <span class="k">return</span> <span class="n">v1</span> <span class="o">*</span> <span class="n">v2</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">operate</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)){</span>
+            <span class="k">return</span> <span class="n">v1</span> <span class="o">/</span> <span class="n">v2</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">(1-20-7+4+18-4+10-9-11-2+11*20-2/7+17+19+8-13*8/3+(8+13*16)+((11+10-13)+4-11+13-9+15+5*1+11-10-11-(4+10)-17+12+20+(6+20-10))+5+13+20+15-9+18*2-1-19-16/3-8/20-19-3-8+8-17*11-(10+1)-11+1+13/17+(10+13-1*2/7)/12-9-3+2+11+16-15-4-7-16+1+9+((14+12*20/17-9-20-16+4)+4-12)-4/2-3*14+11+(7+10+4+13+16-15)-17/19-1+15+12+13+15+10+19+6+11+8*(20+13)+16+7-10+5+14+14+8-13-(11+(14-14*10+3+(5-7)-5/20-1+16)/(1-14-13*14+6+2+5+14+15+20+17)-(18-(17-18*4+10-(3-16-(9-15))+12)-4)-9-(11+(13+1)+20)*17+(17+6*8+16+6)+5))</span>
+<span class="cm">1366</span>
+
+<span class="cm">((11+10-13)+4-11+13-9+15+5*1+11-10-11-(4+10)-17+12+20+(6+20-10))</span>
+<span class="cm">32</span>
+
+<span class="cm">((10-8+9/10-19+7)+(7+4-10+1)+9-1+2+19-((10-3-4)+17)+17+6/15/16-(13+3+16+12+9-5/(9+2)-3-(11+13))+(16+7/2+3-2+7+2+15+13)+5-18-4+13-12-10+2+(13*2)-13-18-((1-4+9+7*19)/18-(1-16+(11+17-18)))+(15*9-(1-2)-15)-7-(4-15)+10/6-17-4+(11+3)-6-3-(15+2)+(8-11+12))+20+(8+1+10+12-15-15+7+14+12-20+(9+10-10+8-18-8+5+10+3+14+9))*(4+15+17+13+9-(18-7)-2*20+3+16-(18+3)-20-3-17+9-3+16)+6-7-(15-11/19+3-1+6-9-15+19+15-19-3-15-11+13-13+9+6-2-3-18+(11+8)-5-18+8-8-14-16-(10/1)*13-((5+1)+8*1+1+5-18-1/13+5)+9)-8</span>
+<span class="cm">-292</span>
+<span class="cm">*/</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-21 13:53:02</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>122 删除多余的字符得到字典序最小的字符串 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;122 删除多余的字符得到字典序最小的字符串
+    <span class="updated">Page Updated&nbsp;
+      2019-12-17 11:59
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">122 删除多余的字符得到字典序最小的字符串</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="err">给一个全是小写字母的字符串</span><span class="n">str</span><span class="err">，删除多余字符，使得每种字符只保留一个，并且让最终结果字符串字典序最小。</span>
+</pre></div>
+
+
+<ul>
+<li>O(n) 空间复杂度, O(n) 时间复杂度</li>
+</ul>
+<p>基于已存在的和后面的字符做加入，删除操作</p>
+<ol>
+<li>
+<p>依次取当前字符，若栈为空或者大于栈顶字符（且栈中不存在该字符），就放入</p>
+</li>
+<li>
+<p>小于栈顶元素，就查看栈顶元素在字符串后面有没有存在的，有的话就弹出，直到栈为空或字符串没有存在相同元素；然后放入该新字符。</p>
+</li>
+</ol>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextLine</span><span class="o">();</span>
+<span class="c1">//        String s = &quot;dbcacbca&quot;;</span>
+
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">chars</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+
+        <span class="c1">// 统计出现次数</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">cnt</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">255</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">cnt</span><span class="o">[</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span> <span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="c1">// 统计是否当前被使用给过了</span>
+        <span class="kt">boolean</span><span class="o">[]</span> <span class="n">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="mi">255</span><span class="o">];</span>
+        <span class="c1">// 收集结果的栈</span>
+        <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Character</span><span class="o">&gt;</span> <span class="n">sta</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">cnt</span><span class="o">[</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span> <span class="o">--;</span> <span class="c1">// 用一个少一次</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">sta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">vis</span><span class="o">[</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span> <span class="o">==</span> <span class="kc">false</span><span class="o">){</span>
+                <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+                <span class="n">vis</span><span class="o">[</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">Character</span> <span class="n">topChar</span> <span class="o">=</span> <span class="n">sta</span><span class="o">.</span><span class="na">peek</span><span class="o">();</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">topChar</span> <span class="o">&amp;&amp;</span> <span class="n">vis</span><span class="o">[</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span> <span class="o">==</span> <span class="kc">false</span><span class="o">){</span>
+                    <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+                    <span class="n">vis</span><span class="o">[</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">topChar</span> <span class="o">&amp;&amp;</span> <span class="n">vis</span><span class="o">[</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span> <span class="o">==</span> <span class="kc">false</span><span class="o">){</span>
+                    <span class="k">while</span> <span class="o">(!</span><span class="n">sta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">sta</span><span class="o">.</span><span class="na">peek</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">cnt</span><span class="o">[</span><span class="n">sta</span><span class="o">.</span><span class="na">peek</span><span class="o">()]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">){</span>
+                        <span class="n">vis</span><span class="o">[</span><span class="n">sta</span><span class="o">.</span><span class="na">peek</span><span class="o">()]</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+                        <span class="n">sta</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+                    <span class="o">}</span>
+                    <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+                    <span class="n">vis</span><span class="o">[</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">// 输出结果</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">ans</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="o">[</span><span class="n">sta</span><span class="o">.</span><span class="na">size</span><span class="o">()];</span>
+        <span class="kt">int</span> <span class="n">ansIndex</span> <span class="o">=</span> <span class="n">ans</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">while</span><span class="o">(!</span><span class="n">sta</span><span class="o">.</span><span class="na">empty</span><span class="o">()){</span>
+            <span class="n">ans</span><span class="o">[</span><span class="n">ansIndex</span> <span class="o">--]</span> <span class="o">=</span> <span class="n">sta</span><span class="o">.</span><span class="na">peek</span><span class="o">();</span>
+            <span class="n">sta</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">ans</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">dbcacbca</span>
+
+<span class="cm">dabc</span>
+<span class="cm">*/</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-21 13:53:02</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

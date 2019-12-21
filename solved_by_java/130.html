@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>130 0左边必有1的二进制字符串的数量 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;130 0左边必有1的二进制字符串的数量
+    <span class="updated">Page Updated&nbsp;
+      2019-12-21 23:06
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">130 0左边必有1的二进制字符串的数量</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="err">给定一个整数</span><span class="n">n</span><span class="err">，求由“</span><span class="mi">0</span><span class="err">”字符和“</span><span class="mi">1</span><span class="err">”字符组成的长度为</span><span class="n">n</span><span class="err">的所有字符串中，满足“</span><span class="mi">0</span><span class="err">”字符的左边必有“</span><span class="mi">1</span><span class="err">”字符的字符串的数量。</span>
+</pre></div>
+
+
+<p>显然最高位置必须时<code>1</code>，应该时每个<code>0</code>左边必须有1，即只能出现<code>10</code>，<code>11</code>，而不能出现<code>00</code>，<code>01</code></p>
+<div class="hlcode"><pre><span class="mi">1</span>
+
+<span class="mi">10</span>
+<span class="mi">11</span>
+
+<span class="mi">101</span>
+<span class="mi">110</span>
+<span class="mi">111</span>
+
+<span class="mi">1111</span>
+<span class="mi">1110</span>
+<span class="mi">1101</span>
+<span class="mi">1011</span>
+<span class="mi">1010</span>
+
+<span class="mi">11111</span>
+<span class="mi">11110</span>
+<span class="mi">11010</span>
+<span class="mi">11011</span>
+<span class="mi">10111</span>
+<span class="mi">10101</span>
+<span class="mi">10110</span>
+<span class="mi">10111</span>
+</pre></div>
+
+
+<p>p(i) 为 0...i-1 的位置已经确定，这一段符合要求(第i-1个位置的字符为<code>1</code>时)如果穷举i～N-1位置上的所有情况会产生多少种符合要求的字符串</p>
+<div class="hlcode"><pre><span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span> <span class="err">时</span> <span class="n">p</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">)</span> <span class="o">+</span> <span class="n">p</span><span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="o">)</span>
+<span class="n">i</span> <span class="o">=</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span> <span class="err">时</span> <span class="n">p</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">i</span> <span class="o">=</span> <span class="n">n</span> <span class="err">时，</span><span class="n">p</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+
+
+<table>
+<thead>
+<tr>
+<th>前2位</th>
+<th>第三位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>11</td>
+<td>0 或 1都可以</td>
+</tr>
+<tr>
+<td>10</td>
+<td>只能1</td>
+</tr>
+</tbody>
+</table>
+<p>如斐波那契数列<code>F(1)=1，F(2)=1, F(n)=F(n-1)+F(n-2)（n&gt;=3，n∈N*）</code></p>
+<p><code>1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144</code></p>
+<p>可采用快速幂求法, ac代码如下</p>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">mod</span> <span class="o">=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="mi">29</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+       <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+       <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">getNth</span><span class="o">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">long</span> <span class="nf">getNth</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="o">){</span>
+            <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">long</span><span class="o">[][]</span> <span class="n">rsMatrix</span> <span class="o">=</span> <span class="o">{</span>
+                <span class="o">{</span><span class="mi">1</span><span class="o">,</span><span class="mi">0</span><span class="o">},</span>
+                <span class="o">{</span><span class="mi">0</span><span class="o">,</span><span class="mi">1</span><span class="o">}</span>
+        <span class="o">};;</span>
+        <span class="kt">long</span><span class="o">[][]</span> <span class="n">matrixFun</span> <span class="o">=</span> <span class="o">{</span>
+                <span class="o">{</span><span class="mi">1</span><span class="o">,</span><span class="mi">1</span><span class="o">},</span>
+                <span class="o">{</span><span class="mi">1</span><span class="o">,</span><span class="mi">0</span><span class="o">}</span>
+        <span class="o">};;</span>
+        <span class="c1">// 快速幂 如n=5, 求funMatrix^5 即 funMatrix^101 = funMatrix^4 * funMatrix^1</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">n</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">bit</span> <span class="o">=</span> <span class="n">n</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">bit</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span>
+                <span class="n">rsMatrix</span> <span class="o">=</span> <span class="n">multiMatrix</span><span class="o">(</span><span class="n">rsMatrix</span><span class="o">,</span> <span class="n">matrixFun</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">matrixFun</span> <span class="o">=</span> <span class="n">multiMatrix</span><span class="o">(</span><span class="n">matrixFun</span><span class="o">,</span> <span class="n">matrixFun</span><span class="o">);</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">long</span> <span class="n">ans</span> <span class="o">=</span> <span class="o">(</span><span class="n">rsMatrix</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">rsMatrix</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">0</span><span class="o">])</span> <span class="o">%</span> <span class="n">mod</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">ans</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 0矩阵</span>
+    <span class="kd">static</span> <span class="kt">long</span><span class="o">[][]</span> <span class="n">zeroMatrix</span> <span class="o">=</span> <span class="o">{</span>
+            <span class="o">{</span><span class="mi">0</span><span class="o">,</span><span class="mi">0</span><span class="o">},</span>
+            <span class="o">{</span><span class="mi">0</span><span class="o">,</span><span class="mi">0</span><span class="o">}</span>
+    <span class="o">};</span>
+
+    <span class="c1">// 1矩阵</span>
+    <span class="kd">static</span> <span class="kt">long</span><span class="o">[][]</span> <span class="n">oneMatrix</span> <span class="o">=</span> <span class="o">{</span>
+            <span class="o">{</span><span class="mi">1</span><span class="o">,</span><span class="mi">0</span><span class="o">},</span>
+            <span class="o">{</span><span class="mi">0</span><span class="o">,</span><span class="mi">1</span><span class="o">}</span>
+    <span class="o">};</span>
+
+    <span class="c1">// 递推矩阵</span>
+    <span class="kd">static</span> <span class="kt">long</span><span class="o">[][]</span> <span class="n">funMatrix</span> <span class="o">=</span> <span class="o">{</span>
+            <span class="o">{</span><span class="mi">1</span><span class="o">,</span><span class="mi">1</span><span class="o">},</span>
+            <span class="o">{</span><span class="mi">1</span><span class="o">,</span><span class="mi">0</span><span class="o">}</span>
+    <span class="o">};</span>
+
+    <span class="c1">// 矩阵乘法</span>
+    <span class="kd">static</span> <span class="kt">long</span><span class="o">[][]</span> <span class="nf">multiMatrix</span><span class="o">(</span><span class="kt">long</span><span class="o">[][]</span> <span class="n">m1</span><span class="o">,</span> <span class="kt">long</span><span class="o">[][]</span> <span class="n">m2</span><span class="o">){</span>
+        <span class="kt">long</span><span class="o">[][]</span> <span class="n">m</span> <span class="o">=</span> <span class="o">{</span>
+                <span class="o">{</span><span class="mi">0</span><span class="o">,</span><span class="mi">0</span><span class="o">},</span>
+                <span class="o">{</span><span class="mi">0</span><span class="o">,</span><span class="mi">0</span><span class="o">}</span>
+        <span class="o">};</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">j</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">;</span><span class="n">j</span><span class="o">++){</span>
+                <span class="kt">long</span> <span class="n">tmp</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">k</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">;</span><span class="n">k</span><span class="o">++){</span>
+                    <span class="n">tmp</span> <span class="o">+=</span> <span class="o">(</span><span class="n">m1</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">k</span><span class="o">]</span> <span class="o">*</span> <span class="n">m2</span><span class="o">[</span><span class="n">k</span><span class="o">][</span><span class="n">j</span><span class="o">]);</span>
+                    <span class="n">tmp</span> <span class="o">%=</span> <span class="n">mod</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="n">m</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">m</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">fn，fn-1 = (fn-1, fn-2) * fmatrix</span>
+<span class="cm">*/</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-21 13:53:02</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

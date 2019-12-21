@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>124 字符串的转换路径问题 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;124 字符串的转换路径问题
+    <span class="updated">Page Updated&nbsp;
+      2019-12-19 10:06
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">124 字符串的转换路径问题</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<ul>
+<li>构造临接表</li>
+<li>bfs求树节点的层</li>
+<li>dfs回溯</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">nStr</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">nStr</span><span class="o">);</span>
+        <span class="n">String</span> <span class="n">s12</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">sArr</span> <span class="o">=</span> <span class="n">s12</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">strs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">strs</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="n">String</span> <span class="n">s1</span> <span class="o">=</span> <span class="n">sArr</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+        <span class="n">String</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">sArr</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+
+        <span class="c1">// 映射地图 next 构造</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">mp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">sonList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">j</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">j</span><span class="o">++){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">i</span><span class="o">){</span>
+                    <span class="k">continue</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">isChangeOne</span><span class="o">(</span><span class="n">strs</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="n">strs</span><span class="o">[</span><span class="n">j</span><span class="o">])){</span>
+                    <span class="n">sonList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">strs</span><span class="o">[</span><span class="n">j</span><span class="o">]);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="n">Collections</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">sonList</span><span class="o">);</span>
+            <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">strs</span><span class="o">[</span><span class="n">i</span><span class="o">],</span> <span class="n">sonList</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="c1">// 处理 s1 的 next</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">sonList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">isChangeOne</span><span class="o">(</span><span class="n">s1</span><span class="o">,</span> <span class="n">strs</span><span class="o">[</span><span class="n">i</span><span class="o">])){</span>
+                <span class="n">sonList</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">strs</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+            <span class="o">}</span>
+            <span class="n">Collections</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">sonList</span><span class="o">);</span>
+            <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">s1</span><span class="o">,</span> <span class="n">sonList</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">mpCeng</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">vis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;&gt;();</span>
+        <span class="n">Queue</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">que</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">queCeng</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">que</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">s1</span><span class="o">);</span>
+        <span class="n">queCeng</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+        <span class="n">vis</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">s1</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(!</span><span class="n">que</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">que</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="kt">int</span> <span class="n">ceng</span> <span class="o">=</span> <span class="n">queCeng</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="n">mpCeng</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">str</span><span class="o">,</span> <span class="n">ceng</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(!</span><span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">str</span><span class="o">).</span><span class="na">isEmpty</span><span class="o">()){</span>
+                <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="nl">sNext:</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">str</span><span class="o">)){</span>
+                    <span class="k">if</span><span class="o">(!</span><span class="n">vis</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">sNext</span><span class="o">))</span> <span class="o">{</span>
+                        <span class="n">que</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">sNext</span><span class="o">);</span>
+                        <span class="n">queCeng</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">ceng</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+                        <span class="n">vis</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">sNext</span><span class="o">);</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">onePath</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">onePath</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">s1</span><span class="o">);</span>
+        <span class="n">dfs</span><span class="o">(</span><span class="n">s1</span><span class="o">,</span> <span class="n">s2</span><span class="o">,</span> <span class="n">mp</span><span class="o">,</span> <span class="n">mpCeng</span><span class="o">,</span> <span class="n">onePath</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">ans</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;NO&quot;</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;YES&quot;</span><span class="o">);</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">ans</span><span class="o">.</span><span class="na">size</span><span class="o">();</span><span class="n">i</span><span class="o">++){</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">ans</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">));</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">minLen</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">ans</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+    <span class="c1">// 将结果直接转成要打印的字符串</span>
+    <span class="kd">static</span> <span class="n">String</span> <span class="nf">printOnePath</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">onePath</span><span class="o">,</span> <span class="kt">int</span> <span class="n">len</span><span class="o">){</span>
+        <span class="n">StringBuffer</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuffer</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">len</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+           <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">onePath</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">+</span> <span class="s">&quot; -&gt; &quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">onePath</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">len</span><span class="o">-</span><span class="mi">1</span><span class="o">));</span>
+        <span class="k">return</span> <span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">dfs</span><span class="o">(</span><span class="n">String</span> <span class="n">cur</span><span class="o">,</span> <span class="n">String</span> <span class="n">s2</span><span class="o">,</span>
+             <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">mp</span><span class="o">,</span>
+             <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">mpCeng</span><span class="o">,</span>
+             <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">onePath</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">onePath</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">minLen</span><span class="o">){</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">s2</span><span class="o">)){</span>
+            <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">onePath</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">len</span> <span class="o">&lt;</span> <span class="n">minLen</span><span class="o">){</span>
+                <span class="n">ans</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
+                <span class="n">ans</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">printOnePath</span><span class="o">(</span><span class="n">onePath</span><span class="o">,</span> <span class="n">len</span><span class="o">));</span>
+                <span class="n">minLen</span> <span class="o">=</span> <span class="n">len</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">len</span> <span class="o">==</span> <span class="n">minLen</span><span class="o">){</span>
+                <span class="n">ans</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">printOnePath</span><span class="o">(</span><span class="n">onePath</span><span class="o">,</span> <span class="n">len</span><span class="o">));</span>
+            <span class="o">}</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">sonList</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">cur</span><span class="o">);</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="nl">nextStr:</span> <span class="n">sonList</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">mpCeng</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">nextStr</span><span class="o">)</span> <span class="o">==</span> <span class="n">mpCeng</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">cur</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">){</span>
+                <span class="n">onePath</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">nextStr</span><span class="o">);</span>
+                <span class="n">dfs</span><span class="o">(</span><span class="n">nextStr</span><span class="o">,</span> <span class="n">s2</span><span class="o">,</span> <span class="n">mp</span><span class="o">,</span> <span class="n">mpCeng</span><span class="o">,</span> <span class="n">onePath</span><span class="o">);</span>
+                <span class="n">onePath</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">nextStr</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 是否改变一个字符就能从 src 到 des</span>
+    <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isChangeOne</span><span class="o">(</span><span class="n">String</span> <span class="n">src</span><span class="o">,</span> <span class="n">String</span> <span class="n">des</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">src</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">des</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">src</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">!=</span> <span class="n">size</span> <span class="o">||</span> <span class="n">des</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">!=</span> <span class="n">size</span><span class="o">){</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">changeSize</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">size</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">src</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">!=</span> <span class="n">des</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)){</span>
+                <span class="n">changeSize</span> <span class="o">++;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">changeSize</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">8</span>
+<span class="cm">abc cab</span>
+<span class="cm">cab</span>
+<span class="cm">acc</span>
+<span class="cm">cbc</span>
+<span class="cm">ccc</span>
+<span class="cm">cac</span>
+<span class="cm">cbb</span>
+<span class="cm">aab</span>
+<span class="cm">abb</span>
+
+<span class="cm">YES</span>
+<span class="cm">abc -&gt; abb -&gt; aab -&gt; cab</span>
+<span class="cm">abc -&gt; abb -&gt; cbb -&gt; cab</span>
+<span class="cm">abc -&gt; cbc -&gt; cac -&gt; cab</span>
+<span class="cm">abc -&gt; cbc -&gt; cbb -&gt; cab</span>
+<span class="cm">*/</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-21 13:53:02</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

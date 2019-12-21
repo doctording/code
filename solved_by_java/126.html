@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>126 添加最少的字符让字符串变为回文字符串（2） - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;126 添加最少的字符让字符串变为回文字符串（2）
+    <span class="updated">Page Updated&nbsp;
+      2019-12-19 12:06
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">126 添加最少的字符让字符串变为回文字符串（2）</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a><ul>
+<li><a href="#_1">剖洋葱过程</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="err">给定一个字符串</span><span class="n">str</span><span class="err">，再给定</span><span class="n">str</span><span class="err">的最长回文子序列字符串</span><span class="n">strlps</span><span class="o">,</span> <span class="err">请返回在添加字符最少的情况下，让</span><span class="n">str</span><span class="err">整体都是回文字符串的一种结果。进阶问题比原问题多了一个参数，请做到时间复杂度比原问题的实现低。</span>
+</pre></div>
+
+
+<p>eg:</p>
+<div class="hlcode"><pre><span class="n">A1B21C</span>
+<span class="mi">121</span>
+
+<span class="n">AC1B2B1CA</span>
+
+<span class="n">str</span><span class="o">=</span><span class="s">&quot;A1B21C&quot;</span><span class="err">，</span><span class="n">strlps</span><span class="o">=</span><span class="s">&quot;121&quot;</span><span class="err">，返回</span><span class="s">&quot;AC1B2B1CA&quot;</span><span class="err">或者</span><span class="s">&quot;CA1B2B1AC&quot;</span><span class="err">，总之，只要是添加的字符数最少，只返回其中一种结果即可。</span>
+</pre></div>
+
+
+<h2 id="_1">剖洋葱过程</h2>
+<ul>
+<li>str: A1BC22DE1F</li>
+<li>strlps: 1221</li>
+</ul>
+<div class="hlcode"><pre><span class="n">leftPart</span> <span class="o">+</span> <span class="n">rightPart</span><span class="err">逆序</span>
+
+<span class="n">AF</span> <span class="n">FA</span>
+<span class="n">BCED</span>  <span class="n">DECB</span>
+
+<span class="n">AF</span> <span class="mi">1</span> <span class="n">BCED</span> <span class="mi">22</span> <span class="n">DECB</span> <span class="n">FA</span>
+</pre></div>
+
+
+<ul>
+<li>ac code</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="n">String</span> <span class="n">strlps</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">chars</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">lps</span> <span class="o">=</span> <span class="n">strlps</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">res</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="o">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">chars</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="n">lps</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+
+        <span class="kt">int</span> <span class="n">charsL</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">charsR</span> <span class="o">=</span> <span class="n">chars</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">lpsL</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">lpsR</span> <span class="o">=</span> <span class="n">lps</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">resL</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">resR</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+
+        <span class="k">while</span> <span class="o">(</span><span class="n">lpsL</span> <span class="o">&lt;=</span> <span class="n">lpsR</span><span class="o">){</span>
+            <span class="kt">int</span> <span class="n">tmpL</span> <span class="o">=</span> <span class="n">charsL</span><span class="o">;</span>
+            <span class="kt">int</span> <span class="n">tmpR</span> <span class="o">=</span> <span class="n">charsR</span><span class="o">;</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">charsL</span><span class="o">]</span> <span class="o">!=</span> <span class="n">lps</span><span class="o">[</span><span class="n">lpsL</span><span class="o">]){</span>
+                <span class="n">charsL</span> <span class="o">++;</span>
+            <span class="o">}</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">charsR</span><span class="o">]</span> <span class="o">!=</span> <span class="n">lps</span><span class="o">[</span><span class="n">lpsR</span><span class="o">]){</span>
+                <span class="n">charsR</span> <span class="o">--;</span>
+            <span class="o">}</span>
+            <span class="c1">// lPart + rPart的逆序</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">tmpL</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">charsL</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+                <span class="n">res</span><span class="o">[</span><span class="n">resL</span><span class="o">++]</span> <span class="o">=</span> <span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+                <span class="n">res</span><span class="o">[</span><span class="n">resR</span><span class="o">--]</span> <span class="o">=</span> <span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="o">}</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">tmpR</span><span class="o">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">charsR</span><span class="o">;</span> <span class="n">i</span><span class="o">--){</span>
+                <span class="n">res</span><span class="o">[</span><span class="n">resL</span><span class="o">++]</span> <span class="o">=</span> <span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+                <span class="n">res</span><span class="o">[</span><span class="n">resR</span><span class="o">--]</span> <span class="o">=</span> <span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="o">}</span>
+            <span class="n">res</span><span class="o">[</span><span class="n">resL</span><span class="o">++]</span> <span class="o">=</span> <span class="n">lps</span><span class="o">[</span><span class="n">lpsL</span><span class="o">++];</span>
+            <span class="n">res</span><span class="o">[</span><span class="n">resR</span><span class="o">--]</span> <span class="o">=</span> <span class="n">lps</span><span class="o">[</span><span class="n">lpsR</span><span class="o">--];</span>
+            <span class="n">charsL</span> <span class="o">++;</span>
+            <span class="n">charsR</span> <span class="o">--;</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">res</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">A1BC22DE1F</span>
+<span class="cm">1221</span>
+
+<span class="cm">*/</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-21 13:53:02</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

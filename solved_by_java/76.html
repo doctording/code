@@ -1,0 +1,312 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>76 数字的英文表达和中文表达 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;76 数字的英文表达和中文表达
+    <span class="updated">Page Updated&nbsp;
+      2019-11-28 23:43
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">76 数字的英文表达和中文表达</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<p>中文表达式注意点</p>
+<ul>
+<li>正负问题</li>
+<li>最大负数问题</li>
+<li>亿，万，千(零几的问题)</li>
+<li>其它各种特殊情况(整十，整百，整万等问题)</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+
+
+<span class="kd">class</span> <span class="nc">NumToExpress</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span><span class="o">[]</span> <span class="n">num2Str</span> <span class="o">=</span> <span class="o">{</span>
+            <span class="s">&quot;零&quot;</span><span class="o">,</span><span class="s">&quot;一&quot;</span><span class="o">,</span><span class="s">&quot;二&quot;</span><span class="o">,</span><span class="s">&quot;三&quot;</span><span class="o">,</span><span class="s">&quot;四&quot;</span><span class="o">,</span><span class="s">&quot;五&quot;</span><span class="o">,</span><span class="s">&quot;六&quot;</span><span class="o">,</span><span class="s">&quot;七&quot;</span><span class="o">,</span><span class="s">&quot;八&quot;</span><span class="o">,</span><span class="s">&quot;九&quot;</span><span class="o">,</span><span class="s">&quot;十&quot;</span>
+    <span class="o">};</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">Bai</span> <span class="o">=</span> <span class="s">&quot;百&quot;</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">Qian</span> <span class="o">=</span> <span class="s">&quot;千&quot;</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">Wan</span> <span class="o">=</span> <span class="s">&quot;万&quot;</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">Yi</span> <span class="o">=</span> <span class="s">&quot;亿&quot;</span><span class="o">;</span>
+
+    <span class="c1">// 小于9的</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">num9</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">){</span>
+        <span class="k">return</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">num</span><span class="o">];</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 小于99的</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">num99</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">){</span>
+        <span class="c1">// 十位 个位</span>
+        <span class="kt">int</span> <span class="n">n1</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="mi">10</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">n2</span> <span class="o">=</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">10</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="c1">// 整除10的</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">n1</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span>
+                <span class="k">return</span> <span class="n">num2Str</span><span class="o">[</span><span class="mi">10</span><span class="o">];</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">n1</span><span class="o">]</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="mi">10</span><span class="o">];</span>
+            <span class="o">}</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">n1</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span>
+               <span class="k">return</span> <span class="n">num2Str</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">n2</span><span class="o">];</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">n1</span><span class="o">]</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="mi">10</span><span class="o">]</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">n2</span><span class="o">];</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 小于999</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">num999</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">){</span>
+        <span class="c1">// 百位 十位 个位</span>
+        <span class="kt">int</span> <span class="n">n1</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="mi">100</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">n2</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="mi">10</span> <span class="o">-</span> <span class="n">n1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">n3</span> <span class="o">=</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">10</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n2</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">n3</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="c1">// 整百</span>
+            <span class="k">return</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">n1</span><span class="o">]</span> <span class="o">+</span> <span class="n">Bai</span><span class="o">;</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">n2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="c1">// 几百零几</span>
+            <span class="k">return</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">n1</span><span class="o">]</span> <span class="o">+</span> <span class="n">Bai</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">n3</span><span class="o">];</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">n3</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="c1">// 几百几十</span>
+            <span class="k">return</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">n1</span><span class="o">]</span> <span class="o">+</span> <span class="n">Bai</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">n2</span><span class="o">]</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="mi">10</span><span class="o">];</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">n2</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 几百一十几</span>
+            <span class="k">return</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">n1</span><span class="o">]</span> <span class="o">+</span> <span class="n">Bai</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="n">num99</span><span class="o">(</span><span class="n">n2</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">n3</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">n1</span><span class="o">]</span> <span class="o">+</span> <span class="n">Bai</span> <span class="o">+</span> <span class="n">num99</span><span class="o">(</span><span class="n">n2</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">n3</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 小于9999</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">num9999</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">){</span>
+        <span class="c1">// 千位 百位 十位 个位</span>
+        <span class="kt">int</span> <span class="n">n1</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="mi">1000</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">n2</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="mi">100</span> <span class="o">-</span> <span class="n">n1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">n3</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="mi">10</span> <span class="o">-</span> <span class="n">n1</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">-</span> <span class="n">n2</span> <span class="o">*</span> <span class="mi">10</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">n4</span> <span class="o">=</span> <span class="n">num</span> <span class="o">%</span> <span class="mi">10</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n2</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">n3</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">n4</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span> <span class="c1">// 整千</span>
+            <span class="k">return</span>  <span class="n">num2Str</span><span class="o">[</span><span class="n">n1</span><span class="o">]</span> <span class="o">+</span> <span class="n">Qian</span><span class="o">;</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">n2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span> <span class="c1">// 百位为0</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">n3</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                <span class="c1">// 十位为0</span>
+                <span class="k">return</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">n1</span><span class="o">]</span> <span class="o">+</span> <span class="n">Qian</span> <span class="o">+</span> <span class="n">num9</span><span class="o">(</span><span class="n">n4</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="c1">// 1014：一千零十四, 不用 一千零一十四</span>
+<span class="c1">//                return num2Str[n1] + Qian + num2Str[0] + num2Str[1] + num99(n3 * 10 + n4);</span>
+                <span class="k">return</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">n1</span><span class="o">]</span> <span class="o">+</span> <span class="n">Qian</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">num99</span><span class="o">(</span><span class="n">n3</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">n4</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">n1</span><span class="o">]</span> <span class="o">+</span> <span class="n">Qian</span> <span class="o">+</span> <span class="n">num999</span><span class="o">(</span><span class="n">num</span> <span class="o">%</span> <span class="mi">1000</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 千级别</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">numQian</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">num</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="o">){</span>
+            <span class="k">return</span> <span class="nf">num9</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">&lt;=</span> <span class="mi">99</span><span class="o">){</span>
+            <span class="k">return</span> <span class="nf">num99</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">&lt;=</span> <span class="mi">999</span><span class="o">){</span>
+            <span class="k">return</span> <span class="nf">num999</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">&lt;=</span> <span class="mi">9999</span><span class="o">){</span>
+            <span class="k">return</span> <span class="nf">num9999</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 万级别</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">numWan</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 万</span>
+        <span class="kt">int</span> <span class="n">n1</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="mi">10000</span><span class="o">;</span>
+        <span class="c1">// 后4位</span>
+        <span class="kt">int</span> <span class="n">n2</span> <span class="o">=</span> <span class="n">num</span> <span class="o">-</span> <span class="n">n1</span> <span class="o">*</span> <span class="mi">10000</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 多少万</span>
+            <span class="k">return</span> <span class="nf">numQian</span><span class="o">(</span><span class="n">n1</span><span class="o">)</span> <span class="o">+</span> <span class="n">Wan</span><span class="o">;</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">n2_1</span> <span class="o">=</span> <span class="n">n2</span> <span class="o">/</span> <span class="mi">1000</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">n2_1</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span> <span class="c1">// 千位为0</span>
+                <span class="kt">int</span> <span class="n">n2_2</span> <span class="o">=</span> <span class="n">n2</span> <span class="o">/</span> <span class="mi">100</span> <span class="o">-</span> <span class="n">n2_1</span> <span class="o">*</span> <span class="mi">10</span><span class="o">;</span>
+                <span class="kt">int</span> <span class="n">n2_3</span> <span class="o">=</span> <span class="n">n2</span> <span class="o">/</span> <span class="mi">10</span> <span class="o">-</span> <span class="n">n2_1</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">-</span> <span class="n">n2_2</span> <span class="o">*</span> <span class="mi">10</span><span class="o">;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">n2_2</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">n2_3</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span>
+                    <span class="k">return</span> <span class="nf">numQian</span><span class="o">(</span><span class="n">n1</span><span class="o">)</span> <span class="o">+</span> <span class="n">Wan</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="n">numQian</span><span class="o">(</span><span class="n">n2</span> <span class="o">-</span> <span class="n">n2_1</span> <span class="o">*</span> <span class="mi">1000</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="k">return</span> <span class="nf">numQian</span><span class="o">(</span><span class="n">n1</span><span class="o">)</span> <span class="o">+</span> <span class="n">Wan</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">numQian</span><span class="o">(</span><span class="n">n2</span> <span class="o">-</span> <span class="n">n2_1</span> <span class="o">*</span> <span class="mi">1000</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="nf">numQian</span><span class="o">(</span><span class="n">n1</span><span class="o">)</span> <span class="o">+</span> <span class="n">Wan</span> <span class="o">+</span> <span class="n">numQian</span><span class="o">(</span><span class="n">n2</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 亿级别</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">numYi</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">yi</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="mi">100</span><span class="n">_000_000</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">wan</span> <span class="o">=</span> <span class="n">num</span> <span class="o">-</span> <span class="n">yi</span> <span class="o">*</span> <span class="mi">100</span><span class="n">_000_000</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">wan</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span> <span class="c1">// 整亿</span>
+            <span class="k">return</span> <span class="n">num2Str</span><span class="o">[</span><span class="n">yi</span><span class="o">]</span> <span class="o">+</span> <span class="n">Yi</span><span class="o">;</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">wan_1</span> <span class="o">=</span> <span class="n">wan</span> <span class="o">/</span> <span class="mi">10000</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">wan_1</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                <span class="k">return</span> <span class="nf">numQian</span><span class="o">(</span><span class="n">yi</span><span class="o">)</span> <span class="o">+</span> <span class="n">Yi</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span>  <span class="n">numQian</span><span class="o">(</span><span class="n">wan</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="c1">// 万的首位</span>
+                <span class="kt">int</span> <span class="n">wan_1_1</span> <span class="o">=</span> <span class="n">wan_1</span> <span class="o">/</span> <span class="mi">1000</span><span class="o">;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">wan_1_1</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                    <span class="k">return</span> <span class="nf">numQian</span><span class="o">(</span><span class="n">yi</span><span class="o">)</span> <span class="o">+</span> <span class="n">Yi</span> <span class="o">+</span> <span class="n">num2Str</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span>  <span class="n">numWan</span><span class="o">(</span><span class="n">wan</span><span class="o">);</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="k">return</span> <span class="nf">numQian</span><span class="o">(</span><span class="n">yi</span><span class="o">)</span> <span class="o">+</span> <span class="n">Yi</span> <span class="o">+</span> <span class="n">numWan</span><span class="o">(</span><span class="n">wan</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 中文表达式</span>
+<span class="cm">     * @param num</span>
+<span class="cm">     * @return</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">num2Chinese</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2147483648</span><span class="o">){</span>
+            <span class="k">return</span> <span class="s">&quot;负二十一亿四千七百四十八万三千六百四十八&quot;</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s">&quot;负&quot;</span><span class="o">;</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="o">-</span><span class="n">num</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">&lt;=</span> <span class="mi">9999</span><span class="o">){</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="n">numQian</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">&lt;=</span> <span class="mi">9999</span><span class="n">_9999</span><span class="o">){</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="n">numWan</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="n">numYi</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">s</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 英文表达式</span>
+<span class="cm">     * @param num</span>
+<span class="cm">     * @return</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">num2English</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">){</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="s">&quot;Zero&quot;</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">String</span> <span class="n">res</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">num</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="s">&quot;Negative, &quot;</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">num</span> <span class="o">==</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MIN_VALUE</span><span class="o">)</span>
+        <span class="o">{</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="s">&quot;Two Billion, &quot;</span><span class="o">;</span>
+            <span class="n">num</span> <span class="o">%=</span> <span class="o">-</span><span class="mi">2000000000</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">abs</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">high</span> <span class="o">=</span> <span class="mi">1000000000</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">highIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">names</span><span class="o">=</span> <span class="o">{</span> <span class="s">&quot;Billion&quot;</span><span class="o">,</span> <span class="s">&quot;Million&quot;</span><span class="o">,</span> <span class="s">&quot;Thousand&quot;</span><span class="o">,</span> <span class="s">&quot;&quot;</span><span class="o">};</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">num</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span>
+        <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="n">high</span><span class="o">;</span>
+            <span class="n">num</span> <span class="o">%=</span> <span class="n">high</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">cur</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span>
+            <span class="o">{</span>
+                <span class="n">res</span> <span class="o">+=</span> <span class="n">num1ToE999</span><span class="o">(</span><span class="n">cur</span><span class="o">);</span>
+                <span class="n">res</span> <span class="o">+=</span> <span class="n">names</span><span class="o">[</span><span class="n">highIndex</span><span class="o">]</span> <span class="o">+</span> <span class="o">(</span><span class="n">num</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="s">&quot; &quot;</span> <span class="o">:</span> <span class="s">&quot;, &quot;</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">high</span> <span class="o">/=</span> <span class="mi">1000</span><span class="o">;</span>
+            <span class="n">highIndex</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="n">String</span> <span class="nf">num1To19</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">num</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="mi">19</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">names</span><span class="o">=</span> <span class="o">{</span> <span class="s">&quot;One &quot;</span><span class="o">,</span> <span class="s">&quot;Two &quot;</span><span class="o">,</span> <span class="s">&quot;Three &quot;</span><span class="o">,</span> <span class="s">&quot;Four &quot;</span><span class="o">,</span> <span class="s">&quot;Five &quot;</span><span class="o">,</span> <span class="s">&quot;Six &quot;</span><span class="o">,</span>
+                <span class="s">&quot;Seven &quot;</span><span class="o">,</span> <span class="s">&quot;Eight &quot;</span><span class="o">,</span> <span class="s">&quot;Nine &quot;</span><span class="o">,</span> <span class="s">&quot;Ten &quot;</span><span class="o">,</span> <span class="s">&quot;Eleven &quot;</span><span class="o">,</span> <span class="s">&quot;Twelve &quot;</span><span class="o">,</span>
+                <span class="s">&quot;Thirteen &quot;</span><span class="o">,</span> <span class="s">&quot;Fourteen &quot;</span><span class="o">,</span> <span class="s">&quot;Fifteen &quot;</span><span class="o">,</span> <span class="s">&quot;Sixteen &quot;</span><span class="o">,</span> <span class="s">&quot;Sixteen &quot;</span><span class="o">,</span>
+                <span class="s">&quot;Eighteen &quot;</span><span class="o">,</span> <span class="s">&quot;Nineteen &quot;</span> <span class="o">};</span>
+        <span class="k">return</span> <span class="n">names</span><span class="o">[</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="o">];</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="n">String</span> <span class="nf">num1To99</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">num</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="mi">99</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">num</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nf">num1To19</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">high</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="mi">10</span><span class="o">;</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">tyNames</span> <span class="o">=</span> <span class="o">{</span> <span class="s">&quot;Twenty &quot;</span><span class="o">,</span> <span class="s">&quot;Thirty &quot;</span><span class="o">,</span> <span class="s">&quot;Forty &quot;</span><span class="o">,</span> <span class="s">&quot;Fifty &quot;</span><span class="o">,</span>
+                <span class="s">&quot;Sixty &quot;</span><span class="o">,</span> <span class="s">&quot;Seventy &quot;</span><span class="o">,</span> <span class="s">&quot;Eighty &quot;</span><span class="o">,</span> <span class="s">&quot;Ninety &quot;</span> <span class="o">};</span>
+        <span class="k">return</span> <span class="n">tyNames</span><span class="o">[</span><span class="n">high</span> <span class="o">-</span> <span class="mi">2</span><span class="o">]</span> <span class="o">+</span> <span class="n">num1To19</span><span class="o">(</span><span class="n">num</span> <span class="o">%</span> <span class="mi">10</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="n">String</span> <span class="nf">num1ToE999</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">num</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">||</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="mi">999</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">num</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nf">num1To99</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">high</span> <span class="o">=</span> <span class="n">num</span> <span class="o">/</span> <span class="mi">100</span><span class="o">;</span>
+        <span class="k">return</span> <span class="nf">num1To19</span><span class="o">(</span><span class="n">high</span><span class="o">)</span> <span class="o">+</span> <span class="s">&quot;Hundred &quot;</span> <span class="o">+</span> <span class="n">num1To99</span><span class="o">(</span><span class="n">num</span> <span class="o">%</span> <span class="mi">100</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">NumToExpress</span><span class="o">.</span><span class="na">num2English</span><span class="o">(</span><span class="n">num</span><span class="o">));</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">NumToExpress</span><span class="o">.</span><span class="na">num2Chinese</span><span class="o">(</span><span class="n">num</span><span class="o">));</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-21 13:53:02</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

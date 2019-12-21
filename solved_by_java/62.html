@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>62 设计有setAll功能的哈希表 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;62 设计有setAll功能的哈希表
+    <span class="updated">Page Updated&nbsp;
+      2019-11-23 14:22
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">62 设计有setAll功能的哈希表</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<ul>
+<li>每个value加上时间戳标志</li>
+<li>setAll设置时间戳标志</li>
+<li>get的时候去和setAll的标志判断</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+
+<span class="kd">class</span> <span class="nc">ValueIncludeTime</span><span class="o">{</span>
+    <span class="kt">int</span> <span class="n">value</span><span class="o">;</span>
+    <span class="kt">long</span> <span class="n">time</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getValue</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getTime</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">time</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setValue</span><span class="o">(</span><span class="kt">int</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setTime</span><span class="o">(</span><span class="kt">long</span> <span class="n">time</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">time</span> <span class="o">=</span> <span class="n">time</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">ValueIncludeTime</span><span class="o">(</span><span class="kt">int</span> <span class="n">value</span><span class="o">,</span> <span class="kt">long</span> <span class="n">time</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">time</span> <span class="o">=</span> <span class="n">time</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">SetAllHashMap</span><span class="o">{</span>
+    <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">ValueIncludeTime</span><span class="o">&gt;</span> <span class="n">mp</span><span class="o">;</span>
+    <span class="n">ValueIncludeTime</span> <span class="n">setAllValue</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">time</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">SetAllHashMap</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">mp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">setAllValue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ValueIncludeTime</span><span class="o">(-</span><span class="mi">1</span><span class="o">,</span><span class="n">time</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">containsKey</span><span class="o">(</span><span class="n">Integer</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">get</span><span class="o">(</span><span class="n">Integer</span> <span class="n">key</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">containsKey</span><span class="o">(</span><span class="n">key</span><span class="o">)){</span>
+            <span class="c1">// 对比 setAllValue 的时间戳</span>
+            <span class="n">ValueIncludeTime</span> <span class="n">valueIncludeTime</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">valueIncludeTime</span><span class="o">.</span><span class="na">getTime</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">setAllValue</span><span class="o">.</span><span class="na">getTime</span><span class="o">()){</span>
+                <span class="k">return</span> <span class="n">valueIncludeTime</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="k">return</span> <span class="n">setAllValue</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">put</span><span class="o">(</span><span class="n">Integer</span> <span class="n">key</span><span class="o">,</span> <span class="n">Integer</span> <span class="n">value</span><span class="o">){</span>
+<span class="c1">//        long time = System.currentTimeMillis();</span>
+        <span class="n">time</span> <span class="o">++;</span>
+        <span class="kt">long</span> <span class="n">newTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">;</span>
+        <span class="n">ValueIncludeTime</span> <span class="n">valueIncludeTime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ValueIncludeTime</span><span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">newTime</span><span class="o">);</span>
+        <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">valueIncludeTime</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setAll</span><span class="o">(</span><span class="kt">int</span> <span class="n">value</span><span class="o">){</span>
+<span class="c1">//        long time = System.currentTimeMillis();</span>
+        <span class="n">time</span> <span class="o">++;</span>
+        <span class="kt">long</span> <span class="n">newTime</span> <span class="o">=</span> <span class="n">time</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">setAllValue</span><span class="o">.</span><span class="na">setTime</span><span class="o">(</span><span class="n">newTime</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">setAllValue</span><span class="o">.</span><span class="na">setValue</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">SetAllHashMap</span> <span class="n">hashMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SetAllHashMap</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="kt">int</span> <span class="n">op</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">op</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span>
+                <span class="c1">// put</span>
+                <span class="kt">int</span> <span class="n">key</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+                <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+                <span class="n">hashMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">op</span> <span class="o">==</span> <span class="mi">2</span><span class="o">){</span>
+                <span class="c1">// get</span>
+                <span class="kt">int</span> <span class="n">key</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">hashMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">));</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">op</span> <span class="o">==</span> <span class="mi">3</span><span class="o">){</span>
+                <span class="c1">// setAll</span>
+                <span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+                <span class="n">hashMap</span><span class="o">.</span><span class="na">setAll</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">6</span>
+<span class="cm">1 1 2</span>
+<span class="cm">2 1</span>
+<span class="cm">2 2</span>
+<span class="cm">3 4</span>
+<span class="cm">2 1</span>
+<span class="cm">2 2</span>
+
+<span class="cm">2</span>
+<span class="cm">-1</span>
+<span class="cm">4</span>
+<span class="cm">-1</span>
+<span class="cm"> */</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-21 13:53:02</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>

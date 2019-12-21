@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>05 设计getMin功能的栈 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;05 设计getMin功能的栈
+    <span class="updated">Page Updated&nbsp;
+      2019-09-24 23:00
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">05 设计getMin功能的栈</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<ul>
+<li>两个栈实现</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Stack</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">MinStack</span><span class="o">{</span>
+    <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">sta</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+    <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">staMin</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+
+    <span class="kt">void</span> <span class="nf">push</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">sta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+            <span class="n">staMin</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">curMin</span> <span class="o">=</span> <span class="n">staMin</span><span class="o">.</span><span class="na">peek</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">val</span> <span class="o">&lt;</span> <span class="n">curMin</span><span class="o">){</span>
+                <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+                <span class="n">staMin</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+                <span class="n">staMin</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">curMin</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kt">int</span> <span class="nf">getMin</span><span class="o">(){</span>
+        <span class="kt">int</span> <span class="n">curMin</span> <span class="o">=</span> <span class="n">staMin</span><span class="o">.</span><span class="na">peek</span><span class="o">();</span>
+        <span class="k">return</span> <span class="n">curMin</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">pop</span><span class="o">(){</span>
+        <span class="n">sta</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+        <span class="n">staMin</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="n">MinStack</span> <span class="n">minStack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MinStack</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;push&quot;</span><span class="o">)){</span>
+                <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+                <span class="n">minStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;getMin&quot;</span><span class="o">)){</span>
+                <span class="kt">int</span> <span class="n">minVal</span> <span class="o">=</span> <span class="n">minStack</span><span class="o">.</span><span class="na">getMin</span><span class="o">();</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">minVal</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;pop&quot;</span><span class="o">)){</span>
+                <span class="n">minStack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+
+
+<ul>
+<li>一个栈实现，存差值</li>
+</ul>
+<p>栈顶部：存最小值，接着的位置：存储当前元素与上个最小值的差</p>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Stack</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">MinStack</span><span class="o">{</span>
+    <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">sta</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+
+    <span class="kt">void</span> <span class="nf">push</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">sta</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+            <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">curMin</span> <span class="o">=</span> <span class="n">sta</span><span class="o">.</span><span class="na">peek</span><span class="o">();</span>
+            <span class="kt">int</span> <span class="n">diff</span> <span class="o">=</span> <span class="n">val</span> <span class="o">-</span> <span class="n">curMin</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">diff</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">){</span>
+                <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">diff</span><span class="o">);</span>
+                <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">diff</span><span class="o">);</span>
+                <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">curMin</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kt">int</span> <span class="nf">getMin</span><span class="o">(){</span>
+        <span class="kt">int</span> <span class="n">curMin</span> <span class="o">=</span> <span class="n">sta</span><span class="o">.</span><span class="na">peek</span><span class="o">();</span>
+        <span class="k">return</span> <span class="n">curMin</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kt">void</span> <span class="nf">pop</span><span class="o">(){</span>
+        <span class="n">sta</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+        <span class="n">sta</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+        <span class="cm">/**</span>
+<span class="cm">         * eg:</span>
+<span class="cm">         *</span>
+<span class="cm">         * 3 2 1: 0 3 -1 2, 0 3 -1 2 -1 1</span>
+<span class="cm">         * 3 1 2: 0 3 -2 1, 0 3 -2 1 1 1</span>
+<span class="cm">         */</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="n">MinStack</span> <span class="n">minStack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MinStack</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;push&quot;</span><span class="o">)){</span>
+                <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+                <span class="n">minStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;getMin&quot;</span><span class="o">)){</span>
+                <span class="kt">int</span> <span class="n">minVal</span> <span class="o">=</span> <span class="n">minStack</span><span class="o">.</span><span class="na">getMin</span><span class="o">();</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">minVal</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;pop&quot;</span><span class="o">)){</span>
+                <span class="n">minStack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-21 13:53:02</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
