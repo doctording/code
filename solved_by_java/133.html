@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>133 找到指定类型的新类型字符 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;133 找到指定类型的新类型字符
+    <span class="updated">Page Updated&nbsp;
+      2019-12-21 23:29
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">133 找到指定类型的新类型字符</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="err">新类型字符的定义如下</span><span class="o">:</span>
+<span class="mi">1</span><span class="o">.</span> <span class="err">新类型字符是长度为</span><span class="mi">1</span><span class="err">或者</span><span class="mi">2</span><span class="err">的字符串。</span>
+<span class="mi">2</span><span class="o">.</span> <span class="err">表现形式可以仅是小写字母，例如，</span><span class="s">&quot;e&quot;</span><span class="o">;</span> <span class="err">也可以是大写字母</span><span class="o">+</span><span class="err">小写字母，例如，</span><span class="s">&quot;Ab&quot;</span><span class="o">;</span><span class="err">还可以是大写字母</span><span class="o">+</span><span class="err">大写字母，例如，</span><span class="s">&quot;DC&quot;</span><span class="err">。</span>
+<span class="err">现在给定一个字符串</span><span class="n">str</span><span class="o">,</span> <span class="n">str</span> <span class="err">一定是若干新类型字符</span> <span class="err">正确组合的结果。比如</span><span class="s">&quot;eaCCBi&quot;</span><span class="err">，由新类型字符</span><span class="s">&quot;e&quot;</span><span class="err">、</span><span class="s">&quot;a”、&quot;</span><span class="n">CC</span><span class="s">&quot;和&quot;</span><span class="n">Bi</span><span class="err">&quot;拼成。</span> <span class="err">再给定一个整数</span><span class="n">k</span><span class="err">，代表</span><span class="n">str</span><span class="err">中的位置。请返回第</span><span class="n">k</span><span class="err">个位置的新类型字符。</span>
+</pre></div>
+
+
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">mod</span> <span class="o">=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="mi">29</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">nk</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">nkArr</span> <span class="o">=</span> <span class="n">nk</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">nkArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">nkArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+        <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">getKth</span><span class="o">(</span><span class="n">str</span><span class="o">,</span> <span class="n">k</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="n">String</span> <span class="nf">getKth</span><span class="o">(</span><span class="n">String</span> <span class="n">str</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">){</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">chars</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">uNum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">--){</span>
+            <span class="k">if</span><span class="o">(!</span><span class="n">isUpper</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">i</span><span class="o">])){</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">uNum</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="c1">// 奇数</span>
+        <span class="k">if</span><span class="o">((</span><span class="n">uNum</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">str</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="c1">// 偶数 且k位置是大写字母</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">isUpper</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">k</span><span class="o">])){</span>
+            <span class="k">return</span> <span class="n">str</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">k</span><span class="o">+</span><span class="mi">2</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="c1">// 偶数 且k位置是小写字母</span>
+        <span class="k">return</span> <span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">chars</span><span class="o">[</span><span class="n">k</span><span class="o">]);</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isUpper</span><span class="o">(</span><span class="kt">char</span> <span class="n">c</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">c</span> <span class="o">&lt;=</span> <span class="sc">&#39;Z&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">c</span> <span class="o">&gt;=</span> <span class="sc">&#39;A&#39;</span><span class="o">){</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">11 7</span>
+<span class="cm">aaABCDEcBCg</span>
+
+<span class="cm">Ec</span>
+<span class="cm">*/</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-22 10:39:43</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
