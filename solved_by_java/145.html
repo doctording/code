@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>145 不用算术运算符实现整数的加减乘除运算 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;145 不用算术运算符实现整数的加减乘除运算
+    <span class="updated">Page Updated&nbsp;
+      2019-12-25 18:29
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">145 不用算术运算符实现整数的加减乘除运算</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">mod</span> <span class="o">=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="mi">29</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">strArr</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="n">String</span> <span class="n">operator</span> <span class="o">=</span> <span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">2</span><span class="o">]);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">operatorVal</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">operator</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">operatorVal</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">b</span><span class="o">,</span> <span class="n">String</span> <span class="n">operator</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">operator</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;+&quot;</span><span class="o">)){</span>
+            <span class="k">return</span> <span class="nf">add</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">operator</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;-&quot;</span><span class="o">)){</span>
+            <span class="k">return</span> <span class="nf">sub</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">operator</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;*&quot;</span><span class="o">)){</span>
+            <span class="k">return</span> <span class="nf">multi</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">operator</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">)</span> <span class="o">||</span> <span class="n">operator</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;\\&quot;</span><span class="o">)){</span>
+            <span class="k">return</span> <span class="nf">divide</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">negative</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="o">~(</span><span class="n">a</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span> <span class="c1">// 最大负整数问题 -a = ~(a-1)</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">b</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">a</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">xor</span> <span class="o">=</span> <span class="n">a</span> <span class="o">^</span> <span class="n">b</span><span class="o">;</span> <span class="c1">// 异或是不带进位的加</span>
+        <span class="kt">int</span> <span class="n">carry</span> <span class="o">=</span> <span class="o">(</span><span class="n">a</span> <span class="o">&amp;</span> <span class="n">b</span><span class="o">)</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="o">;</span> <span class="c1">// 进位和</span>
+        <span class="k">return</span> <span class="nf">add</span><span class="o">(</span><span class="n">xor</span><span class="o">,</span> <span class="n">carry</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">sub</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">b</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">a</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="nf">add</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">negative</span><span class="o">(</span><span class="n">b</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">multi</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">b</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">a</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">sign1</span> <span class="o">=</span> <span class="o">(</span><span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="mi">31</span><span class="o">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">sign2</span> <span class="o">=</span> <span class="o">(</span><span class="n">b</span> <span class="o">&gt;&gt;</span> <span class="mi">31</span><span class="o">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">sign1</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">sign2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="nf">bit_multi</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">sign1</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">sign2</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span>
+            <span class="k">return</span> <span class="nf">negative</span><span class="o">(</span><span class="n">bit_multi</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">negative</span><span class="o">(</span><span class="n">b</span><span class="o">)));</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">sign1</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">sign2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="nf">negative</span><span class="o">(</span><span class="n">bit_multi</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">negative</span><span class="o">(</span><span class="n">a</span><span class="o">)));</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nf">bit_multi</span><span class="o">(</span><span class="n">negative</span><span class="o">(</span><span class="n">a</span><span class="o">),</span> <span class="n">negative</span><span class="o">(</span><span class="n">b</span><span class="o">));</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">bit_multi</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">b</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">b</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">((</span><span class="n">b</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span>
+                <span class="n">ans</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span><span class="n">ans</span><span class="o">,</span> <span class="n">a</span><span class="o">);</span> <span class="c1">// 第一次加 a，第二次加 a^1，第三次加 a^4</span>
+            <span class="o">}</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="o">;</span> <span class="c1">// 左移,相当于乘以2</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="o">;</span> <span class="c1">// 右移,为得到接着位,有种快速幂的感觉</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">ans</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 类似a包含多少个b</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">divide</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">b</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">a</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">sign1</span> <span class="o">=</span> <span class="o">(</span><span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="mi">31</span><span class="o">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">sign2</span> <span class="o">=</span> <span class="o">(</span><span class="n">b</span> <span class="o">&gt;&gt;</span> <span class="mi">31</span><span class="o">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">sign1</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">sign2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="nf">divide_positive</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">sign1</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">sign2</span> <span class="o">==</span> <span class="mi">1</span><span class="o">){</span>
+            <span class="k">return</span> <span class="nf">negative</span><span class="o">(</span><span class="n">divide_positive</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">negative</span><span class="o">(</span><span class="n">b</span><span class="o">)));</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">sign1</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">sign2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="nf">negative</span><span class="o">(</span><span class="n">divide_positive</span><span class="o">(</span><span class="n">negative</span><span class="o">(</span><span class="n">a</span><span class="o">),</span> <span class="n">b</span><span class="o">));</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="nf">divide_positive</span><span class="o">(</span><span class="n">negative</span><span class="o">(</span><span class="n">a</span><span class="o">),</span> <span class="n">negative</span><span class="o">(</span><span class="n">b</span><span class="o">));</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 类似a包含多少个b</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">divide_positive</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">b</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="o">){</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">sub</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">add</span><span class="o">(</span><span class="n">count</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">count</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">5 + 7</span>
+<span class="cm">5   0101</span>
+<span class="cm">7   0111</span>
+<span class="cm">12  1100</span>
+
+<span class="cm">5 ^ 7       =  0010</span>
+<span class="cm">5 &amp; 7 &lt;&lt; 1  =  1010</span>
+
+
+<span class="cm">232977618 \ -59857512</span>
+<span class="cm">-3</span>
+<span class="cm">*/</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-25 22:11:01</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
