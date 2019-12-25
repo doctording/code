@@ -1,0 +1,192 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>142 子数组的最大异或和 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;142 子数组的最大异或和
+    <span class="updated">Page Updated&nbsp;
+      2019-12-24 12:29
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">142 子数组的最大异或和</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a><ul>
+<li><a href="#_1">异或性质</a></li>
+<li><a href="#_2">前缀+利用异或性质</a></li>
+<li><a href="#ac_1">ac</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="err">数组异或和的定义：把数组中所有的数异或起来得到的值。给定一个整型数组</span><span class="n">arr</span><span class="err">，其中可能有正、有负，有零，求其中子数组的最大异或和。</span>
+</pre></div>
+
+
+<h2 id="_1">异或性质</h2>
+<div class="hlcode"><pre><span class="mi">1</span><span class="err">、交换律</span>
+
+<span class="mi">2</span><span class="err">、结合律（即</span><span class="o">(</span><span class="n">a</span><span class="o">^</span><span class="n">b</span><span class="o">)^</span><span class="n">c</span> <span class="o">==</span> <span class="n">a</span><span class="o">^(</span><span class="n">b</span><span class="o">^</span><span class="n">c</span><span class="o">)</span><span class="err">）</span>
+
+<span class="mi">3</span><span class="err">、对于任何数</span><span class="n">x</span><span class="err">，都有</span><span class="n">x</span><span class="o">^</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="err">，</span><span class="n">x</span><span class="o">^</span><span class="mi">0</span><span class="o">=</span><span class="n">x</span>
+
+<span class="mi">4</span><span class="err">、自反性</span> <span class="n">A</span> <span class="n">XOR</span> <span class="n">B</span> <span class="n">XOR</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span> <span class="n">xor</span> <span class="mi">0</span> <span class="o">=</span> <span class="n">A</span>
+</pre></div>
+
+
+<p>如果: <code>E1 ^ E2 = E3</code><br />
+则: <code>E1 ^ E3 = E2</code>, <code>E2 ^ E3 = E1</code></p>
+<p>eg:</p>
+<div class="hlcode"><pre>  <span class="mi">0101</span>   <span class="mi">0101</span>    <span class="mi">1010</span>
+<span class="o">^</span> <span class="mi">1010</span>   <span class="mi">1111</span>    <span class="mi">1111</span>
+  <span class="mi">1111</span>   <span class="mi">1010</span>    <span class="mi">0101</span>
+</pre></div>
+
+
+<p>【0-i-1的异或和】 ^ 【0-j-1的异或和】 = 【j到i-1的异或和】</p>
+<h2 id="_2">前缀+利用异或性质</h2>
+<div class="hlcode"><pre><span class="mi">0</span><span class="o">-</span><span class="mi">0</span>
+<span class="mi">0</span><span class="o">-</span><span class="mi">1</span>
+<span class="mi">0</span><span class="o">-</span><span class="mi">2</span>
+<span class="mi">0</span><span class="o">-</span><span class="mi">3</span>
+<span class="mi">0</span><span class="o">-</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span>
+</pre></div>
+
+
+<p>【0 ... x】^ 【0 ... i】 = 【x+1 ... i】</p>
+<p>即以i结尾的最大异或和就是0到某一位置x的异或结果和0-i异或结果最大，举个例子，假设x是3，0-3的异或结果和0-i进行异或得到的结果最大，那么就说明4-i的异或结果是最大的</p>
+<p>eg:</p>
+<div class="hlcode"><pre><span class="mi">0</span><span class="err">异或任何数都是这个数</span>
+<span class="mi">0</span><span class="o">-</span><span class="mi">1</span> <span class="o">^</span> <span class="mi">0</span><span class="o">-</span><span class="mi">3</span> <span class="o">=</span> <span class="mi">2</span><span class="o">-</span><span class="mi">3</span>
+<span class="mi">0</span><span class="o">-</span><span class="mi">1</span> <span class="o">^</span> <span class="mi">0</span><span class="o">-</span><span class="mi">2</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="mi">0</span><span class="o">-</span><span class="mi">0</span> <span class="o">^</span> <span class="mi">0</span><span class="o">-</span><span class="mi">3</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="mi">3</span>
+</pre></div>
+
+
+<p>所以问题最后转化为：求前缀异或和中每两个数的异或和最大的，初始需要前缀树中有个0</p>
+<p>int整数，最高位是符号位(0为正数,1为负数),对于异或操作<br />
+只要符号位相同，后面31位相异的越多，那么最后异或操作得到的值就越大</p>
+<h2 id="ac_1">ac</h2>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">Trie</span><span class="o">{</span>
+
+    <span class="n">Node</span> <span class="n">root</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+
+    <span class="kd">class</span> <span class="nc">Node</span><span class="o">{</span>
+        <span class="n">Node</span><span class="o">[]</span> <span class="n">next</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="nf">Node</span><span class="o">()</span> <span class="o">{</span>
+            <span class="n">next</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+                <span class="n">next</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 将一个数加到字典树里面</span>
+    <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">){</span>
+        <span class="n">Node</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">root</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">move</span> <span class="o">=</span> <span class="mi">31</span><span class="o">;</span><span class="n">move</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">;</span><span class="n">move</span><span class="o">--)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">bit</span> <span class="o">=</span> <span class="o">((</span><span class="n">num</span> <span class="o">&gt;&gt;</span> <span class="n">move</span><span class="o">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="o">);</span><span class="c1">//每一位上的数字(0,1)</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">next</span><span class="o">[</span><span class="n">bit</span><span class="o">]</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+                <span class="n">cur</span><span class="o">.</span><span class="na">next</span><span class="o">[</span><span class="n">bit</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">next</span><span class="o">[</span><span class="n">bit</span><span class="o">];</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 判断num与字典树里面的所有值进行异或能得到的最大值</span>
+    <span class="kt">int</span> <span class="nf">getMaxXOR</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">){</span>
+        <span class="n">Node</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">root</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">move</span> <span class="o">=</span> <span class="mi">31</span><span class="o">;</span><span class="n">move</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">;</span><span class="n">move</span><span class="o">--)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">bit</span> <span class="o">=</span> <span class="o">(</span><span class="n">num</span> <span class="o">&gt;&gt;</span> <span class="n">move</span><span class="o">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="o">;</span><span class="c1">//提取每一位</span>
+            <span class="kt">int</span> <span class="n">bestBit</span><span class="o">;</span> <span class="c1">// 选择可能的最大树分支进行异或，符号位选择跟符号位一样的，非符号位选择跟当前不一样的</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">move</span> <span class="o">==</span> <span class="mi">31</span><span class="o">){</span> <span class="c1">// 符号位</span>
+                <span class="n">bestBit</span> <span class="o">=</span> <span class="n">bit</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span> <span class="c1">// 非符号位</span>
+                <span class="n">bestBit</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">^</span> <span class="n">bit</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="kt">int</span> <span class="n">realbit</span> <span class="o">=</span> <span class="n">bestBit</span><span class="o">;</span> <span class="c1">// 实际选择的可能没有, 那别无选择</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">next</span><span class="o">[</span><span class="n">bestBit</span><span class="o">]</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+                <span class="n">realbit</span> <span class="o">=</span> <span class="n">bestBit</span> <span class="o">^</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">res</span> <span class="o">|</span> <span class="o">(</span><span class="n">bit</span> <span class="o">^</span> <span class="n">realbit</span><span class="o">)</span> <span class="o">&lt;&lt;</span> <span class="n">move</span><span class="o">;</span> <span class="c1">// 设置res的每一位</span>
+            <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">next</span><span class="o">[</span><span class="n">realbit</span><span class="o">];</span> <span class="c1">//继续往下走</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">res</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">mod</span> <span class="o">=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="mi">29</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">preFix</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">preFix</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">preFix</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">preFix</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">^</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MIN_VALUE</span><span class="o">;</span>
+        <span class="n">Trie</span> <span class="n">trie</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Trie</span><span class="o">();</span>
+        <span class="n">trie</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">trie</span><span class="o">.</span><span class="na">getMaxXOR</span><span class="o">(</span><span class="n">preFix</span><span class="o">[</span><span class="n">i</span><span class="o">]));</span>
+            <span class="n">trie</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">preFix</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+    <span class="o">}</span>
+
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">4</span>
+<span class="cm">3 -28 -29 2</span>
+
+<span class="cm">7</span>
+
+<span class="cm">{-28，-29}这个子数组的异或和为7，是所有子数组中最大的</span>
+<span class="cm">*/</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-25 10:41:24</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
