@@ -1,0 +1,360 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>163 打印二叉树的边界节点 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;163 打印二叉树的边界节点
+    <span class="updated">Page Updated&nbsp;
+      2019-12-28 16:49
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">163 打印二叉树的边界节点</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="err">给定一颗二叉树的根节点</span> <span class="n">root</span><span class="err">，按照如下两种标准分别实现二叉树的边界节点的逆时针打印。</span>
+<span class="err">标准一：</span>
+<span class="mi">1</span><span class="err">，根节点为边界节点。</span>
+<span class="mi">2</span><span class="err">，叶节点为边界节点。</span>
+<span class="mi">3</span><span class="err">，如果节点在其所在的层中是最左的或最右的，那么该节点也是边界节点。</span>
+<span class="err">标准二：</span>
+<span class="mi">1</span><span class="err">，根节点为边界节点。</span>
+<span class="mi">2</span><span class="err">，叶节点为边界节点。</span>
+<span class="mi">3</span><span class="err">，树左边界延伸下去的路径为边界节点。</span>
+<span class="mi">4</span><span class="err">，树右边界延伸下去的路径为边界节点。</span>
+</pre></div>
+
+
+<ul>
+<li>读懂要求</li>
+<li>BFS, DFS</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">TreeNode</span><span class="o">{</span>
+    <span class="kt">int</span> <span class="n">val</span><span class="o">;</span>
+    <span class="n">TreeNode</span> <span class="n">left</span><span class="o">;</span>
+    <span class="n">TreeNode</span> <span class="n">right</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">TreeNode</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">mod</span> <span class="o">=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="mi">29</span><span class="o">);</span>
+
+    <span class="kd">static</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">leftArr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">static</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">rightArr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+
+    <span class="c1">// 递归建立树</span>
+    <span class="kd">static</span> <span class="n">TreeNode</span> <span class="nf">buildTree</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">,</span> <span class="kt">int</span> <span class="n">val</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TreeNode</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">left</span> <span class="o">=</span> <span class="n">leftArr</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">right</span> <span class="o">=</span> <span class="n">rightArr</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">val</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">left</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="n">root</span><span class="o">.</span><span class="na">left</span> <span class="o">=</span> <span class="n">buildTree</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">left</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">right</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="n">root</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="n">buildTree</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">right</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">root</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">getHeight</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">getHeight</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">),</span> <span class="n">getHeight</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">String</span> <span class="n">line</span><span class="o">;</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">strArr</span><span class="o">;</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="kt">int</span> <span class="n">rootVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+            <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">curVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+            <span class="kt">int</span> <span class="n">leftVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+            <span class="kt">int</span> <span class="n">rightVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">2</span><span class="o">]);</span>
+            <span class="n">leftArr</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">curVal</span><span class="o">,</span><span class="n">leftVal</span><span class="o">);</span>
+            <span class="n">rightArr</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">curVal</span><span class="o">,</span> <span class="n">rightVal</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">TreeNode</span> <span class="n">root</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">buildTree</span><span class="o">(</span><span class="n">root</span><span class="o">,</span> <span class="n">rootVal</span><span class="o">);</span>
+        <span class="n">printEdge1</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+        <span class="n">printEdge2</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+    <span class="o">}</span>
+
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">printEdge2</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">val</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">printLeftEdge</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">,</span><span class="kc">true</span><span class="o">);</span>
+            <span class="n">printRightEdge</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span><span class="kc">true</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="n">printEdge2</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">root</span><span class="o">.</span><span class="na">left</span> <span class="o">:</span> <span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 从上往下打印左边界，包括的处理了最后一层</span>
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">printLeftEdge</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">print</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 先打印根</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">print</span> <span class="o">||</span> <span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root</span><span class="o">.</span><span class="na">right</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">val</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">printLeftEdge</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">print</span><span class="o">);</span>
+        <span class="c1">// 只有当左节点为null的时候才打印右节点</span>
+        <span class="n">printLeftEdge</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">print</span> <span class="o">&amp;&amp;</span> <span class="n">root</span><span class="o">.</span><span class="na">left</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="kc">true</span> <span class="o">:</span> <span class="kc">false</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 从下往上打印右边界，包括的处理了最后一层</span>
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">printRightEdge</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">print</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">printRightEdge</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">print</span> <span class="o">&amp;&amp;</span> <span class="n">root</span><span class="o">.</span><span class="na">right</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="kc">true</span> <span class="o">:</span> <span class="kc">false</span><span class="o">);</span>
+        <span class="n">printRightEdge</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">print</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">print</span> <span class="o">||</span> <span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root</span><span class="o">.</span><span class="na">right</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">val</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">printEdge1</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">height</span> <span class="o">=</span> <span class="n">getHeight</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+        <span class="n">TreeNode</span><span class="o">[]</span> <span class="n">leftEdge</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TreeNode</span><span class="o">[</span><span class="n">height</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+        <span class="n">TreeNode</span><span class="o">[]</span> <span class="n">rightEdge</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TreeNode</span><span class="o">[</span><span class="n">height</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+        <span class="c1">// 叶子节点</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">leafList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="c1">// 左侧的</span>
+        <span class="n">Queue</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">queueC</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+        <span class="n">queueC</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(!</span><span class="n">queue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">TreeNode</span> <span class="n">node</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="kt">int</span> <span class="n">ceng</span> <span class="o">=</span> <span class="n">queueC</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">leftEdge</span><span class="o">[</span><span class="n">ceng</span><span class="o">]</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">leftEdge</span><span class="o">[</span><span class="n">ceng</span><span class="o">]</span> <span class="o">=</span> <span class="n">node</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">left</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+                <span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+                <span class="n">queueC</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">ceng</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+                <span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+                <span class="n">queueC</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">ceng</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">// 右侧的</span>
+        <span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+        <span class="n">queueC</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(!</span><span class="n">queue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">TreeNode</span> <span class="n">node</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="kt">int</span> <span class="n">ceng</span> <span class="o">=</span> <span class="n">queueC</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">rightEdge</span><span class="o">[</span><span class="n">ceng</span><span class="o">]</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">rightEdge</span><span class="o">[</span><span class="n">ceng</span><span class="o">]</span> <span class="o">=</span> <span class="n">node</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="c1">// 先右边再左边</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+                <span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+                <span class="n">queueC</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">ceng</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">left</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+                <span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+                <span class="n">queueC</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">ceng</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">// 非左，非右，且是叶子节点，按照每一层打印的</span>
+<span class="c1">//        queue.offer(root);</span>
+<span class="c1">//        queueC.offer(1);</span>
+<span class="c1">//        while (!queue.isEmpty()){</span>
+<span class="c1">//            TreeNode node = queue.poll();</span>
+<span class="c1">//            int ceng = queueC.poll();</span>
+<span class="c1">//            if(node.left == null &amp;&amp; node.right == null &amp;&amp; node != leftEdge[ceng] &amp;&amp; node != rightEdge[ceng]) {</span>
+<span class="c1">//                    leafList.add(node);</span>
+<span class="c1">//            }</span>
+<span class="c1">//            if(node.left !=  null){</span>
+<span class="c1">//                queue.offer(node.left);</span>
+<span class="c1">//                queueC.offer(ceng + 1);</span>
+<span class="c1">//            }</span>
+<span class="c1">//            if(node.right != null){</span>
+<span class="c1">//                queue.offer(node.right);</span>
+<span class="c1">//                queueC.offer(ceng + 1);</span>
+<span class="c1">//            }</span>
+<span class="c1">//        }</span>
+        <span class="n">leafList</span> <span class="o">=</span> <span class="n">getLeafList</span><span class="o">(</span><span class="n">root</span><span class="o">,</span> <span class="n">height</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="n">leftEdge</span><span class="o">,</span><span class="n">rightEdge</span><span class="o">);</span>
+        <span class="c1">// 一次打印即可</span>
+        <span class="c1">// 左</span>
+        <span class="n">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">height</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">leftEdge</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">val</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="c1">// 叶子</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">TreeNode</span> <span class="nl">node:</span> <span class="n">leafList</span><span class="o">){</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">val</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="c1">// 右</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">height</span><span class="o">;</span><span class="n">i</span><span class="o">&gt;=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">--){</span>
+            <span class="c1">// 一层可能只有一个节点，左边打印了，则右边不需要打印了</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">rightEdge</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">!=</span> <span class="n">leftEdge</span><span class="o">[</span><span class="n">i</span><span class="o">])</span> <span class="o">{</span>
+                <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">rightEdge</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">val</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 递归深度</span>
+    <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="nf">getLeafList</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">,</span> <span class="kt">int</span> <span class="n">height</span><span class="o">,</span> <span class="kt">int</span> <span class="n">curCeng</span><span class="o">,</span>
+                                      <span class="n">TreeNode</span><span class="o">[]</span> <span class="n">leftEdge</span><span class="o">,</span>  <span class="n">TreeNode</span><span class="o">[]</span> <span class="n">rightEdge</span><span class="o">){</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">treeNodes</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">treeNodes</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root</span><span class="o">.</span><span class="na">right</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root</span> <span class="o">!=</span> <span class="n">leftEdge</span><span class="o">[</span><span class="n">curCeng</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">root</span> <span class="o">!=</span> <span class="n">rightEdge</span><span class="o">[</span><span class="n">curCeng</span><span class="o">])</span> <span class="o">{</span>
+            <span class="n">treeNodes</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">treeNodes</span><span class="o">.</span><span class="na">addAll</span><span class="o">(</span><span class="n">getLeafList</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">height</span><span class="o">,</span> <span class="n">curCeng</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">leftEdge</span><span class="o">,</span> <span class="n">rightEdge</span><span class="o">));</span>
+        <span class="n">treeNodes</span><span class="o">.</span><span class="na">addAll</span><span class="o">(</span><span class="n">getLeafList</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">height</span><span class="o">,</span> <span class="n">curCeng</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">leftEdge</span><span class="o">,</span> <span class="n">rightEdge</span><span class="o">));</span>
+        <span class="k">return</span> <span class="n">treeNodes</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">         1</span>
+<span class="cm">     /        \</span>
+<span class="cm">  2              3</span>
+<span class="cm">  \             /   \</span>
+<span class="cm">  4            5     6</span>
+<span class="cm"> / \          / \</span>
+<span class="cm">7   8         9  10</span>
+<span class="cm">     \       /</span>
+<span class="cm">      11    12</span>
+<span class="cm">     / \    / \</span>
+<span class="cm">    13 14  15  16</span>
+
+<span class="cm">16 1</span>
+<span class="cm">1 2 3</span>
+<span class="cm">2 0 4</span>
+<span class="cm">4 7 8</span>
+<span class="cm">7 0 0</span>
+<span class="cm">8 0 11</span>
+<span class="cm">11 13 14</span>
+<span class="cm">13 0 0</span>
+<span class="cm">14 0 0</span>
+<span class="cm">3 5 6</span>
+<span class="cm">5 9 10</span>
+<span class="cm">10 0 0</span>
+<span class="cm">9 12 0</span>
+<span class="cm">12 15 16</span>
+<span class="cm">15 0 0</span>
+<span class="cm">16 0 0</span>
+<span class="cm">6 0 0</span>
+
+<span class="cm">1 2 4 7 11 13 14 15 16 12 10 6 3</span>
+<span class="cm">1 2 4 7 13 14 15 16 10 6 3</span>
+
+<span class="cm">44 44</span>
+<span class="cm">44 18 10</span>
+<span class="cm">18 22 1</span>
+<span class="cm">22 40 0</span>
+<span class="cm">40 0 34</span>
+<span class="cm">34 36 0</span>
+<span class="cm">36 31 0</span>
+<span class="cm">31 0 0</span>
+<span class="cm">1 41 9</span>
+<span class="cm">41 30 27</span>
+<span class="cm">30 0 19</span>
+<span class="cm">19 0 0</span>
+<span class="cm">27 16 0</span>
+<span class="cm">16 32 0</span>
+<span class="cm">32 0 0</span>
+<span class="cm">9 3 39</span>
+<span class="cm">3 0 12</span>
+<span class="cm">12 0 0</span>
+<span class="cm">39 20 11</span>
+<span class="cm">20 4 0</span>
+<span class="cm">4 0 0</span>
+<span class="cm">11 0 0</span>
+<span class="cm">10 38 2</span>
+<span class="cm">38 7 0</span>
+<span class="cm">7 23 35</span>
+<span class="cm">23 0 8</span>
+<span class="cm">8 42 0</span>
+<span class="cm">42 0 0</span>
+<span class="cm">35 0 28</span>
+<span class="cm">28 0 0</span>
+<span class="cm">2 14 21</span>
+<span class="cm">14 6 0</span>
+<span class="cm">6 24 0</span>
+<span class="cm">24 15 43</span>
+<span class="cm">15 0 0</span>
+<span class="cm">43 0 5</span>
+<span class="cm">5 33 0</span>
+<span class="cm">33 26 0</span>
+<span class="cm">26 0 0</span>
+<span class="cm">21 17 25</span>
+<span class="cm">17 29 13</span>
+<span class="cm">29 0 0</span>
+<span class="cm">13 0 0</span>
+<span class="cm">25 0 37</span>
+<span class="cm">37 0 0</span>
+
+<span class="cm">44 18 22 40 34 36 31 5 33 26 19 32 12 4 11 42 28 15 29 13 43 37 25 21 2 10</span>
+<span class="cm">44 18 22 40 34 36 31 19 32 12 4 11 42 28 15 26 29 13 37 25 21 2 10</span>
+<span class="cm">*/</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-28 21:43:50</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
