@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>159 向有序的环形单链表中插入新节点 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;159 向有序的环形单链表中插入新节点
+    <span class="updated">Page Updated&nbsp;
+      2019-12-28 13:29
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">159 向有序的环形单链表中插入新节点</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+<li><a href="#include">include <bits/stdc++.h></a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="err">一个环形单链表从头节点</span> <span class="n">head</span> <span class="err">开始不降序，同时由最后的节点指回头节点。给定这样一个环形单链表的头节点</span> <span class="n">head</span> <span class="err">和</span> <span class="err">一个整数</span> <span class="n">num</span><span class="err">，</span> <span class="err">请生成节点值为</span> <span class="n">num</span> <span class="err">的新节点，并插入到这个环形链表中，保证调整后的链表依然有序。</span>
+</pre></div>
+
+
+<ul>
+<li>找到断点位置，插入节点即可</li>
+</ul>
+<h1 id="include">include <bits/stdc++.h></h1>
+<p>using namespace std;</p>
+<p>struct list_node{<br />
+    int val;<br />
+    struct list_node * next;<br />
+};</p>
+<p>list_node * input_list(void)<br />
+{<br />
+    int n, val;<br />
+    list_node * phead = new list_node();<br />
+    list_node * cur_pnode = phead;<br />
+    scanf("%d", &amp;n);<br />
+    for (int i = 1; i &lt;= n; ++i) {<br />
+        scanf("%d", &amp;val);<br />
+        if (i == 1) {<br />
+            cur_pnode-&gt;val = val;<br />
+            cur_pnode-&gt;next = NULL;<br />
+        }<br />
+        else {<br />
+            list_node * new_pnode = new list_node();<br />
+            new_pnode-&gt;val = val;<br />
+            new_pnode-&gt;next = NULL;<br />
+            cur_pnode-&gt;next = new_pnode;<br />
+            cur_pnode = new_pnode;<br />
+            if (i == n) {<br />
+                new_pnode-&gt;next = phead;<br />
+            }<br />
+        }<br />
+    }<br />
+    return phead;<br />
+}</p>
+<p>list_node * insert_num(list_node * head, int num)<br />
+{<br />
+    //////在下面完成代码<br />
+    list_node<em> pPre = head;<br />
+    list_node</em> p = head-&gt;next;<br />
+    while(p != head &amp;&amp; p-&gt;val &lt; num){<br />
+        list_node* pNext = p-&gt;next;<br />
+        pPre = p;<br />
+        p = pNext;<br />
+    }<br />
+    list_node * new_pnode = new list_node();<br />
+    new_pnode-&gt;val = num;</p>
+<div class="hlcode"><pre><span class="n">new_pnode</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
+<span class="n">pPre</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">new_pnode</span><span class="p">;</span>
+
+<span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+</pre></div>
+
+
+<p>}</p>
+<p>void print_list(list_node * head)<br />
+{<br />
+    list_node * h = head;<br />
+    while (1) {<br />
+        printf("%d ", head-&gt;val);<br />
+        if (head-&gt;next == h) break;<br />
+        head = head-&gt;next;<br />
+    }<br />
+    puts("");<br />
+}</p>
+<p>int main ()<br />
+{<br />
+    list_node * head = input_list();<br />
+    int n;<br />
+    scanf("%d", &amp;n);<br />
+    list_node * new_head = insert_num(head, n);<br />
+    print_list(new_head);<br />
+    return 0;<br />
+}<br />
+```</p>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2019 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2019-12-28 13:50:25</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
