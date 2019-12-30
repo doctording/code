@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>15 生成窗口最大值数组 - 程序员代码面试指南</title>
+    <title>015 生成窗口最大值数组 - 程序员代码面试指南</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,14 +16,14 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;15 生成窗口最大值数组
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;015 生成窗口最大值数组
     <span class="updated">Page Updated&nbsp;
       2019-10-26 23:11
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">15 生成窗口最大值数组</div>
+<div class="page_title">015 生成窗口最大值数组</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ac">ac</a><ul>
@@ -33,10 +33,97 @@
 </ul>
 </div>
 <h1 id="ac">ac</h1>
-<div class="hlcode"><pre>
+<div class="hlcode"><pre><span class="err">有一个整型数组</span><span class="n">arr</span><span class="err">和一个大小为</span><span class="n">w</span><span class="err">的窗口从数组的最左边滑到最右边，窗口每次向右边滑一个位置，求每一种窗口状态下的最大值。（如果数组长度为</span><span class="n">n</span><span class="err">，窗口大小为</span><span class="n">w</span><span class="err">，则一共产生</span><span class="n">n</span><span class="o">-</span><span class="n">w</span><span class="o">+</span><span class="mi">1</span><span class="err">个窗口的最大值）</span>
 </pre></div>
 
 
+<p>时间复杂度<code>O(n)</code></p>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">String</span> <span class="n">line</span><span class="o">;</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">strArr</span><span class="o">;</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="kt">int</span> <span class="n">w</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+
+        <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+
+        <span class="kt">int</span> <span class="n">arrMaxVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MIN_VALUE</span><span class="o">;</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">val</span> <span class="o">&gt;</span> <span class="n">arrMaxVal</span><span class="o">){</span>
+                <span class="n">arrMaxVal</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">w</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">w</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arrMaxVal</span><span class="o">);</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">res</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">w</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+        <span class="c1">// 双端队列存放下标</span>
+        <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">queue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+                <span class="n">queue</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="k">while</span> <span class="o">(!</span><span class="n">queue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+                    <span class="kt">int</span> <span class="n">lastIndex</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">peekLast</span><span class="o">();</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">lastIndex</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">])</span> <span class="o">{</span>
+                        <span class="n">queue</span><span class="o">.</span><span class="na">pollLast</span><span class="o">();</span>
+                    <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                        <span class="k">break</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+                <span class="n">queue</span><span class="o">.</span><span class="na">offerLast</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">queue</span><span class="o">.</span><span class="na">getFirst</span><span class="o">()</span> <span class="o">&gt;</span> <span class="o">(</span><span class="n">w</span> <span class="o">-</span> <span class="mi">1</span><span class="o">))</span> <span class="o">{</span>
+                    <span class="n">queue</span><span class="o">.</span><span class="na">pollFirst</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">w</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">res</span><span class="o">[</span><span class="n">i</span> <span class="o">-</span> <span class="o">(</span><span class="n">w</span><span class="o">-</span><span class="mi">1</span><span class="o">)]</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">getFirst</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">res</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+<span class="c1">//            System.out.print(arr[res[i]] + &quot; &quot;);</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">res</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+<span class="c1">//        System.out.println(arr[res[res.length-1]]);</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">res</span><span class="o">[</span><span class="n">res</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">]]);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">8 3</span>
+<span class="cm">4 3 5 4 3 3 6 7</span>
+
+<span class="cm">5 5 5 4 6 7</span>
+<span class="cm">*/</span>
+</pre></div>
+
+
+<ul>
+<li>java 的输入输出注意，输出可以用<code>StringBuilder</code></li>
+</ul>
 <h2 id="linkedlist">双端队列求解，使用<code>LinkedList</code> 超时</h2>
 <ul>
 <li>存储<code>index</code>, 超过队列长度范围的要出队列</li>
@@ -112,7 +199,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-12-30 22:33:04</p>
+        <p>Site Generated 2019-12-30 22:58:02</p>
       </span>
     </div>
 
