@@ -18,7 +18,7 @@
 <div id="header">
   <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;166 在二叉树中找到累加和为指定值的最长路径长度
     <span class="updated">Page Updated&nbsp;
-      2019-12-30 10:49
+      2019-12-31 00:49
     </span></div>
 </div>
 <div class="clearfix"></div>
@@ -32,12 +32,235 @@
 <h1 id="ac">ac</h1>
 <div class="hlcode"><pre><span class="err">给定一颗二叉树和一个整数</span> <span class="n">sum</span><span class="err">，求累加和为</span> <span class="n">sum</span> <span class="err">的最长路径长度。路径是指从某个节点往下，每次最多选择一个孩子节点或者不选所形成的节点链</span>
 </pre></div>
+
+
+<ul>
+<li>
+<p>时间复杂度<code>O(n)</code></p>
+</li>
+<li>
+<p>dfs回溯</p>
+</li>
+<li>
+<p>类似<code>未排序数组中累加和为给定值的最长子数组长度</code></p>
+</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">org.omg.CORBA.INTERNAL</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">TreeNode</span><span class="o">{</span>
+    <span class="kt">int</span> <span class="n">curVal</span><span class="o">;</span>
+    <span class="n">TreeNode</span> <span class="n">left</span><span class="o">;</span>
+    <span class="n">TreeNode</span> <span class="n">right</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">val</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">TreeNode</span><span class="o">(</span><span class="kt">int</span> <span class="n">curVal</span><span class="o">,</span> <span class="kt">int</span> <span class="n">val</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">curVal</span> <span class="o">=</span> <span class="n">curVal</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">mod</span> <span class="o">=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="mi">29</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="n">String</span> <span class="n">line</span><span class="o">;</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">strArr</span><span class="o">;</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="kt">int</span> <span class="n">rootVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">mp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;(</span><span class="n">n</span><span class="o">);</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+            <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">curVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+            <span class="kt">int</span> <span class="n">leftVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+            <span class="kt">int</span> <span class="n">rightVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">2</span><span class="o">]);</span>
+            <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">3</span><span class="o">]);</span>
+
+            <span class="k">if</span><span class="o">(!</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">curVal</span><span class="o">)){</span>
+                <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">curVal</span><span class="o">,</span> <span class="k">new</span> <span class="n">TreeNode</span><span class="o">(</span><span class="n">curVal</span><span class="o">,</span> <span class="n">val</span><span class="o">));</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">TreeNode</span> <span class="n">node</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">curVal</span><span class="o">);</span>
+                <span class="n">node</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+                <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">curVal</span><span class="o">,</span> <span class="n">node</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">leftVal</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(!</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">leftVal</span><span class="o">)){</span>
+                    <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">leftVal</span><span class="o">,</span> <span class="k">new</span> <span class="n">TreeNode</span><span class="o">(</span><span class="n">leftVal</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">));</span>
+                <span class="o">}</span>
+                <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">curVal</span><span class="o">).</span><span class="na">left</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">leftVal</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">rightVal</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">){</span>
+                <span class="k">if</span><span class="o">(!</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">rightVal</span><span class="o">)){</span>
+                    <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">rightVal</span><span class="o">,</span> <span class="k">new</span> <span class="n">TreeNode</span><span class="o">(</span><span class="n">rightVal</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">));</span>
+                <span class="o">}</span>
+                <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">curVal</span><span class="o">).</span><span class="na">right</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rightVal</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">TreeNode</span> <span class="n">root</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rootVal</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">());</span>
+<span class="c1">//        System.out.println(getLen(root, k));</span>
+
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">sumCengMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">sumCengMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span> <span class="c1">// 和为0，不使用任何节点</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">dfs</span><span class="o">(</span><span class="n">root</span><span class="o">,</span> <span class="n">k</span><span class="o">,</span> <span class="n">sumCengMap</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="c1">// dfs 回溯，一条路径走到底</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">dfs</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">,</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">sumCengMap</span><span class="o">,</span> <span class="kt">int</span> <span class="n">preSum</span><span class="o">,</span> <span class="kt">int</span> <span class="n">preCeng</span><span class="o">,</span> <span class="kt">int</span> <span class="n">maxLen</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">maxLen</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">curLevel</span> <span class="o">=</span> <span class="n">preCeng</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">curSum</span> <span class="o">=</span> <span class="n">preSum</span> <span class="o">+</span> <span class="n">root</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(!</span><span class="n">sumCengMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">curSum</span><span class="o">)){</span>
+            <span class="n">sumCengMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">curSum</span><span class="o">,</span> <span class="n">curLevel</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">sumCengMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">curSum</span> <span class="o">-</span> <span class="n">k</span><span class="o">)){</span>
+            <span class="n">maxLen</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">maxLen</span><span class="o">,</span> <span class="n">curLevel</span> <span class="o">-</span> <span class="n">sumCengMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">curSum</span> <span class="o">-</span> <span class="n">k</span><span class="o">));</span>
+        <span class="o">}</span>
+        <span class="n">maxLen</span> <span class="o">=</span> <span class="n">dfs</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">k</span><span class="o">,</span> <span class="n">sumCengMap</span><span class="o">,</span> <span class="n">curSum</span><span class="o">,</span> <span class="n">curLevel</span><span class="o">,</span> <span class="n">maxLen</span><span class="o">);</span>
+        <span class="n">maxLen</span> <span class="o">=</span> <span class="n">dfs</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">k</span><span class="o">,</span> <span class="n">sumCengMap</span><span class="o">,</span> <span class="n">curSum</span><span class="o">,</span> <span class="n">curLevel</span><span class="o">,</span> <span class="n">maxLen</span><span class="o">);</span>
+        <span class="c1">// 是遍历到当前节点加的 sumCengMap.put(curSum, curLevel)</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">curLevel</span> <span class="o">==</span> <span class="n">sumCengMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">curSum</span><span class="o">)){</span>
+            <span class="n">sumCengMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">curSum</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">maxLen</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 错我，这是按照层来的，没有考虑节点是要在一条路径上</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">getLen</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">,</span> <span class="kt">int</span> <span class="n">k</span><span class="o">){</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">mp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span> <span class="c1">// 和为0，不使用任何节点</span>
+        <span class="kt">int</span> <span class="n">maxLen</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+        <span class="n">Queue</span><span class="o">&lt;</span><span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">que</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">queCeng</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">Queue</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">queSum</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">que</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+        <span class="n">queCeng</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">queSum</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(!</span><span class="n">que</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">TreeNode</span> <span class="n">node</span> <span class="o">=</span> <span class="n">que</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="kt">int</span> <span class="n">ceng</span> <span class="o">=</span> <span class="n">queCeng</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="kt">int</span> <span class="n">sumPre</span> <span class="o">=</span> <span class="n">queSum</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">sumPre</span> <span class="o">-</span> <span class="n">k</span><span class="o">)){</span>
+                <span class="kt">int</span> <span class="n">ans</span> <span class="o">=</span> <span class="n">ceng</span> <span class="o">-</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">sumPre</span> <span class="o">-</span> <span class="n">k</span><span class="o">);</span>
+                <span class="n">maxLen</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">maxLen</span><span class="o">,</span> <span class="n">ans</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(!</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">sumPre</span><span class="o">)){</span>
+                <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">sumPre</span><span class="o">,</span> <span class="n">ceng</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">left</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">que</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+                <span class="n">queCeng</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">ceng</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+                <span class="n">queSum</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">sumPre</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="na">left</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">que</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">node</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+                <span class="n">queCeng</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">ceng</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+                <span class="n">queSum</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">sumPre</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="na">right</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">maxLen</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">         1</span>
+<span class="cm">     /        \</span>
+<span class="cm">  2              3</span>
+<span class="cm"> / \            /   \</span>
+<span class="cm">4   5          6     7</span>
+<span class="cm">    /\</span>
+<span class="cm">   8  9</span>
+
+<span class="cm">9 1</span>
+<span class="cm">1 2 3 -3</span>
+<span class="cm">2 4 5 3</span>
+<span class="cm">4 0 0 1</span>
+<span class="cm">5 8 9 0</span>
+<span class="cm">8 0 0 1</span>
+<span class="cm">9 0 0 6</span>
+<span class="cm">3 6 7 -9</span>
+<span class="cm">6 0 0 2</span>
+<span class="cm">7 0 0 1</span>
+<span class="cm">6</span>
+
+<span class="cm">4</span>
+
+<span class="cm">9 1</span>
+<span class="cm">1 2 3 -3</span>
+<span class="cm">2 4 5 3</span>
+<span class="cm">4 0 0 1</span>
+<span class="cm">5 8 9 0</span>
+<span class="cm">8 0 0 1</span>
+<span class="cm">9 0 0 6</span>
+<span class="cm">3 6 7 -9</span>
+<span class="cm">6 0 0 2</span>
+<span class="cm">7 0 0 1</span>
+<span class="cm">-9</span>
+
+<span class="cm">1</span>
+
+<span class="cm">35 29</span>
+<span class="cm">29 26 32 -70</span>
+<span class="cm">26 33 34 -19</span>
+<span class="cm">33 0 0 31</span>
+<span class="cm">34 0 0 -94</span>
+<span class="cm">32 15 17 76</span>
+<span class="cm">15 3 0 -28</span>
+<span class="cm">3 0 11 32</span>
+<span class="cm">11 24 0 -51</span>
+<span class="cm">24 0 0 -92</span>
+<span class="cm">17 18 30 55</span>
+<span class="cm">18 22 21 -4</span>
+<span class="cm">22 0 0 67</span>
+<span class="cm">21 2 14 1</span>
+<span class="cm">2 6 23 -92</span>
+<span class="cm">6 0 8 74</span>
+<span class="cm">8 0 0 65</span>
+<span class="cm">23 0 9 85</span>
+<span class="cm">9 16 0 43</span>
+<span class="cm">16 0 12 -53</span>
+<span class="cm">12 0 0 55</span>
+<span class="cm">14 0 31 -68</span>
+<span class="cm">31 35 0 -31</span>
+<span class="cm">35 0 0 -17</span>
+<span class="cm">30 0 4 29</span>
+<span class="cm">4 19 10 8</span>
+<span class="cm">19 0 28 34</span>
+<span class="cm">28 25 0 -63</span>
+<span class="cm">25 5 0 49</span>
+<span class="cm">5 0 0 98</span>
+<span class="cm">10 27 1 -88</span>
+<span class="cm">27 20 0 52</span>
+<span class="cm">20 7 13 50</span>
+<span class="cm">7 0 0 -18</span>
+<span class="cm">13 0 0 78</span>
+<span class="cm">1 0 0 60</span>
+<span class="cm">50</span>
+
+<span class="cm">1</span>
+<span class="cm">*/</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-12-30 22:58:02</p>
+        <p>Site Generated 2019-12-31 00:12:21</p>
       </span>
     </div>
 
