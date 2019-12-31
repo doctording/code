@@ -30,6 +30,17 @@
 </ul>
 </div>
 <h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="err">输出</span><span class="n">N</span><span class="err">行，每行两个数。</span>
+
+<span class="err">为了检验输出的正确性，请在输出当前打印的数字之后输出此时最后一个加入的元素。</span>
+
+<span class="err">具体看输入输出样例</span>
+</pre></div>
+
+
+<ul>
+<li>链表结构，存储各个区间，以及上一次打印的值，接收到比上一次打印值多1的元素即可打印</li>
+</ul>
 <div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
@@ -37,6 +48,7 @@
 <span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
 
 
+<span class="c1">// 79题</span>
 <span class="kd">class</span> <span class="nc">MessageBox</span><span class="o">{</span>
 
     <span class="kd">public</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Node</span><span class="o">&gt;</span> <span class="n">headMap</span><span class="o">;</span>
@@ -53,29 +65,26 @@
         <span class="k">if</span><span class="o">(</span><span class="n">num</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="o">){</span>
             <span class="k">return</span><span class="o">;</span>
         <span class="o">}</span>
-        <span class="n">Node</span> <span class="n">node</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="n">Node</span> <span class="n">curNode</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="n">headMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">curNode</span><span class="o">);</span>
+        <span class="n">tailMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">curNode</span><span class="o">);</span>
         <span class="c1">// 判断区间是否可以合并</span>
-        <span class="k">if</span><span class="o">(</span><span class="n">tailMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">num</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">tailMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)){</span> <span class="c1">// 首尾都有,连接两个区间</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">tailMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">num</span><span class="o">-</span><span class="mi">1</span><span class="o">)){</span> <span class="c1">// 首尾有,连接两个区间</span>
             <span class="n">Node</span> <span class="n">tailNode</span> <span class="o">=</span> <span class="n">tailMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
-            <span class="n">Node</span> <span class="n">headNode</span> <span class="o">=</span> <span class="n">headMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
-            <span class="n">tailNode</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">node</span><span class="o">;</span>
-            <span class="n">node</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">headNode</span><span class="o">;</span>
+            <span class="n">tailNode</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">curNode</span><span class="o">;</span>
             <span class="c1">// 删除老的区间节点</span>
             <span class="n">tailMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="n">headMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="c1">// 经过上一步后肯定有tailMap是 num 的节点的</span>
+        <span class="c1">// 接着判断是否能连接某个头部是 num + 1的节点</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">headMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)){</span> <span class="c1">//</span>
+            <span class="n">Node</span> <span class="n">tailNode</span> <span class="o">=</span> <span class="n">tailMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+            <span class="n">tailNode</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">headMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="c1">// 删除老的节点</span>
+            <span class="n">tailMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
             <span class="n">headMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
-        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">tailMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)){</span> <span class="c1">// 某个的尾部</span>
-            <span class="n">tailMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="o">).</span><span class="na">next</span> <span class="o">=</span> <span class="n">node</span><span class="o">;</span>
-            <span class="n">tailMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">node</span><span class="o">);</span>
-            <span class="c1">// 删除老的尾部</span>
-            <span class="n">tailMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
-        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">headMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)){</span> <span class="c1">// 某个的头部</span>
-            <span class="n">node</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">headMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
-            <span class="n">headMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">node</span><span class="o">);</span>
-            <span class="c1">// 删除老的头部</span>
-            <span class="n">headMap</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
-        <span class="o">}</span><span class="k">else</span> <span class="o">{</span> <span class="c1">// 自己成为一个区间</span>
-            <span class="n">headMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">node</span><span class="o">);</span>
-            <span class="n">tailMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">num</span><span class="o">,</span> <span class="n">node</span><span class="o">);</span>
+
         <span class="o">}</span>
         <span class="c1">// 最后判断打印与否</span>
         <span class="k">if</span><span class="o">(</span><span class="n">headMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">lastPrintVal</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)){</span>
@@ -170,7 +179,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-12-31 13:28:02</p>
+        <p>Site Generated 2019-12-31 13:49:25</p>
       </span>
     </div>
 
