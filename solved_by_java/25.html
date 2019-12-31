@@ -34,13 +34,13 @@
 <li>时间复杂度O(N*logN)</li>
 <li>空间复杂度O(N)</li>
 </ul>
-<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+<div class="hlcode"><pre><span class="err">```</span><span class="n">java</span>
+<span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
 
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
 
     <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
-
 
     <span class="c1">// 最左边大于等于val的数</span>
     <span class="kd">static</span> <span class="kt">int</span> <span class="nf">bsearch</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">ends</span><span class="o">,</span> <span class="kt">int</span> <span class="n">left</span><span class="o">,</span> <span class="kt">int</span> <span class="n">right</span><span class="o">,</span> <span class="kt">int</span> <span class="n">val</span><span class="o">){</span>
@@ -71,7 +71,7 @@
         <span class="kt">int</span><span class="o">[]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
         <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
         <span class="n">ends</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
-        <span class="c1">// 有效区域[0, right]; right + 1 为 最长递增</span>
+        <span class="c1">// 有效区域为[0, right]; right + 1 为 最长递增</span>
         <span class="kt">int</span> <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
         <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
             <span class="kt">int</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">bsearch</span><span class="o">(</span><span class="n">ends</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span> <span class="n">right</span><span class="o">,</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
@@ -81,11 +81,12 @@
                 <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">right</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
             <span class="o">}</span><span class="k">else</span><span class="o">{</span>
                 <span class="n">right</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">right</span><span class="o">,</span> <span class="n">pos</span><span class="o">);</span>
+                <span class="c1">// pos + 1 长度的最长递增 结尾的就是 arr[i]</span>
                 <span class="n">ends</span><span class="o">[</span><span class="n">pos</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
                 <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
             <span class="o">}</span>
         <span class="o">}</span>
-        <span class="kt">int</span> <span class="n">maxLen</span> <span class="o">=</span> <span class="n">right</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">maxLen</span> <span class="o">=</span> <span class="n">right</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span> <span class="c1">// 最长递增的长度</span>
         <span class="kt">int</span> <span class="n">lastDpVal</span> <span class="o">=</span> <span class="n">maxLen</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
         <span class="kt">int</span><span class="o">[]</span> <span class="n">ans</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">maxLen</span><span class="o">];</span>
         <span class="kt">int</span> <span class="n">ansIndex</span> <span class="o">=</span> <span class="n">maxLen</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
@@ -110,13 +111,16 @@
 <span class="cm">9</span>
 <span class="cm">2 1 5 3 6 4 8 9 7</span>
 
+<span class="cm">1 3 4 8 9</span>
+
 <span class="cm">5</span>
 <span class="cm">1 2 8 6 4</span>
+
+<span class="cm">1 2 4</span>
 <span class="cm">*/</span>
 </pre></div>
 
 
-<hr />
 <ul>
 <li>输入</li>
 </ul>
@@ -142,7 +146,7 @@
       <span>
         <p>Copyright © 2019 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2019-12-31 18:43:04</p>
+        <p>Site Generated 2019-12-31 19:09:19</p>
       </span>
     </div>
 
