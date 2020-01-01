@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>171 判断t1树是否包含t2树全部的拓扑结构 - 程序员代码面试指南</title>
+    <title>172 判断t1树中是否有与t2树拓扑结构完全相同的子树 - 程序员代码面试指南</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,23 +16,20 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;171 判断t1树是否包含t2树全部的拓扑结构
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;172 判断t1树中是否有与t2树拓扑结构完全相同的子树
     <span class="updated">Page Updated&nbsp;
-      2020-01-01 18:49
+      2020-01-01 19:49
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">171 判断t1树是否包含t2树全部的拓扑结构</div>
+<div class="page_title">172 判断t1树中是否有与t2树拓扑结构完全相同的子树</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ac">ac</a></li>
 </ul>
 </div>
 <h1 id="ac">ac</h1>
-<ul>
-<li>递归的判断</li>
-</ul>
 <div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
@@ -131,13 +128,13 @@
         <span class="k">return</span> <span class="nf">contains</span><span class="o">(</span><span class="n">root</span><span class="o">,</span> <span class="n">subRoot</span><span class="o">)</span> <span class="o">||</span> <span class="n">isInclude</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">subRoot</span><span class="o">)</span> <span class="o">||</span> <span class="n">isInclude</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">subRoot</span><span class="o">);</span>
     <span class="o">}</span>
 
+    <span class="c1">// 必须确保树一样的</span>
     <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">contains</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root1</span><span class="o">,</span> <span class="n">TreeNode</span> <span class="n">root2</span><span class="o">){</span>
         <span class="k">if</span><span class="o">(</span><span class="n">root1</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root2</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
             <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
         <span class="o">}</span>
-        <span class="c1">// root2 为null root1随意 都是匹配的</span>
         <span class="k">if</span><span class="o">(</span><span class="n">root1</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
-            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
         <span class="o">}</span>
         <span class="k">if</span><span class="o">(</span><span class="n">root1</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
             <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
@@ -150,25 +147,77 @@
 
 <span class="o">}</span>
 <span class="cm">/*</span>
-<span class="cm">10 1</span>
+<span class="cm">9 1</span>
 <span class="cm">1 2 3</span>
 <span class="cm">2 4 5</span>
-<span class="cm">4 8 9</span>
+<span class="cm">4 0 8</span>
 <span class="cm">8 0 0</span>
+<span class="cm">5 9 0</span>
 <span class="cm">9 0 0</span>
-<span class="cm">5 10 0</span>
-<span class="cm">10 0 0</span>
+<span class="cm">3 6 7</span>
+<span class="cm">6 0 0</span>
+<span class="cm">7 0 0</span>
+<span class="cm">5 2</span>
+<span class="cm">2 4 5</span>
+<span class="cm">4 0 8</span>
+<span class="cm">8 0 0</span>
+<span class="cm">5 9 0</span>
+<span class="cm">9 0 0</span>
+
+<span class="cm">true</span>
+
+<span class="cm">9 1</span>
+<span class="cm">1 2 3</span>
+<span class="cm">2 4 5</span>
+<span class="cm">4 0 8</span>
+<span class="cm">8 0 0</span>
+<span class="cm">5 9 0</span>
+<span class="cm">9 0 0</span>
 <span class="cm">3 6 7</span>
 <span class="cm">6 0 0</span>
 <span class="cm">7 0 0</span>
 <span class="cm">4 2</span>
 <span class="cm">2 4 5</span>
-<span class="cm">5 0 0</span>
-<span class="cm">4 8 0</span>
+<span class="cm">4 0 8</span>
 <span class="cm">8 0 0</span>
+<span class="cm">5 0 0</span>
 
-<span class="cm">true</span>
+<span class="cm">false</span>
 <span class="cm"> */</span>
+</pre></div>
+
+
+<p>如下<code>true</code>:</p>
+<div class="hlcode"><pre>       <span class="mi">1</span>
+     <span class="o">/</span>   <span class="err">\</span>
+   <span class="mi">2</span>       <span class="mi">3</span>
+ <span class="o">/</span>   <span class="err">\</span>    <span class="o">/</span>  <span class="err">\</span>
+<span class="mi">4</span>     <span class="mi">5</span>  <span class="mi">6</span>    <span class="mi">7</span>
+ <span class="err">\</span>   <span class="o">/</span>
+ <span class="mi">8</span>  <span class="mi">9</span>
+
+   <span class="mi">2</span>
+ <span class="o">/</span>   <span class="err">\</span>
+<span class="mi">4</span>     <span class="mi">5</span>
+ <span class="err">\</span>   <span class="o">/</span>
+  <span class="mi">8</span> <span class="mi">9</span>
+</pre></div>
+
+
+<p>如下<code>false</code>:</p>
+<div class="hlcode"><pre>       <span class="mi">1</span>
+     <span class="o">/</span>   <span class="err">\</span>
+   <span class="mi">2</span>       <span class="mi">3</span>
+ <span class="o">/</span>   <span class="err">\</span>    <span class="o">/</span>  <span class="err">\</span>
+<span class="mi">4</span>     <span class="mi">5</span>  <span class="mi">6</span>    <span class="mi">7</span>
+ <span class="err">\</span>   <span class="o">/</span>
+  <span class="mi">8</span> <span class="mi">9</span>
+
+   <span class="mi">2</span>
+ <span class="o">/</span>   <span class="err">\</span>
+<span class="mi">4</span>     <span class="mi">5</span>
+ <span class="err">\</span>
+  <span class="mi">8</span>
 </pre></div>
     </div>
     <div id="footer">
