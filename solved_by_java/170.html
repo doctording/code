@@ -18,7 +18,7 @@
 <div id="header">
   <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;170 找到搜索二叉树中两个错误的节点
     <span class="updated">Page Updated&nbsp;
-      2020-01-01 03:49
+      2020-01-01 14:49
     </span></div>
 </div>
 <div class="clearfix"></div>
@@ -30,12 +30,142 @@
 </ul>
 </div>
 <h1 id="ac">ac</h1>
+<ul>
+<li>类似一个排序数组，有两个位置交换了，那么一定有降序出现的，可能一次，可能两次</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">TreeNode</span><span class="o">{</span>
+    <span class="n">TreeNode</span> <span class="n">left</span><span class="o">;</span>
+    <span class="n">TreeNode</span> <span class="n">right</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">val</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">TreeNode</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">mod</span> <span class="o">=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span> <span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">29</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">line</span><span class="o">;</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">strArr</span><span class="o">;</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="kt">int</span> <span class="n">rootVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">TreeNode</span><span class="o">&gt;</span> <span class="n">mp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;(</span><span class="n">n</span><span class="o">);</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+            <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+            <span class="kt">int</span> <span class="n">leftVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+            <span class="kt">int</span> <span class="n">rightVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">2</span><span class="o">]);</span>
+
+            <span class="k">if</span> <span class="o">(!</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">val</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">val</span><span class="o">,</span> <span class="k">new</span> <span class="n">TreeNode</span><span class="o">(</span><span class="n">val</span><span class="o">));</span>
+            <span class="o">}</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">leftVal</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(!</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">leftVal</span><span class="o">))</span> <span class="o">{</span>
+                    <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">leftVal</span><span class="o">,</span> <span class="k">new</span> <span class="n">TreeNode</span><span class="o">(</span><span class="n">leftVal</span><span class="o">));</span>
+                <span class="o">}</span>
+                <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">val</span><span class="o">).</span><span class="na">left</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">leftVal</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">rightVal</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(!</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">rightVal</span><span class="o">))</span> <span class="o">{</span>
+                    <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">rightVal</span><span class="o">,</span> <span class="k">new</span> <span class="n">TreeNode</span><span class="o">(</span><span class="n">rightVal</span><span class="o">));</span>
+                <span class="o">}</span>
+                <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">val</span><span class="o">).</span><span class="na">right</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rightVal</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">TreeNode</span> <span class="n">root</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rootVal</span><span class="o">);</span>
+        <span class="n">inOrder</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="c1">// 左 根 右</span>
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">inOrder</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">v1</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">v2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">lastVal</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">TreeNode</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">root</span><span class="o">;</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">cur</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">left</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+                <span class="c1">// 打印</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">lastVal</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                    <span class="n">lastVal</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">val</span> <span class="o">&lt;</span> <span class="n">lastVal</span><span class="o">){</span>
+                        <span class="c1">// 有问题了</span>
+                        <span class="k">if</span><span class="o">(</span><span class="n">v1</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                            <span class="n">v1</span> <span class="o">=</span> <span class="n">lastVal</span><span class="o">;</span>
+                            <span class="n">v2</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+                        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                            <span class="n">v2</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+                        <span class="o">}</span>
+                    <span class="o">}</span>
+                    <span class="n">lastVal</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">TreeNode</span> <span class="n">pre</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
+                <span class="k">while</span> <span class="o">(</span><span class="n">pre</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">pre</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="n">cur</span><span class="o">){</span>
+                    <span class="n">pre</span> <span class="o">=</span> <span class="n">pre</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">pre</span><span class="o">.</span><span class="na">right</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span> <span class="c1">// 第一次访问</span>
+                    <span class="c1">// 建立联系，并转向左节点</span>
+                    <span class="n">pre</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="n">cur</span><span class="o">;</span>
+                    <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span> <span class="c1">// 第二次访问,表示cur的左子树都访问过了</span>
+                    <span class="c1">// 打印</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">lastVal</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                        <span class="n">lastVal</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+                    <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                        <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">val</span> <span class="o">&lt;</span> <span class="n">lastVal</span><span class="o">){</span>
+                            <span class="c1">// 有问题了</span>
+                            <span class="k">if</span><span class="o">(</span><span class="n">v1</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                                <span class="n">v1</span> <span class="o">=</span> <span class="n">lastVal</span><span class="o">;</span>
+                                <span class="n">v2</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+                            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                                <span class="n">v2</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+                            <span class="o">}</span>
+                        <span class="o">}</span>
+                        <span class="n">lastVal</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
+                    <span class="o">}</span>
+                    <span class="n">pre</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                    <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">v1</span><span class="o">,</span> <span class="n">v2</span><span class="o">)</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">v1</span><span class="o">,</span> <span class="n">v2</span><span class="o">));</span>
+        <span class="k">return</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">3 1</span>
+<span class="cm">1 2 3</span>
+<span class="cm">2 0 0</span>
+<span class="cm">3 0 0</span>
+
+<span class="cm">1 2</span>
+<span class="cm"> */</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-01 15:33:21</p>
+        <p>Site Generated 2020-01-01 15:52:12</p>
       </span>
     </div>
 
