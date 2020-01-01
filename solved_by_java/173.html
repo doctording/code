@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>170 找到搜索二叉树中两个错误的节点 - 程序员代码面试指南</title>
+    <title>173 判断二叉树是否为平衡二叉树 - 程序员代码面试指南</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,23 +16,20 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;170 找到搜索二叉树中两个错误的节点
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;173 判断二叉树是否为平衡二叉树
     <span class="updated">Page Updated&nbsp;
-      2020-01-01 14:49
+      2020-01-01 21:49
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">170 找到搜索二叉树中两个错误的节点</div>
+<div class="page_title">173 判断二叉树是否为平衡二叉树</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ac">ac</a></li>
 </ul>
 </div>
 <h1 id="ac">ac</h1>
-<ul>
-<li>类似一个排序数组，有两个位置交换了，那么一定有降序出现的，可能一次，可能两次</li>
-</ul>
 <div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
@@ -46,6 +43,16 @@
         <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
         <span class="n">left</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
         <span class="n">right</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">Rs</span><span class="o">{</span>
+    <span class="kt">boolean</span> <span class="n">isBalance</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">height</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Rs</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">isBalance</span><span class="o">,</span> <span class="kt">int</span> <span class="n">height</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">isBalance</span> <span class="o">=</span> <span class="n">isBalance</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">height</span> <span class="o">=</span> <span class="n">height</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 
@@ -88,76 +95,39 @@
             <span class="o">}</span>
         <span class="o">}</span>
         <span class="n">TreeNode</span> <span class="n">root</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rootVal</span><span class="o">);</span>
-        <span class="n">inOrder</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+        <span class="n">Rs</span> <span class="n">rs</span> <span class="o">=</span> <span class="n">isBalanceTree</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="na">isBalance</span> <span class="o">?</span> <span class="s">&quot;true&quot;</span><span class="o">:</span> <span class="s">&quot;false&quot;</span><span class="o">);</span>
     <span class="o">}</span>
-    <span class="c1">// 左 根 右</span>
-    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">inOrder</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">){</span>
+
+    <span class="c1">// 一次递归，既可以求出高度，也可以判断是否是平衡二叉树</span>
+    <span class="kd">static</span> <span class="n">Rs</span> <span class="nf">isBalanceTree</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">){</span>
         <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
-            <span class="k">return</span><span class="o">;</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Rs</span><span class="o">(</span><span class="kc">true</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
         <span class="o">}</span>
-        <span class="kt">int</span> <span class="n">v1</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="kt">int</span> <span class="n">v2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="kt">int</span> <span class="n">lastVal</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-        <span class="n">TreeNode</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">root</span><span class="o">;</span>
-        <span class="k">while</span> <span class="o">(</span><span class="n">cur</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
-            <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">left</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
-                <span class="c1">// 打印</span>
-                <span class="k">if</span><span class="o">(</span><span class="n">lastVal</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
-                    <span class="n">lastVal</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
-                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
-                    <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">val</span> <span class="o">&lt;</span> <span class="n">lastVal</span><span class="o">){</span>
-                        <span class="c1">// 有问题了</span>
-                        <span class="k">if</span><span class="o">(</span><span class="n">v1</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
-                            <span class="n">v1</span> <span class="o">=</span> <span class="n">lastVal</span><span class="o">;</span>
-                            <span class="n">v2</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
-                        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
-                            <span class="n">v2</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
-                        <span class="o">}</span>
-                    <span class="o">}</span>
-                    <span class="n">lastVal</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
-                <span class="o">}</span>
-                <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
-            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
-                <span class="n">TreeNode</span> <span class="n">pre</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
-                <span class="k">while</span> <span class="o">(</span><span class="n">pre</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">pre</span><span class="o">.</span><span class="na">right</span> <span class="o">!=</span> <span class="n">cur</span><span class="o">){</span>
-                    <span class="n">pre</span> <span class="o">=</span> <span class="n">pre</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
-                <span class="o">}</span>
-                <span class="k">if</span><span class="o">(</span><span class="n">pre</span><span class="o">.</span><span class="na">right</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span> <span class="c1">// 第一次访问</span>
-                    <span class="c1">// 建立联系，并转向左节点</span>
-                    <span class="n">pre</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="n">cur</span><span class="o">;</span>
-                    <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">left</span><span class="o">;</span>
-                <span class="o">}</span><span class="k">else</span> <span class="o">{</span> <span class="c1">// 第二次访问,表示cur的左子树都访问过了</span>
-                    <span class="c1">// 打印</span>
-                    <span class="k">if</span><span class="o">(</span><span class="n">lastVal</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
-                        <span class="n">lastVal</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
-                    <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
-                        <span class="k">if</span><span class="o">(</span><span class="n">cur</span><span class="o">.</span><span class="na">val</span> <span class="o">&lt;</span> <span class="n">lastVal</span><span class="o">){</span>
-                            <span class="c1">// 有问题了</span>
-                            <span class="k">if</span><span class="o">(</span><span class="n">v1</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
-                                <span class="n">v1</span> <span class="o">=</span> <span class="n">lastVal</span><span class="o">;</span>
-                                <span class="n">v2</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
-                            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
-                                <span class="n">v2</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
-                            <span class="o">}</span>
-                        <span class="o">}</span>
-                        <span class="n">lastVal</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">val</span><span class="o">;</span>
-                    <span class="o">}</span>
-                    <span class="n">pre</span><span class="o">.</span><span class="na">right</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-                    <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="na">right</span><span class="o">;</span>
-                <span class="o">}</span>
-            <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root</span><span class="o">.</span><span class="na">right</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Rs</span><span class="o">(</span><span class="kc">true</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
         <span class="o">}</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">v1</span><span class="o">,</span> <span class="n">v2</span><span class="o">)</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">v1</span><span class="o">,</span> <span class="n">v2</span><span class="o">));</span>
-        <span class="k">return</span><span class="o">;</span>
+        <span class="n">Rs</span> <span class="n">leftRs</span> <span class="o">=</span> <span class="n">isBalanceTree</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+        <span class="n">Rs</span> <span class="n">rightRs</span> <span class="o">=</span> <span class="n">isBalanceTree</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+        <span class="kt">boolean</span> <span class="n">balance</span> <span class="o">=</span> <span class="n">leftRs</span><span class="o">.</span><span class="na">isBalance</span> <span class="o">&amp;&amp;</span> <span class="n">rightRs</span><span class="o">.</span><span class="na">isBalance</span> <span class="o">&amp;&amp;</span> <span class="n">Math</span><span class="o">.</span><span class="na">abs</span><span class="o">(</span><span class="n">leftRs</span><span class="o">.</span><span class="na">height</span><span class="o">-</span><span class="n">rightRs</span><span class="o">.</span><span class="na">height</span><span class="o">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">height</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">leftRs</span><span class="o">.</span><span class="na">height</span><span class="o">,</span> <span class="n">rightRs</span><span class="o">.</span><span class="na">height</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Rs</span><span class="o">(</span><span class="n">balance</span><span class="o">,</span> <span class="n">height</span><span class="o">);</span>
     <span class="o">}</span>
+
 <span class="o">}</span>
 <span class="cm">/*</span>
-<span class="cm">3 1</span>
+<span class="cm">9 1</span>
 <span class="cm">1 2 3</span>
-<span class="cm">2 0 0</span>
-<span class="cm">3 0 0</span>
+<span class="cm">2 4 5</span>
+<span class="cm">4 0 8</span>
+<span class="cm">8 0 0</span>
+<span class="cm">5 9 0</span>
+<span class="cm">9 0 0</span>
+<span class="cm">3 6 7</span>
+<span class="cm">6 0 0</span>
+<span class="cm">7 0 0</span>
 
-<span class="cm">1 2</span>
+<span class="cm">true</span>
 <span class="cm"> */</span>
 </pre></div>
     </div>
