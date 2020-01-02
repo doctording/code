@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>182 统计和生成所有不同的二叉树 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;182 统计和生成所有不同的二叉树
+    <span class="updated">Page Updated&nbsp;
+      2020-01-03 01:59
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">182 统计和生成所有不同的二叉树</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a><ul>
+<li><a href="#on2">O(n^2)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<ul>
+<li>卡特兰树</li>
+</ul>
+<p>前几项为：1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, 58786, 208012</p>
+<h2 id="on2">O(n^2)</h2>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">org.omg.CORBA.INTERNAL</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">TreeNode</span><span class="o">{</span>
+    <span class="n">TreeNode</span> <span class="n">left</span><span class="o">;</span>
+    <span class="n">TreeNode</span> <span class="n">right</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">val</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">TreeNode</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">mod</span> <span class="o">=</span> <span class="mi">1000000007</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">10001</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">rev</span><span class="o">(</span><span class="n">n</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">long</span> <span class="nf">rev</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">){</span>
+        <span class="c1">// 0 处理成 1</span>
+        <span class="kt">long</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">long</span><span class="o">[</span><span class="n">N</span><span class="o">];</span>
+        <span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="n">arr</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="n">arr</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="o">){</span>
+            <span class="k">return</span> <span class="n">arr</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="o">;</span><span class="n">k</span><span class="o">&lt;=</span><span class="n">n</span><span class="o">;</span><span class="n">k</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="kt">long</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">k</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="kt">int</span> <span class="n">leftCnt</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+                <span class="kt">int</span> <span class="n">rightCnt</span> <span class="o">=</span> <span class="n">k</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="n">sum</span> <span class="o">+=</span> <span class="n">arr</span><span class="o">[</span><span class="n">leftCnt</span><span class="o">]</span> <span class="o">*</span> <span class="n">arr</span><span class="o">[</span><span class="n">rightCnt</span><span class="o">];</span>
+                <span class="n">sum</span> <span class="o">%=</span> <span class="n">mod</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">sum</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">arr</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">结构</span>
+<span class="cm">  2  1</span>
+<span class="cm"> /    \</span>
+<span class="cm">1      2</span>
+
+<span class="cm">7</span>
+
+<span class="cm">429</span>
+
+<span class="cm">43</span>
+
+<span class="cm">4616923</span>
+<span class="cm"> */</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-01-02 23:05:09</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
