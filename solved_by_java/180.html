@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>171 判断t1树是否包含t2树全部的拓扑结构 - 程序员代码面试指南</title>
+    <title>180 二叉树节点间的最大距离问题 - 程序员代码面试指南</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,24 +16,23 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;171 判断t1树是否包含t2树全部的拓扑结构
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;180 二叉树节点间的最大距离问题
     <span class="updated">Page Updated&nbsp;
-      2020-01-01 18:49
+      2020-01-02 23:49
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">171 判断t1树是否包含t2树全部的拓扑结构</div>
+<div class="page_title">180 二叉树节点间的最大距离问题</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ac">ac</a></li>
 </ul>
 </div>
 <h1 id="ac">ac</h1>
-<ul>
-<li>递归的判断</li>
-</ul>
-<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">org.omg.CORBA.INTERNAL</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
 
@@ -88,86 +87,80 @@
             <span class="o">}</span>
         <span class="o">}</span>
         <span class="n">TreeNode</span> <span class="n">root</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rootVal</span><span class="o">);</span>
-
-        <span class="n">mp</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
-        <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
-        <span class="n">rootVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
-        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
-            <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
-            <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
-            <span class="kt">int</span> <span class="n">leftVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
-            <span class="kt">int</span> <span class="n">rightVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">2</span><span class="o">]);</span>
-
-            <span class="k">if</span> <span class="o">(!</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">val</span><span class="o">))</span> <span class="o">{</span>
-                <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">val</span><span class="o">,</span> <span class="k">new</span> <span class="n">TreeNode</span><span class="o">(</span><span class="n">val</span><span class="o">));</span>
-            <span class="o">}</span>
-            <span class="k">if</span> <span class="o">(</span><span class="n">leftVal</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
-                <span class="k">if</span> <span class="o">(!</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">leftVal</span><span class="o">))</span> <span class="o">{</span>
-                    <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">leftVal</span><span class="o">,</span> <span class="k">new</span> <span class="n">TreeNode</span><span class="o">(</span><span class="n">leftVal</span><span class="o">));</span>
-                <span class="o">}</span>
-                <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">val</span><span class="o">).</span><span class="na">left</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">leftVal</span><span class="o">);</span>
-            <span class="o">}</span>
-            <span class="k">if</span> <span class="o">(</span><span class="n">rightVal</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
-                <span class="k">if</span> <span class="o">(!</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">rightVal</span><span class="o">))</span> <span class="o">{</span>
-                    <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">rightVal</span><span class="o">,</span> <span class="k">new</span> <span class="n">TreeNode</span><span class="o">(</span><span class="n">rightVal</span><span class="o">));</span>
-                <span class="o">}</span>
-                <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">val</span><span class="o">).</span><span class="na">right</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rightVal</span><span class="o">);</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-
-        <span class="n">TreeNode</span> <span class="n">subRoot</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rootVal</span><span class="o">);</span>
-
-        <span class="kt">boolean</span> <span class="n">b</span> <span class="o">=</span> <span class="n">isInclude</span><span class="o">(</span><span class="n">root</span><span class="o">,</span> <span class="n">subRoot</span><span class="o">);</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">b</span> <span class="o">?</span> <span class="s">&quot;true&quot;</span><span class="o">:</span> <span class="s">&quot;false&quot;</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">getMaxLen</span><span class="o">(</span><span class="n">root</span><span class="o">));</span>
     <span class="o">}</span>
 
-    <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isInclude</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">,</span> <span class="n">TreeNode</span> <span class="n">subRoot</span><span class="o">){</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">getMaxLen</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">){</span>
         <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
-            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
         <span class="o">}</span>
-        <span class="k">return</span> <span class="nf">contains</span><span class="o">(</span><span class="n">root</span><span class="o">,</span> <span class="n">subRoot</span><span class="o">)</span> <span class="o">||</span> <span class="n">isInclude</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">subRoot</span><span class="o">)</span> <span class="o">||</span> <span class="n">isInclude</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">subRoot</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">leftLen</span> <span class="o">=</span> <span class="n">getMaxLen</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">rightLen</span> <span class="o">=</span> <span class="n">getMaxLen</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">rootMaxLen</span> <span class="o">=</span>  <span class="n">getMaxSinglePath</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">)</span> <span class="o">+</span>  <span class="n">getMaxSinglePath</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">leftLen</span><span class="o">,</span> <span class="n">rightLen</span><span class="o">),</span> <span class="n">rootMaxLen</span><span class="o">);</span>
     <span class="o">}</span>
 
-    <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">contains</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root1</span><span class="o">,</span> <span class="n">TreeNode</span> <span class="n">root2</span><span class="o">){</span>
-        <span class="k">if</span><span class="o">(</span><span class="n">root1</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root2</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
-            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="c1">//    static int getMaxLenBySingle(int leftMaxLen, int rightMaxLen){</span>
+<span class="c1">//        if(leftMaxLen == 0 &amp;&amp; rightMaxLen == 0){</span>
+<span class="c1">//            return 1;</span>
+<span class="c1">//        }else if(rightMaxLen == 0){</span>
+<span class="c1">//            return leftMaxLen;</span>
+<span class="c1">//        }else if(leftMaxLen == 0){</span>
+<span class="c1">//            return rightMaxLen;</span>
+<span class="c1">//        }else {</span>
+<span class="c1">//            return leftMaxLen + rightMaxLen - 1;</span>
+<span class="c1">//        }</span>
+<span class="c1">//    }</span>
+
+    <span class="c1">// 以 root 为节点的，左边 或者 右边最大单路径</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">getMaxSinglePath</span><span class="o">(</span><span class="n">TreeNode</span> <span class="n">root</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
         <span class="o">}</span>
-        <span class="c1">// root2 为null root1随意 都是匹配的</span>
-        <span class="k">if</span><span class="o">(</span><span class="n">root1</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
-            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="k">if</span><span class="o">(</span><span class="n">root1</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">root2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
-            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="k">if</span><span class="o">(</span><span class="n">root1</span><span class="o">.</span><span class="na">val</span> <span class="o">!=</span> <span class="n">root2</span><span class="o">.</span><span class="na">val</span><span class="o">){</span>
-            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="k">return</span> <span class="nf">contains</span><span class="o">(</span><span class="n">root1</span><span class="o">.</span><span class="na">left</span><span class="o">,</span> <span class="n">root2</span><span class="o">.</span><span class="na">left</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">contains</span><span class="o">(</span><span class="n">root1</span><span class="o">.</span><span class="na">right</span><span class="o">,</span> <span class="n">root2</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">leftPath</span> <span class="o">=</span> <span class="n">getMaxSinglePath</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">left</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">rightPath</span> <span class="o">=</span> <span class="n">getMaxSinglePath</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">right</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">leftPath</span><span class="o">,</span> <span class="n">rightPath</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
     <span class="o">}</span>
 
 <span class="o">}</span>
 <span class="cm">/*</span>
-<span class="cm">10 1</span>
+<span class="cm">         1</span>
+<span class="cm">      /     \</span>
+<span class="cm">     2        3</span>
+<span class="cm">    / \      / \</span>
+<span class="cm">   4  5     6  7</span>
+<span class="cm">              /</span>
+<span class="cm">             8</span>
+
+<span class="cm">8 1</span>
 <span class="cm">1 2 3</span>
 <span class="cm">2 4 5</span>
-<span class="cm">4 8 9</span>
+<span class="cm">4 0 0</span>
+<span class="cm">5 0 0</span>
+<span class="cm">3 6 7</span>
+<span class="cm">6 0 0</span>
+<span class="cm">7 8 0</span>
 <span class="cm">8 0 0</span>
-<span class="cm">9 0 0</span>
-<span class="cm">5 10 0</span>
-<span class="cm">10 0 0</span>
+
+<span class="cm">6</span>
+
+<span class="cm">         1</span>
+<span class="cm">      /     \</span>
+<span class="cm">     2        3</span>
+<span class="cm">    / \      / \</span>
+<span class="cm">   4  5     6  7</span>
+
+<span class="cm">7 1</span>
+<span class="cm">1 2 3</span>
+<span class="cm">2 4 5</span>
+<span class="cm">4 0 0</span>
+<span class="cm">5 0 0</span>
 <span class="cm">3 6 7</span>
 <span class="cm">6 0 0</span>
 <span class="cm">7 0 0</span>
-<span class="cm">4 2</span>
-<span class="cm">2 4 5</span>
-<span class="cm">5 0 0</span>
-<span class="cm">4 8 0</span>
-<span class="cm">8 0 0</span>
 
-<span class="cm">true</span>
+<span class="cm">5</span>
 <span class="cm"> */</span>
 </pre></div>
     </div>
