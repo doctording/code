@@ -1,0 +1,207 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/style.css">
+    <link rel="Stylesheet" type="text/css" href="/code/static/css/tango.css">
+    <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
+    <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
+    <title>188 派对的最大快乐值 - 程序员代码面试指南</title>
+    <meta name="keywords" content="algorithm，python"/>
+    <meta name="description" content="for python and algorithm"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+
+  <body>
+    <div id="container">
+      
+<div id="header">
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;188 派对的最大快乐值
+    <span class="updated">Page Updated&nbsp;
+      2020-01-03 18:59
+    </span></div>
+</div>
+<div class="clearfix"></div>
+
+<div class="page_title">188 派对的最大快乐值</div>
+
+  <div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#ac">ac</a></li>
+</ul>
+</div>
+<h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="err">整个公司的人员结构可以看作是一棵标准的多叉树。树的头节点是公司唯一的老板，除老板外，每个员工都有唯一的直接上级，叶节点是没有任何下属的基层员工，除基层员工外，每个员工都有一个或多个直接下级，另外每个员工都有一个快乐值。</span>
+<span class="err">这个公司现在要办</span> <span class="n">party</span><span class="err">，你可以决定哪些员工来，哪些员工不来。但是要遵循如下的原则：</span>
+<span class="mi">1</span><span class="o">.</span><span class="err">如果某个员工来了，那么这个员工的所有直接下级都不能来。</span>
+<span class="mi">2</span><span class="o">.</span><span class="err">派对的整体快乐值是所有到场员工快乐值的累加。</span>
+<span class="mi">3</span><span class="o">.</span><span class="err">你的目标是让派对的整体快乐值尽量大。</span>
+<span class="err">给定一棵多叉树，请输出派对的最大快乐值。</span>
+</pre></div>
+
+
+<ul>
+<li>后序方式的递归求解</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.Reader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+
+<span class="kd">class</span> <span class="nc">Employee</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">val</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="n">happy</span><span class="o">;</span> <span class="c1">//这名员工带来的快乐值</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Employee</span><span class="o">&gt;</span> <span class="n">subordinates</span><span class="o">;</span> <span class="c1">//这名员工有哪些直属下级</span>
+
+    <span class="kd">public</span> <span class="nf">Employee</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">,</span> <span class="kt">int</span> <span class="n">happy</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Employee</span><span class="o">&gt;</span> <span class="n">subordinates</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">happy</span> <span class="o">=</span> <span class="n">happy</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">subordinates</span> <span class="o">=</span> <span class="n">subordinates</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="nf">Employee</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">,</span> <span class="kt">int</span> <span class="n">happy</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">happy</span> <span class="o">=</span> <span class="n">happy</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">subordinates</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// 是否有使用根的最大happiness</span>
+<span class="kd">class</span> <span class="nc">Return</span><span class="o">{</span>
+    <span class="kt">int</span> <span class="n">withRoot</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">withOutRoot</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Return</span><span class="o">(</span><span class="kt">int</span> <span class="n">withRoot</span><span class="o">,</span> <span class="kt">int</span> <span class="n">withOutRoot</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">withRoot</span> <span class="o">=</span> <span class="n">withRoot</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">withOutRoot</span> <span class="o">=</span> <span class="n">withOutRoot</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">mod</span><span class="o">=(</span><span class="kt">int</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span><span class="mi">9</span><span class="o">)+</span><span class="mi">7</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">rootVal</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">happy</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">happy</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Employee</span><span class="o">&gt;</span> <span class="n">mp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;(</span><span class="n">n</span><span class="o">);</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">u1</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+            <span class="kt">int</span> <span class="n">u2</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(!</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">u1</span><span class="o">)){</span>
+                <span class="n">Employee</span> <span class="n">employee</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Employee</span><span class="o">(</span><span class="n">u1</span><span class="o">,</span> <span class="n">happy</span><span class="o">[</span><span class="n">u1</span><span class="o">]);</span>
+                <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">u1</span><span class="o">,</span> <span class="n">employee</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span><span class="o">(!</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">u2</span><span class="o">)){</span>
+                <span class="n">Employee</span> <span class="n">employee</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Employee</span><span class="o">(</span><span class="n">u2</span><span class="o">,</span> <span class="n">happy</span><span class="o">[</span><span class="n">u2</span><span class="o">]);</span>
+                <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">u2</span><span class="o">,</span> <span class="n">employee</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">Employee</span> <span class="n">u1Employee</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">u1</span><span class="o">);</span>
+            <span class="n">u1Employee</span><span class="o">.</span><span class="na">subordinates</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">u2</span><span class="o">));</span>
+        <span class="o">}</span>
+        <span class="n">Employee</span> <span class="n">root</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">rootVal</span><span class="o">);</span>
+        <span class="n">Return</span> <span class="n">ans</span> <span class="o">=</span> <span class="n">getMaxHappy</span><span class="o">(</span><span class="n">root</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">ans</span><span class="o">.</span><span class="na">withOutRoot</span><span class="o">,</span> <span class="n">ans</span><span class="o">.</span><span class="na">withRoot</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="c1">// https://www.cnblogs.com/coding-gaga/p/11080111.html</span>
+    <span class="kd">static</span> <span class="n">Return</span> <span class="nf">getMaxHappy</span><span class="o">(</span><span class="n">Employee</span> <span class="n">root</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Return</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="mi">0</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">subordinates</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">root</span><span class="o">.</span><span class="na">subordinates</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Return</span><span class="o">(</span><span class="n">root</span><span class="o">.</span><span class="na">happy</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">sumValWithOutRoot</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="c1">// 不包括当前root</span>
+        <span class="kt">int</span> <span class="n">sumValWithRoot</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="na">happy</span><span class="o">;</span> <span class="c1">// 包括当前root</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">Employee</span> <span class="nl">employeeChild:</span> <span class="n">root</span><span class="o">.</span><span class="na">subordinates</span><span class="o">){</span>
+            <span class="n">Return</span> <span class="n">happySon</span> <span class="o">=</span> <span class="n">getMaxHappy</span><span class="o">(</span><span class="n">employeeChild</span><span class="o">);</span>
+
+            <span class="n">sumValWithRoot</span> <span class="o">+=</span> <span class="n">happySon</span><span class="o">.</span><span class="na">withOutRoot</span><span class="o">;</span><span class="c1">// 包括当前root, 则不能包含直接子节点</span>
+
+            <span class="n">sumValWithOutRoot</span> <span class="o">+=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">happySon</span><span class="o">.</span><span class="na">withRoot</span><span class="o">,</span> <span class="n">happySon</span><span class="o">.</span><span class="na">withOutRoot</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">Return</span><span class="o">(</span><span class="n">sumValWithRoot</span><span class="o">,</span> <span class="n">sumValWithOutRoot</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">3 1</span>
+<span class="cm">5 1 1</span>
+<span class="cm">1 2</span>
+<span class="cm">1 3</span>
+
+<span class="cm">5</span>
+
+<span class="cm">48 11</span>
+<span class="cm">825 815 5 996 172 528 309 185 309 473 408 34 776 498 952 866 674 881 135 102 50 408 609 167 514 171 750 880 227 186 338 246 264 294 18 372 932 14 653 987 843 868 585 506 123 399 916 759</span>
+<span class="cm">11 9</span>
+<span class="cm">9 27</span>
+<span class="cm">9 40</span>
+<span class="cm">9 37</span>
+<span class="cm">40 36</span>
+<span class="cm">11 16</span>
+<span class="cm">11 13</span>
+<span class="cm">16 48</span>
+<span class="cm">16 46</span>
+<span class="cm">40 4</span>
+<span class="cm">37 5</span>
+<span class="cm">36 7</span>
+<span class="cm">9 15</span>
+<span class="cm">36 42</span>
+<span class="cm">37 19</span>
+<span class="cm">48 35</span>
+<span class="cm">9 28</span>
+<span class="cm">19 45</span>
+<span class="cm">13 10</span>
+<span class="cm">40 2</span>
+<span class="cm">16 12</span>
+<span class="cm">9 41</span>
+<span class="cm">36 31</span>
+<span class="cm">45 3</span>
+<span class="cm">5 6</span>
+<span class="cm">31 22</span>
+<span class="cm">6 33</span>
+<span class="cm">45 8</span>
+<span class="cm">5 30</span>
+<span class="cm">9 23</span>
+<span class="cm">9 43</span>
+<span class="cm">48 14</span>
+<span class="cm">6 29</span>
+<span class="cm">9 25</span>
+<span class="cm">8 34</span>
+<span class="cm">19 1</span>
+<span class="cm">29 26</span>
+<span class="cm">42 32</span>
+<span class="cm">33 18</span>
+<span class="cm">11 47</span>
+<span class="cm">29 44</span>
+<span class="cm">36 38</span>
+<span class="cm">33 24</span>
+<span class="cm">15 39</span>
+<span class="cm">36 20</span>
+<span class="cm">27 17</span>
+<span class="cm">13 21</span>
+
+<span class="cm">16332</span>
+<span class="cm"> */</span>
+</pre></div>
+    </div>
+    <div id="footer">
+      <span>
+        <p>Copyright © 2020 doctording.
+        Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
+        <p>Site Generated 2020-01-03 20:37:46</p>
+      </span>
+    </div>
+
+    
+    
+  </body>
+</html>
