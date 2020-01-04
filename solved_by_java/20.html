@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>20  - 程序员代码面试指南</title>
+    <title>20 打气球的最大分数 - 程序员代码面试指南</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,28 +16,129 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;20 
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;20 打气球的最大分数
     <span class="updated">Page Updated&nbsp;
-      2019-11-03 11:00
+      2019-11-03 11:01
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">20 </div>
+<div class="page_title">20 打气球的最大分数</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ac">ac</a></li>
 </ul>
 </div>
 <h1 id="ac">ac</h1>
-<div class="hlcode"><pre>
+<div class="hlcode"><pre><span class="err">给定一个数组</span><span class="n">arr</span><span class="o">,</span><span class="err">长度为</span><span class="n">n</span><span class="err">。代表排有分数的气球。</span> <span class="err">每打爆一个气球都能获得分数，假设打爆气球的分数为</span><span class="n">X</span><span class="err">，获得分数的规则如下</span><span class="o">:</span>
+<span class="mi">1</span><span class="o">)</span><span class="err">如果被打爆气球的左边有没被打爆的气球，找到离被打爆气球最近的气球，假设分数为</span><span class="nl">L:</span><span class="err">如果被打爆气球的右边有没被打爆的气球，找到离被打爆气球最近的气球，假设分数为</span><span class="n">R</span><span class="o">.</span><span class="err">获得分数为</span><span class="n">L</span><span class="o">*</span><span class="n">X</span><span class="o">*</span><span class="n">R</span>
+<span class="mi">2</span><span class="o">)</span><span class="err">如果被打爆的气球的左边有没被打爆的气球，找到离被打爆气球最近的气球，假设分数为</span><span class="nl">L:</span><span class="err">如果被打爆气球的右边所有气球都已经被打爆，获得分数为</span><span class="n">L</span><span class="o">*</span><span class="n">X</span><span class="err">。</span>
+<span class="mi">3</span><span class="o">)</span><span class="err">如果被打爆气球的左边所有的气球都已经被打爆</span><span class="o">:</span><span class="err">如果被打爆气球的右边有没被打爆的气球，找到离被打爆气球最近的气球。获得分数为</span><span class="n">X</span><span class="o">*</span><span class="n">R</span><span class="o">.</span>
+<span class="mi">4</span><span class="o">)</span><span class="err">如果被打爆气球的左边和右边所有的气球都已经被打爆。获得分数为</span><span class="n">X</span><span class="err">。</span>
+<span class="err">目标是打爆所有气球，获得每次打爆的分数。通过选择打爆气球的顺序，可以得到不同的总分，请返回能获得的最大分数。</span>
+
+<span class="err">时间复杂度</span><span class="n">O</span><span class="o">(</span><span class="n">n</span><span class="o">^{</span><span class="mi">3</span><span class="o">}),</span><span class="err">空间复杂度</span><span class="n">O</span><span class="o">(</span><span class="n">n</span><span class="o">^{</span><span class="mi">2</span><span class="o">})</span>
+</pre></div>
+
+
+<p>四种情况：以是否有没有被打爆的最近的气球为标准</p>
+<p>某个气球被打爆了，剩下的求解就与该气球无关了</p>
+<p><code>dp[i...j]</code>表示<code>arr[i..j]</code>的最大得分：O(n^2)时间复杂度</p>
+<p>如何求<code>dp[i...j+1]</code></p>
+<p>arr[j+1] 可以在<code>arr[i...j]</code>的顺序中任意一次被打爆：这是O(n)</p>
+<ul>
+<li>动态规划</li>
+</ul>
+<div class="hlcode"><pre><span class="mi">3</span> <span class="mi">2</span> <span class="mi">5</span>
+
+<span class="err">左右补充</span><span class="mi">1</span><span class="o">:</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">5</span> <span class="mi">1</span>
+
+<span class="err">第一步：</span><span class="o">(</span><span class="err">必须考虑左右情况</span><span class="o">)</span>
+<span class="n">dp</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">1</span><span class="o">]=</span><span class="mi">3</span><span class="o">*</span><span class="mi">2</span><span class="o">=</span><span class="mi">6</span><span class="o">,</span> <span class="n">dp</span><span class="o">[</span><span class="mi">2</span><span class="o">][</span><span class="mi">2</span><span class="o">]=</span><span class="mi">3</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="mi">5</span><span class="o">=</span><span class="mi">30</span><span class="o">,</span><span class="n">dp</span><span class="o">[</span><span class="mi">3</span><span class="o">][</span><span class="mi">3</span><span class="o">]=</span><span class="mi">2</span><span class="o">*</span><span class="mi">5</span><span class="o">=</span><span class="mi">10</span>
+
+<span class="err">第二步：</span><span class="o">(</span><span class="err">必须考虑左右情况</span><span class="o">)</span>
+<span class="n">dp</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="mi">2</span><span class="o">][</span><span class="mi">2</span><span class="o">]</span> <span class="o">+</span> <span class="err">再处理</span><span class="mi">1</span> <span class="o">=</span> <span class="mi">30</span> <span class="o">+</span> <span class="mi">15</span> <span class="o">=</span> <span class="mi">45</span>
+         <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="err">再处理</span><span class="mi">2</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">=</span> <span class="mi">16</span>
+         <span class="o">=</span> <span class="mi">45</span>
+
+<span class="n">dp</span><span class="o">[</span><span class="mi">2</span><span class="o">][</span><span class="mi">3</span><span class="o">]</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="mi">2</span><span class="o">][</span><span class="mi">2</span><span class="o">]</span> <span class="o">+</span> <span class="err">再处理</span><span class="mi">3</span> <span class="o">=</span> <span class="mi">30</span> <span class="o">+</span> <span class="mi">15</span> <span class="o">=</span> <span class="mi">45</span>
+         <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="mi">3</span><span class="o">][</span><span class="mi">3</span><span class="o">]</span> <span class="o">+</span> <span class="err">再处理</span><span class="mi">2</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">=</span> <span class="mi">16</span>
+         <span class="o">=</span> <span class="mi">45</span>
+
+<span class="err">第二步：</span><span class="o">(</span><span class="err">必须考虑左右情况</span><span class="o">)</span>
+<span class="n">dp</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">3</span><span class="o">]</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">2</span><span class="o">]</span> <span class="o">+</span> <span class="err">再处理</span><span class="mi">3</span> <span class="o">=</span> <span class="mi">45</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">=</span> <span class="mi">50</span>
+         <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="mi">2</span><span class="o">][</span><span class="mi">3</span><span class="o">]</span> <span class="o">+</span> <span class="err">再处理</span><span class="mi">1</span> <span class="o">=</span> <span class="mi">45</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">=</span> <span class="mi">48</span>
+         <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="n">dp</span><span class="o">[</span><span class="mi">3</span><span class="o">][</span><span class="mi">3</span><span class="o">]</span> <span class="o">+</span> <span class="err">再处理</span><span class="mi">2</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">18</span>
+         <span class="o">=</span> <span class="mi">50</span>
+</pre></div>
+
+
+<ul>
+<li>ac</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="c1">// 方便处理，前后增加一个1</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">+</span><span class="mi">2</span><span class="o">];</span>
+        <span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="n">arr</span><span class="o">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="c1">// 0 1 ... n n+1</span>
+        <span class="kt">int</span><span class="o">[][]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">+</span><span class="mi">2</span><span class="o">][</span><span class="n">n</span><span class="o">+</span><span class="mi">2</span><span class="o">];</span>
+        <span class="c1">// dp[i..i] 的求解就方便了</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">*</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">*</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="o">}</span>
+        <span class="c1">// dp[i][j]距离为0的求解了，接下来求距离为1,2...的，即如下3个元素</span>
+        <span class="c1">// 先求：11 22 33</span>
+        <span class="c1">// 接着求：12 23</span>
+        <span class="c1">// 最后求：13 (最后的结果)</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">k</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">k</span><span class="o">++){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+                <span class="c1">// 求dp[l][r]</span>
+                <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+                <span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">k</span><span class="o">;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">r</span> <span class="o">&gt;</span> <span class="n">n</span><span class="o">){</span>
+                    <span class="k">continue</span><span class="o">;</span>
+                <span class="o">}</span>
+                <span class="c1">// dp[l][r-1] ... dp[l+1][r]等是已经求出来了的，就是距离是k-1的是已经求解出来了的</span>
+                <span class="c1">// 这里循环代表，先打爆哪一个</span>
+                <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">l</span><span class="o">;</span><span class="n">j</span><span class="o">&lt;=</span><span class="n">r</span><span class="o">;</span><span class="n">j</span><span class="o">++){</span> <span class="c1">// 最后打爆j</span>
+                    <span class="n">dp</span><span class="o">[</span><span class="n">l</span><span class="o">][</span><span class="n">r</span><span class="o">]</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">l</span><span class="o">][</span><span class="n">r</span><span class="o">],</span>
+                            <span class="n">dp</span><span class="o">[</span><span class="n">l</span><span class="o">][</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="o">][</span><span class="n">r</span><span class="o">]</span> <span class="o">+</span> <span class="n">arr</span><span class="o">[</span><span class="n">l</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">*</span> <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">*</span> <span class="n">arr</span><span class="o">[</span><span class="n">r</span><span class="o">+</span><span class="mi">1</span><span class="o">]);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="n">n</span><span class="o">]);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">3</span>
+<span class="cm">3 2 5</span>
+
+<span class="cm">2-&gt;1-&gt;3  3*2*5+3*5+5=50</span>
+
+<span class="cm">8</span>
+<span class="cm">23 4 45 65 23 43 54 56</span>
+
+<span class="cm">639019</span>
+<span class="cm"> */</span>
 </pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-04 11:52:07</p>
+        <p>Site Generated 2020-01-04 14:03:06</p>
       </span>
     </div>
 
