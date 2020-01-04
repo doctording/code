@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>42  - 程序员代码面试指南</title>
+    <title>42 子数组异或和为0的最多划分 - 程序员代码面试指南</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,32 +16,126 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;42 
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;42 子数组异或和为0的最多划分
     <span class="updated">Page Updated&nbsp;
-      2019-11-13 23:00
+      2019-11-13 23:10
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">42 </div>
+<div class="page_title">42 子数组异或和为0的最多划分</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#ac">ac</a></li>
+<li><a href="#ac">ac</a><ul>
+<li><a href="#ac-">AC-动态规划</a></li>
+<li><a href="#_1">附：异或性质</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <h1 id="ac">ac</h1>
 <ul>
-<li>时间复杂度<code>O()</code></li>
-<li>额外空间复杂度<code>O()</code></li>
+<li>时间复杂度<code>O(n)</code></li>
+<li>额外空间复杂度<code>O(n)</code></li>
 </ul>
-<div class="hlcode"><pre>
+<div class="hlcode"><pre><span class="err">给定一个整型数组</span><span class="n">arr</span><span class="err">，其中可能有正有负有零。你可以随意把整个数组切成若干个不相容的子数组，求异或和为</span><span class="mi">0</span><span class="err">的子数组最多可能有多少个？整数异或和定义：把数组中所有的数异或起来得到的值。</span>
 </pre></div>
+
+
+<div class="hlcode"><pre><span class="mi">10</span>
+<span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">9</span> <span class="mi">0</span> <span class="mi">7</span> <span class="mi">0</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span>
+
+<span class="err">最优划分：</span><span class="o">{</span><span class="mi">3</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">1</span><span class="o">},{</span><span class="mi">9</span><span class="o">},{</span><span class="mi">0</span><span class="o">},{</span><span class="mi">7</span><span class="o">},{</span><span class="mi">0</span><span class="o">},{</span><span class="mi">2</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">}</span> <span class="err">其中</span><span class="o">{</span><span class="mi">3</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">1</span><span class="o">},{</span><span class="mi">0</span><span class="o">},{</span><span class="mi">0</span><span class="o">},{</span><span class="mi">2</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">}</span><span class="err">的异或和为</span><span class="mi">0</span>
+</pre></div>
+
+
+<h2 id="ac-">AC-动态规划</h2>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">M</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">9</span><span class="o">)</span> <span class="o">+</span> <span class="mi">7</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">process</span><span class="o">(</span><span class="n">arr</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">process</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="c1">// key存储出现过的异或和,value表示下标</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Integer</span><span class="o">&gt;</span> <span class="n">mp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">len</span><span class="o">];</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">],</span> <span class="mi">0</span><span class="o">);</span>
+
+        <span class="kt">int</span> <span class="n">eor</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span> <span class="c1">// 累计的eor，划分要是连续的</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">len</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">eor</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">^</span> <span class="n">eor</span><span class="o">;</span> <span class="c1">// 与自己异或是0，与0异或是自己</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">eor</span><span class="o">)){</span>
+                <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">eor</span><span class="o">);</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">k</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="o">){</span> <span class="c1">// 0到k一个划分，k+1到i一个划分</span>
+                    <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">dp</span><span class="o">[</span><span class="n">k</span><span class="o">];</span>
+                <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                    <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">],</span> <span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+            <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">eor</span><span class="o">,</span> <span class="n">i</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">dp</span><span class="o">[</span><span class="n">len</span><span class="o">-</span><span class="mi">1</span><span class="o">];</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">10</span>
+<span class="cm">3 2 1 9 0 7 0 2 1 3</span>
+
+<span class="cm">4</span>
+<span class="cm"> */</span>
+</pre></div>
+
+
+<h2 id="_1">附：异或性质</h2>
+<div class="hlcode"><pre><span class="mi">1</span><span class="err">、交换律</span>
+
+<span class="mi">2</span><span class="err">、结合律（即</span><span class="o">(</span><span class="n">a</span><span class="o">^</span><span class="n">b</span><span class="o">)^</span><span class="n">c</span> <span class="o">==</span> <span class="n">a</span><span class="o">^(</span><span class="n">b</span><span class="o">^</span><span class="n">c</span><span class="o">)</span><span class="err">）</span>
+
+<span class="mi">3</span><span class="err">、对于任何数</span><span class="n">x</span><span class="err">，都有</span><span class="n">x</span><span class="o">^</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="err">，</span><span class="n">x</span><span class="o">^</span><span class="mi">0</span><span class="o">=</span><span class="n">x</span>
+
+<span class="mi">4</span><span class="err">、自反性</span> <span class="n">A</span> <span class="n">XOR</span> <span class="n">B</span> <span class="n">XOR</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span> <span class="n">xor</span> <span class="mi">0</span> <span class="o">=</span> <span class="n">A</span>
+</pre></div>
+
+
+<p>如果: <code>E1 ^ E2 = E3</code><br />
+则: <code>E1 ^ E3 = E2</code>, <code>E2 ^ E3 = E1</code></p>
+<p>eg:</p>
+<div class="hlcode"><pre>  <span class="mi">0101</span>   <span class="mi">0101</span>    <span class="mi">1010</span>
+<span class="o">^</span> <span class="mi">1010</span>   <span class="mi">1111</span>    <span class="mi">1111</span>
+  <span class="mi">1111</span>   <span class="mi">1010</span>    <span class="mi">0101</span>
+</pre></div>
+
+
+<p>【0-i-1的异或和】 ^ 【0-j-1的异或和】 = 【j到i-1的异或和】</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-04 15:39:50</p>
+        <p>Site Generated 2020-01-04 16:44:24</p>
       </span>
     </div>
 
