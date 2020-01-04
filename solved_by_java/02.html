@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>02 最长的可整合子数组的长度 - 程序员代码面试指南</title>
+    <title>002 最长的可整合子数组的长度 - 程序员代码面试指南</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,20 +16,25 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;02 最长的可整合子数组的长度
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;002 最长的可整合子数组的长度
     <span class="updated">Page Updated&nbsp;
       2019-09-23 23:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">02 最长的可整合子数组的长度</div>
+<div class="page_title">002 最长的可整合子数组的长度</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ac">ac</a></li>
 </ul>
 </div>
 <h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="err">先给出可整合数组的定义：如果一个数组在排序之后，每相邻两个数的差的绝对值都为</span><span class="mi">1</span><span class="err">，或者该数组长度为</span><span class="mi">1</span><span class="err">，则该数组为可整合数组。例如，</span><span class="o">[</span><span class="mi">5</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">6</span><span class="o">,</span> <span class="mi">2</span><span class="o">]</span><span class="err">排序后为</span><span class="o">[</span><span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">6</span><span class="o">]</span><span class="err">，符合每相邻两个数差的绝对值都为</span><span class="mi">1</span><span class="err">，所以这个数组为可整合数组</span>
+<span class="err">给定一个数组</span><span class="n">arr</span><span class="o">,</span> <span class="err">请返回其中最大可整合子数组的长度。例如，</span><span class="o">[</span><span class="mi">5</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">6</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">3</span><span class="o">]</span><span class="err">的最大可整合子数组为</span><span class="o">[</span><span class="mi">5</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">6</span><span class="o">,</span> <span class="mi">4</span><span class="o">]</span><span class="err">，所以请返回</span><span class="mi">5</span>
+</pre></div>
+
+
 <div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
 
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
@@ -78,7 +83,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-03 22:45:31</p>
+        <p>Site Generated 2020-01-04 11:52:07</p>
       </span>
     </div>
 
