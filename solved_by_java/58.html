@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>58 判断一个点是否在矩形内部 - 程序员代码面试指南</title>
+    <title>058 判断一个点是否在矩形内部 - 程序员代码面试指南</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,36 +16,126 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;58 判断一个点是否在矩形内部
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;058 判断一个点是否在矩形内部
     <span class="updated">Page Updated&nbsp;
       2019-11-21 23:22
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">58 判断一个点是否在矩形内部</div>
+<div class="page_title">058 判断一个点是否在矩形内部</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ac">ac</a></li>
 </ul>
 </div>
 <h1 id="ac">ac</h1>
+<div class="hlcode"><pre><span class="err">在二维坐标系中，所有的值是</span><span class="kt">double</span><span class="err">类型，那么一个矩形可以由四个点来代表，</span><span class="o">(</span><span class="n">x1</span><span class="o">,</span> <span class="n">y1</span><span class="o">)</span><span class="err">为最左的点，</span><span class="o">(</span><span class="n">x2</span><span class="o">,</span> <span class="n">y2</span><span class="o">)</span><span class="err">为最上的点，</span><span class="o">(</span><span class="n">x3</span><span class="o">,</span> <span class="n">y3</span><span class="o">)</span><span class="err">为最下的点，</span><span class="o">(</span><span class="n">x4</span><span class="o">,</span> <span class="n">y4</span><span class="o">)</span><span class="err">为最右的点。给定</span><span class="mi">4</span><span class="err">个点代表的矩形，再给定一个点</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">)</span><span class="err">，判断</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">)</span><span class="err">是否在矩形中</span>
+</pre></div>
+
+
 <ul>
-<li>
-<p>平行<code>x</code>轴、<code>y</code>轴</p>
-</li>
-<li>
-<p>坐标变换，旋转使之平行<code>x</code>轴、<code>y</code>轴</p>
-</li>
+<li>平行<code>x</code>轴、<code>y</code>轴</li>
+<li>坐标变换，旋转使之平行<code>x</code>轴、<code>y</code>轴</li>
 </ul>
-<div class="hlcode"><pre>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">M</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span><span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">9</span><span class="o">)</span> <span class="o">+</span> <span class="mi">7</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
+        <span class="kt">double</span><span class="o">[][]</span> <span class="n">rec</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">double</span><span class="o">[</span><span class="mi">4</span><span class="o">][</span><span class="mi">2</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">4</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">String</span> <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+            <span class="n">String</span><span class="o">[]</span> <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+            <span class="n">rec</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">Double</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+            <span class="n">rec</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">Double</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+        <span class="o">}</span>
+        <span class="n">String</span> <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="kt">double</span> <span class="n">x</span> <span class="o">=</span> <span class="n">Double</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="kt">double</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Double</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">process</span><span class="o">(</span><span class="n">rec</span><span class="o">,</span><span class="n">x</span><span class="o">,</span><span class="n">y</span><span class="o">)</span> <span class="o">?</span> <span class="s">&quot;Yes&quot;</span> <span class="o">:</span> <span class="s">&quot;No&quot;</span><span class="o">);</span>
+
+    <span class="o">}</span>
+
+    <span class="c1">// 矩形平行与x轴(或y轴)</span>
+    <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isInside</span><span class="o">(</span><span class="kt">double</span> <span class="n">x1</span><span class="o">,</span> <span class="kt">double</span> <span class="n">y1</span><span class="o">,</span> <span class="kt">double</span> <span class="n">x4</span><span class="o">,</span> <span class="kt">double</span> <span class="n">y4</span><span class="o">,</span> <span class="kt">double</span> <span class="n">x</span><span class="o">,</span> <span class="kt">double</span> <span class="n">y</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">x1</span> <span class="o">||</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">x4</span><span class="o">){</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">y4</span> <span class="o">||</span> <span class="n">y</span> <span class="o">&gt;=</span> <span class="n">y1</span><span class="o">){</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">process</span><span class="o">(</span><span class="kt">double</span><span class="o">[][]</span> <span class="n">rec</span><span class="o">,</span> <span class="kt">double</span> <span class="n">x</span><span class="o">,</span> <span class="kt">double</span> <span class="n">y</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">rec</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">==</span> <span class="n">rec</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="mi">1</span><span class="o">]){</span>
+            <span class="k">return</span> <span class="nf">isInside</span><span class="o">(</span><span class="n">rec</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">],</span> <span class="n">rec</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">1</span><span class="o">],</span> <span class="n">rec</span><span class="o">[</span><span class="mi">3</span><span class="o">][</span><span class="mi">0</span><span class="o">],</span> <span class="n">rec</span><span class="o">[</span><span class="mi">3</span><span class="o">][</span><span class="mi">1</span><span class="o">],</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="c1">// 坐标变换</span>
+        <span class="c1">// 长，宽</span>
+        <span class="kt">double</span> <span class="n">l</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">abs</span><span class="o">(</span><span class="n">rec</span><span class="o">[</span><span class="mi">3</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">-</span> <span class="n">rec</span><span class="o">[</span><span class="mi">2</span><span class="o">][</span><span class="mi">1</span><span class="o">]);</span>
+        <span class="kt">double</span> <span class="n">k</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">abs</span><span class="o">(</span><span class="n">rec</span><span class="o">[</span><span class="mi">3</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">-</span> <span class="n">rec</span><span class="o">[</span><span class="mi">2</span><span class="o">][</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="kt">double</span> <span class="n">s</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">sqrt</span><span class="o">(</span><span class="n">k</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="n">l</span><span class="o">*</span><span class="n">l</span><span class="o">);</span>
+        <span class="kt">double</span> <span class="n">sin</span> <span class="o">=</span> <span class="n">l</span> <span class="o">/</span> <span class="n">s</span><span class="o">;</span>
+        <span class="kt">double</span> <span class="n">cos</span> <span class="o">=</span> <span class="n">k</span> <span class="o">/</span> <span class="n">s</span><span class="o">;</span>
+        <span class="kt">double</span> <span class="n">x1R</span> <span class="o">=</span> <span class="n">rec</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">*</span> <span class="n">cos</span>  <span class="o">+</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">rec</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">1</span><span class="o">];</span>
+        <span class="kt">double</span> <span class="n">y1R</span> <span class="o">=</span> <span class="o">-</span><span class="n">rec</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">*</span> <span class="n">sin</span>  <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">rec</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">1</span><span class="o">];</span>
+        <span class="kt">double</span> <span class="n">x4R</span> <span class="o">=</span> <span class="n">rec</span><span class="o">[</span><span class="mi">3</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">*</span> <span class="n">cos</span>  <span class="o">+</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">rec</span><span class="o">[</span><span class="mi">3</span><span class="o">][</span><span class="mi">1</span><span class="o">];</span>
+        <span class="kt">double</span> <span class="n">y4R</span> <span class="o">=</span> <span class="o">-</span><span class="n">rec</span><span class="o">[</span><span class="mi">3</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">*</span> <span class="n">sin</span>  <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">rec</span><span class="o">[</span><span class="mi">3</span><span class="o">][</span><span class="mi">1</span><span class="o">];</span>
+        <span class="kt">double</span> <span class="n">xR</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">cos</span>  <span class="o">+</span> <span class="n">sin</span> <span class="o">*</span> <span class="n">y</span> <span class="o">;</span>
+        <span class="kt">double</span> <span class="n">yR</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span> <span class="o">*</span> <span class="n">sin</span>  <span class="o">+</span> <span class="n">cos</span> <span class="o">*</span> <span class="n">y</span><span class="o">;</span>
+        <span class="k">return</span> <span class="nf">isInside</span><span class="o">(</span><span class="n">x1R</span><span class="o">,</span> <span class="n">y1R</span><span class="o">,</span> <span class="n">x4R</span><span class="o">,</span> <span class="n">y4R</span><span class="o">,</span> <span class="n">xR</span><span class="o">,</span> <span class="n">yR</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">                     (x2, y2)</span>
+<span class="cm">(x1, y1)</span>
+
+<span class="cm">                           (x4, y4)</span>
+<span class="cm">      (x3, y3)</span>
+
+<span class="cm">                               (rec[1][0], rec[1][1])</span>
+<span class="cm">(rec[0][0], rec[0][1])</span>
+
+<span class="cm">                                          (rec[3][0], rec[3][1])</span>
+<span class="cm">      (rec[2][0], rec[2][1])</span>
+
+<span class="cm">2.00 2.50</span>
+<span class="cm">3.00 5.00</span>
+<span class="cm">3.00 1.50</span>
+<span class="cm">4.00 4.00</span>
+<span class="cm">3.21 3.78</span>
+
+<span class="cm">Yes</span>
+
+<span class="cm">2.00 2.50</span>
+<span class="cm">3.00 5.00</span>
+<span class="cm">3.00 1.50</span>
+<span class="cm">4.00 4.00</span>
+<span class="cm">2333.33 2333333.33</span>
+
+<span class="cm">No</span>
+<span class="cm"> */</span>
 </pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-05 13:10:27</p>
+        <p>Site Generated 2020-01-05 13:52:41</p>
       </span>
     </div>
 
