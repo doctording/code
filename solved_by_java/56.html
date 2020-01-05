@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>56 有关阶乘的两个问题1 - 程序员代码面试指南</title>
+    <title>056 有关阶乘的两个问题1 - 程序员代码面试指南</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,14 +16,14 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;56 有关阶乘的两个问题1
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;056 有关阶乘的两个问题1
     <span class="updated">Page Updated&nbsp;
       2019-11-22 23:22
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">56 有关阶乘的两个问题1</div>
+<div class="page_title">056 有关阶乘的两个问题1</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ac">ac</a></li>
@@ -36,7 +36,8 @@
 </pre></div>
 
 
-<div class="hlcode"><pre><span class="err">举例说明：</span>
+<div class="hlcode"><pre><span class="err">出现</span><span class="mi">5</span><span class="err">，一定能足够的</span><span class="mi">2</span><span class="err">来配对，所以只需要知道</span><span class="mi">1</span><span class="o">-</span><span class="n">n</span><span class="err">这</span><span class="n">n</span><span class="err">个数中</span><span class="o">,</span><span class="err">含有多少个因子</span><span class="mi">5</span>
+<span class="err">举例说明：</span>
 <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="err">，</span><span class="n">Z</span><span class="o">=</span><span class="mi">20</span><span class="o">/</span><span class="mi">5</span> <span class="o">+</span> <span class="mi">20</span><span class="o">/</span><span class="mi">25</span> <span class="o">=</span> <span class="mi">4</span><span class="err">，</span><span class="mi">20</span><span class="o">/</span><span class="mi">5</span><span class="err">可理解为</span><span class="mi">20</span><span class="o">,</span><span class="mi">15</span><span class="o">,</span><span class="mi">10</span><span class="o">,</span><span class="mi">5</span><span class="err">这四个数每个都提供了一个</span><span class="mi">5</span>
 <span class="n">N</span><span class="o">=</span><span class="mi">25</span><span class="err">，</span><span class="n">Z</span><span class="o">=</span><span class="mi">25</span><span class="o">/</span><span class="mi">5</span> <span class="o">+</span> <span class="mi">25</span><span class="o">/</span><span class="mi">25</span> <span class="o">+</span><span class="mi">25</span><span class="o">/</span><span class="mi">125</span> <span class="o">=</span> <span class="mi">6</span><span class="err">，</span><span class="mi">25</span><span class="o">/</span><span class="mi">5</span><span class="err">可理解为：</span><span class="mi">25</span><span class="o">,</span><span class="mi">20</span><span class="o">,</span><span class="mi">15</span><span class="o">,</span><span class="mi">10</span><span class="o">,</span><span class="mi">5</span><span class="err">这五个数每个都提供了一个</span><span class="mi">5</span><span class="err">，</span><span class="mi">25</span><span class="o">/</span><span class="mi">25</span><span class="err">可理解为：</span><span class="mi">25</span> <span class="o">=</span> <span class="mi">5</span><span class="o">*</span><span class="mi">5</span><span class="err">，在</span><span class="mi">25</span><span class="o">/</span><span class="mi">5</span><span class="err">中提供了一个</span><span class="mi">5</span><span class="err">，在</span><span class="mi">25</span><span class="o">/</span><span class="mi">25</span><span class="err">中又提供了一个</span><span class="mi">5</span><span class="err">，即</span><span class="mi">25</span><span class="err">提供了两个</span><span class="mi">5</span>
 <span class="err">同样的</span><span class="mi">125</span><span class="o">=</span><span class="mi">5</span><span class="o">*</span><span class="mi">5</span><span class="o">*</span><span class="mi">5</span><span class="err">，</span><span class="mi">125</span><span class="err">可提供三个</span><span class="mi">5</span>
@@ -53,6 +54,7 @@
 
     <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
 
+    <span class="c1">// 时间复杂度 O(logn)</span>
     <span class="kd">static</span> <span class="kt">long</span> <span class="nf">numOfZero</span><span class="o">(</span><span class="kt">long</span> <span class="n">n</span><span class="o">){</span>
        <span class="kt">long</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
        <span class="kt">long</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span>
@@ -75,7 +77,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-05 12:51:42</p>
+        <p>Site Generated 2020-01-05 13:10:27</p>
       </span>
     </div>
 
