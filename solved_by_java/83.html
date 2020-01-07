@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>83 两个有序数组间相加和的Topk问题 - 程序员代码面试指南</title>
+    <title>083 两个有序数组间相加和的Topk问题 - 程序员代码面试指南</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,38 +16,39 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;83 两个有序数组间相加和的Topk问题
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;083 两个有序数组间相加和的Topk问题
     <span class="updated">Page Updated&nbsp;
       2019-12-03 11:59
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">83 两个有序数组间相加和的Topk问题</div>
+<div class="page_title">083 两个有序数组间相加和的Topk问题</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ac">ac</a></li>
 </ul>
 </div>
 <h1 id="ac">ac</h1>
+<p>牛客网反应出来的问题注意点，也可以作为理解题目问答</p>
 <ul>
-<li>牛客网内存超限制</li>
+<li>是否是两个有序的数组</li>
+<li>判断重复如何判断省内存</li>
+<li>优先队列/堆的使用</li>
+<li>输入输出也是个奇葩</li>
 </ul>
 <div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.util.PriorityQueue</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
 
 
 <span class="kd">class</span> <span class="nc">DataNode</span><span class="o">{</span>
     <span class="kt">int</span> <span class="n">i</span><span class="o">;</span>
     <span class="kt">int</span> <span class="n">j</span><span class="o">;</span>
-    <span class="kt">int</span> <span class="n">val</span><span class="o">;</span>
 
-    <span class="kd">public</span> <span class="nf">DataNode</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">,</span> <span class="kt">int</span> <span class="n">val</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nf">DataNode</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">j</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">this</span><span class="o">.</span><span class="na">i</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">j</span> <span class="o">=</span> <span class="n">j</span><span class="o">;</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 
@@ -59,56 +60,97 @@
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
         <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
         <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
-        <span class="kt">int</span><span class="o">[]</span> <span class="n">a1</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
-        <span class="kt">int</span><span class="o">[]</span> <span class="n">a2</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="kt">long</span><span class="o">[]</span> <span class="n">a1</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">long</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="kt">long</span><span class="o">[]</span> <span class="n">a2</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">long</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
         <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
-            <span class="n">a1</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+            <span class="n">a1</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextLong</span><span class="o">();</span>
         <span class="o">}</span>
         <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
-            <span class="n">a2</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+            <span class="n">a2</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextLong</span><span class="o">();</span>
         <span class="o">}</span>
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">a1</span><span class="o">);</span>
+        <span class="n">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">a2</span><span class="o">);</span>
         <span class="c1">// 大根堆</span>
         <span class="n">PriorityQueue</span><span class="o">&lt;</span><span class="n">DataNode</span><span class="o">&gt;</span> <span class="n">priorityQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PriorityQueue</span><span class="o">&lt;&gt;((</span><span class="n">a</span><span class="o">,</span><span class="n">b</span><span class="o">)-&gt;{</span>
-            <span class="k">if</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">val</span> <span class="o">&gt;</span> <span class="n">b</span><span class="o">.</span><span class="na">val</span><span class="o">){</span>
+            <span class="kt">long</span> <span class="n">val1</span> <span class="o">=</span> <span class="n">a1</span><span class="o">[</span><span class="n">a</span><span class="o">.</span><span class="na">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">a2</span><span class="o">[</span><span class="n">a</span><span class="o">.</span><span class="na">j</span><span class="o">];</span>
+            <span class="kt">long</span> <span class="n">val2</span> <span class="o">=</span> <span class="n">a1</span><span class="o">[</span><span class="n">b</span><span class="o">.</span><span class="na">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">a2</span><span class="o">[</span><span class="n">b</span><span class="o">.</span><span class="na">j</span><span class="o">];</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">val1</span> <span class="o">&gt;</span> <span class="n">val2</span><span class="o">){</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
             <span class="o">}</span>
-            <span class="k">if</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">val</span> <span class="o">&lt;</span> <span class="n">b</span><span class="o">.</span><span class="na">val</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">val1</span> <span class="o">&lt;</span> <span class="n">val2</span><span class="o">){</span>
                 <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
             <span class="o">}</span>
             <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
         <span class="o">});</span>
 
-        <span class="kt">boolean</span><span class="o">[][]</span> <span class="n">posOccur</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="n">n</span><span class="o">][</span><span class="n">n</span><span class="o">];</span>
-        <span class="n">priorityQueue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="k">new</span> <span class="n">DataNode</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">a1</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="n">a2</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]));</span>
-        <span class="n">posOccur</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">][</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+<span class="c1">//        boolean[][] posOccur = new boolean[n][n]; // n*n可能越界</span>
+<span class="c1">//        posOccur[n-1][n-1] = true; // n * n 内存太多了，内存超限制</span>
 
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span><span class="n">Boolean</span><span class="o">&gt;&gt;</span> <span class="n">mp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
+
+        <span class="n">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">();</span>
+        <span class="n">priorityQueue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="k">new</span> <span class="n">DataNode</span><span class="o">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">));</span>
         <span class="kt">int</span> <span class="n">popNum</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
         <span class="k">while</span> <span class="o">(</span><span class="n">popNum</span> <span class="o">&lt;</span> <span class="n">k</span><span class="o">){</span>
             <span class="k">if</span><span class="o">(!</span><span class="n">priorityQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
                 <span class="n">DataNode</span> <span class="n">dataNode</span> <span class="o">=</span> <span class="n">priorityQueue</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+                <span class="kt">long</span> <span class="n">val</span> <span class="o">=</span> <span class="n">a1</span><span class="o">[</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">a2</span><span class="o">[</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span><span class="o">];</span>
                 <span class="k">if</span><span class="o">(</span><span class="n">popNum</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
-                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+<span class="c1">//                    sb.append(val);</span>
                     <span class="n">popNum</span> <span class="o">++;</span>
                 <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
-                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">dataNode</span><span class="o">.</span><span class="na">val</span><span class="o">);</span>
+<span class="c1">//                    sb.append(&quot; &quot; + val);</span>
                     <span class="n">popNum</span> <span class="o">++;</span>
                 <span class="o">}</span>
+                <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">val</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
                 <span class="k">if</span><span class="o">(</span><span class="n">popNum</span> <span class="o">==</span> <span class="n">k</span><span class="o">){</span>
                     <span class="k">break</span><span class="o">;</span>
                 <span class="o">}</span>
-                <span class="k">if</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="o">!</span> <span class="n">posOccur</span><span class="o">[</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">][</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span><span class="o">])</span> <span class="o">{</span>
-                    <span class="n">DataNode</span> <span class="n">d1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataNode</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">dataNode</span><span class="o">.</span><span class="na">j</span><span class="o">,</span> <span class="n">a1</span><span class="o">[</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="n">a2</span><span class="o">[</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span><span class="o">]);</span>
+                <span class="kt">boolean</span> <span class="n">flag</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">-</span><span class="mi">1</span><span class="o">)){</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">-</span><span class="mi">1</span><span class="o">).</span><span class="na">containsKey</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span><span class="o">)){</span>
+                        <span class="n">flag</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="o">!</span> <span class="n">flag</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">DataNode</span> <span class="n">d1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataNode</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="n">dataNode</span><span class="o">.</span><span class="na">j</span><span class="o">);</span>
                     <span class="n">priorityQueue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">d1</span><span class="o">);</span>
-                    <span class="n">posOccur</span><span class="o">[</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">][</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+<span class="c1">//                    posOccur[(dataNode.i - 1)][dataNode.j] = true;</span>
+                    <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Boolean</span><span class="o">&gt;</span> <span class="n">tmp</span><span class="o">;</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">-</span><span class="mi">1</span><span class="o">)){</span>
+                        <span class="n">tmp</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+                        <span class="n">tmp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+                    <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                        <span class="n">tmp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;(</span><span class="mi">2</span><span class="o">);</span>
+                        <span class="n">tmp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+                    <span class="o">}</span>
+                    <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">tmp</span><span class="o">);</span>
                 <span class="o">}</span>
-                <span class="k">if</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span>  <span class="o">!</span> <span class="n">posOccur</span><span class="o">[</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">][</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span> <span class="o">-</span> <span class="mi">1</span><span class="o">])</span> <span class="o">{</span>
-                    <span class="n">DataNode</span> <span class="n">d2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataNode</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">,</span> <span class="n">dataNode</span><span class="o">.</span><span class="na">j</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="n">a1</span><span class="o">[</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">]</span> <span class="o">+</span> <span class="n">a2</span><span class="o">[</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]);</span>
+                <span class="n">flag</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">)){</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">).</span><span class="na">containsKey</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span><span class="o">-</span><span class="mi">1</span><span class="o">)){</span>
+                        <span class="n">flag</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span>  <span class="o">!</span> <span class="n">flag</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">DataNode</span> <span class="n">d2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataNode</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">,</span> <span class="n">dataNode</span><span class="o">.</span><span class="na">j</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
                     <span class="n">priorityQueue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">d2</span><span class="o">);</span>
-                    <span class="n">posOccur</span><span class="o">[</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">][</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+<span class="c1">//                    posOccur[dataNode.i][dataNode.j - 1] = true;</span>
+                    <span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">,</span> <span class="n">Boolean</span><span class="o">&gt;</span> <span class="n">tmp</span><span class="o">;</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">mp</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">)){</span>
+                        <span class="n">tmp</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">);</span>
+                        <span class="n">tmp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+                    <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                        <span class="n">tmp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;(</span><span class="mi">2</span><span class="o">);</span>
+                        <span class="n">tmp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">j</span><span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+                    <span class="o">}</span>
+                    <span class="n">mp</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">dataNode</span><span class="o">.</span><span class="na">i</span><span class="o">,</span> <span class="n">tmp</span><span class="o">);</span>
                 <span class="o">}</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="k">break</span><span class="o">;</span>
             <span class="o">}</span>
         <span class="o">}</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
     <span class="o">}</span>
 
 <span class="o">}</span>
@@ -118,6 +160,14 @@
 <span class="cm">3 5 7 9 11</span>
 
 <span class="cm">16 15 14 14</span>
+
+<span class="cm">5 30</span>
+<span class="cm">1 2 3 4 5</span>
+<span class="cm">3 5 7 9 11</span>
+
+<span class="cm">5 -1</span>
+<span class="cm">1 2 3 4 5</span>
+<span class="cm">3 5 7 9 11</span>
 <span class="cm"> */</span>
 </pre></div>
     </div>
@@ -125,7 +175,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-06 22:57:09</p>
+        <p>Site Generated 2020-01-07 10:39:08</p>
       </span>
     </div>
 
