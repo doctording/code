@@ -30,14 +30,142 @@
 </ul>
 </div>
 <h1 id="ac">ac</h1>
-<div class="hlcode"><pre>
+<div class="hlcode"><pre><span class="err">问题如下：</span>
+<span class="err">给定一个含有负数可能有重复值的数组</span> <span class="n">arr</span><span class="err">，请问有多少对山峰能够相互看见</span>
+</pre></div>
+
+
+<ul>
+<li>单调栈逻辑</li>
+</ul>
+<p>找到其中一个最大的next遍历完, 某个记录(x,k)从栈中弹出, 产生可见山峰对的数量为: 2<em>k + C(2,k)对   k==1时, C(2,k)=0; k&gt;1时, C(2,k)=k</em>(k-1)/2</p>
+<ul>
+<li>
+<p>(x,k)不是栈的倒数第二个元素, 也不是栈的倒数第一个元素, 此时产生2<em>k+C(2,k)个,  k==1时, C(2,k)=0; k&gt;1时, C(2,k)=k</em>(k-1)/2</p>
+</li>
+<li>
+<p>(x,k)是栈的倒数第二个元素, 此时产生可见山峰对的数量取决于栈底元素的个数</p>
+<ul>
+<li>
+<p>如果栈底元素出现1次, 此时产生可见山峰对的数量为: k+C(2,k)个,  k==1时, C(2,k)=0; k&gt;1时, C(2,k)=k*(k-1)/2</p>
+</li>
+<li>
+<p>如果栈底元素出现大于1次, 此时产生可见山峰对的数量为: 2<em>k+C(2,k)个,  k==1时, C(2,k)=0; k&gt;1时, C(2,k)=k</em>(k-1)/2</p>
+</li>
+<li>
+<p>是栈的倒数第一个元素, 此时产生可见山峰对的数量为: C(2,k)个, k==1时, C(2,k)=0; k&gt;1时, C(2,k)=k*(k-1)/2</p>
+</li>
+</ul>
+</li>
+<li>
+<p>ac code</p>
+</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">class</span> <span class="nc">Record</span><span class="o">{</span>
+    <span class="kt">int</span> <span class="n">val</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">cnt</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Record</span><span class="o">(</span><span class="kt">int</span> <span class="n">val</span><span class="o">,</span> <span class="kt">int</span> <span class="n">cnt</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">cnt</span> <span class="o">=</span> <span class="n">cnt</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">getNext</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="kt">int</span> <span class="n">n</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">){</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">int</span> <span class="nf">getCn2</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">n</span> <span class="o">*</span> <span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>       <span class="c1">// C(n,2)</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">];</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">val</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">val</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 找到其中一个最大值</span>
+        <span class="kt">int</span> <span class="n">maxIndex</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">maxVal</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">MIN_VALUE</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">maxVal</span><span class="o">){</span>
+                <span class="n">maxVal</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+                <span class="n">maxIndex</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+        <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Record</span><span class="o">&gt;</span> <span class="n">recordStack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span> <span class="c1">// 维持一个递减的栈</span>
+        <span class="n">recordStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="k">new</span> <span class="n">Record</span><span class="o">(</span><span class="n">maxVal</span><span class="o">,</span> <span class="mi">1</span><span class="o">));</span>
+
+        <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">getNext</span><span class="o">(</span><span class="n">maxIndex</span><span class="o">,</span> <span class="n">n</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">index</span> <span class="o">!=</span> <span class="n">maxIndex</span><span class="o">){</span> <span class="c1">// next一圈</span>
+            <span class="c1">// 栈里面小于当前值的pop，计算</span>
+            <span class="k">while</span> <span class="o">(!</span><span class="n">recordStack</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">recordStack</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">val</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">[</span><span class="n">index</span><span class="o">]){</span>
+                <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">recordStack</span><span class="o">.</span><span class="na">pop</span><span class="o">().</span><span class="na">cnt</span><span class="o">;</span>
+                <span class="n">res</span> <span class="o">+=</span> <span class="n">getCn2</span><span class="o">(</span><span class="n">k</span><span class="o">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="k">if</span> <span class="o">(!</span><span class="n">recordStack</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="n">recordStack</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">val</span> <span class="o">==</span> <span class="n">arr</span><span class="o">[</span><span class="n">index</span><span class="o">]){</span>
+                <span class="n">recordStack</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">cnt</span> <span class="o">++;</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">recordStack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="k">new</span> <span class="n">Record</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">index</span><span class="o">],</span> <span class="mi">1</span><span class="o">));</span>
+            <span class="o">}</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">getNext</span><span class="o">(</span><span class="n">index</span><span class="o">,</span> <span class="n">n</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="c1">// 不是栈中最后一个记录，也不是倒数第二个</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">recordStack</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">recordStack</span><span class="o">.</span><span class="na">pop</span><span class="o">().</span><span class="na">cnt</span><span class="o">;</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="n">getCn2</span><span class="o">(</span><span class="n">k</span><span class="o">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 是栈中倒数第二个</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">recordStack</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">==</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">recordStack</span><span class="o">.</span><span class="na">pop</span><span class="o">().</span><span class="na">cnt</span><span class="o">;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">recordStack</span><span class="o">.</span><span class="na">peek</span><span class="o">().</span><span class="na">cnt</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">res</span> <span class="o">+=</span> <span class="n">getCn2</span><span class="o">(</span><span class="n">k</span><span class="o">)</span> <span class="o">+</span> <span class="n">k</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="n">res</span> <span class="o">+=</span> <span class="n">getCn2</span><span class="o">(</span><span class="n">k</span><span class="o">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k</span><span class="o">;</span>
+            <span class="o">}</span>
+
+        <span class="o">}</span>
+        <span class="c1">// 最后一个记录</span>
+        <span class="n">res</span> <span class="o">+=</span> <span class="n">getCn2</span><span class="o">(</span><span class="n">recordStack</span><span class="o">.</span><span class="na">pop</span><span class="o">().</span><span class="na">cnt</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">res</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">5</span>
+<span class="cm">3 1 2 4 5</span>
+
+<span class="cm">7</span>
+<span class="cm"> */</span>
 </pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-07 23:00:46</p>
+        <p>Site Generated 2020-01-08 23:11:27</p>
       </span>
     </div>
 
