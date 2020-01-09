@@ -32,12 +32,92 @@
 <h1 id="ac">ac</h1>
 <div class="hlcode"><pre><span class="err">一个字符串可以分解为多种二叉树。如果</span><span class="n">str</span><span class="err">长度为</span><span class="mi">1</span><span class="err">，认为不可分解；如果</span><span class="n">str</span><span class="err">长度为</span><span class="n">N</span><span class="o">(</span><span class="n">N</span><span class="o">&gt;</span><span class="mi">1</span><span class="o">),</span><span class="err">左半部分长度可以为</span><span class="mi">1</span><span class="o">~</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="err">，右半部分为剩下的长度，然后你可以交换左右两部分。并且左右部分可以按照同样的逻辑，继续分解。每一个形成的字符串都可以是原字符串的旋变字符串。现在给你两个字符串</span><span class="n">str1</span><span class="err">和</span><span class="n">str2</span><span class="err">，判断</span><span class="n">str2</span><span class="err">是否为</span><span class="n">str1</span><span class="err">的旋变字符串。</span>
 </pre></div>
+
+
+<ul>
+<li>时间复杂度O(N^4)</li>
+<li>额外空间复杂度O(N^3)</li>
+<li>动态规划</li>
+</ul>
+<p>dp[L1][L2][size] 表示str1以L1位置开始长度为size的字符子串 与 str2以L2位置开始长度为size的字符</p>
+<p><code>size</code>可分为左右两部分,可以左右对等，也可以旋变对等<br />
+arr1[l1....l1+left] arr1[l1+left+1...size]<br />
+arr2[l1....l1+left] arr2[l1+left+1...size]</p>
+<ul>
+<li>ac代码</li>
+</ul>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">str1</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="n">String</span> <span class="n">str2</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">isChange</span><span class="o">(</span><span class="n">str1</span><span class="o">,</span> <span class="n">str2</span><span class="o">)</span> <span class="o">?</span> <span class="s">&quot;YES&quot;</span> <span class="o">:</span> <span class="s">&quot;NO&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isChange</span><span class="o">(</span><span class="n">String</span> <span class="n">s1</span><span class="o">,</span> <span class="n">String</span> <span class="n">s2</span><span class="o">){</span>
+        <span class="k">if</span> <span class="o">((</span><span class="n">s1</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">s2</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">||</span> <span class="o">(</span><span class="n">s1</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">s2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">))</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">((</span><span class="n">s1</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">s2</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">||</span> <span class="o">(</span><span class="n">s1</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">s2</span><span class="o">)))</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">s1</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">!=</span> <span class="n">s2</span><span class="o">.</span><span class="na">length</span><span class="o">()){</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">arr1</span> <span class="o">=</span> <span class="n">s1</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">arr2</span> <span class="o">=</span> <span class="n">s2</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">arr1</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+        <span class="c1">// dp[L1][L2][size] 表示str1以L1位置开始长度为size的字符子串 与 str2以L2位置开始长度为size的字符子串是否互为旋变字符串</span>
+        <span class="kt">boolean</span><span class="o">[][][]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="n">n</span><span class="o">][</span><span class="n">n</span><span class="o">][</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+
+        <span class="c1">// 长度为1判断是否相等</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">l1</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">l1</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">l1</span><span class="o">++){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">l2</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">l2</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">l2</span><span class="o">++){</span>
+                <span class="n">dp</span><span class="o">[</span><span class="n">l1</span><span class="o">][</span><span class="n">l2</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr1</span><span class="o">[</span><span class="n">l1</span><span class="o">]</span> <span class="o">==</span> <span class="n">arr2</span><span class="o">[</span><span class="n">l2</span><span class="o">];</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+        <span class="c1">// size=2, 一直到size = n</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="o">;</span><span class="n">size</span><span class="o">&lt;=</span><span class="n">n</span><span class="o">;</span><span class="n">size</span><span class="o">++){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">l1</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">l1</span><span class="o">&lt;=</span><span class="n">n</span><span class="o">-</span><span class="n">size</span><span class="o">;</span><span class="n">l1</span><span class="o">++){</span>
+                <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">l2</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">l2</span><span class="o">&lt;=</span><span class="n">n</span><span class="o">-</span><span class="n">size</span><span class="o">;</span><span class="n">l2</span><span class="o">++){</span>
+                    <span class="c1">// 依据size分成左右两部分</span>
+                    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">left</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">left</span><span class="o">&lt;</span><span class="n">size</span><span class="o">;</span><span class="n">left</span><span class="o">++){</span>
+                        <span class="c1">// 左右两部分</span>
+                        <span class="k">if</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">l1</span><span class="o">][</span><span class="n">l2</span><span class="o">][</span><span class="n">left</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">dp</span><span class="o">[</span><span class="n">l1</span><span class="o">+</span><span class="n">left</span><span class="o">][</span><span class="n">l2</span><span class="o">+</span><span class="n">left</span><span class="o">][</span><span class="n">size</span><span class="o">-</span><span class="n">left</span><span class="o">]){</span>
+                            <span class="n">dp</span><span class="o">[</span><span class="n">l1</span><span class="o">][</span><span class="n">l2</span><span class="o">][</span><span class="n">size</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+                            <span class="k">break</span><span class="o">;</span>
+                        <span class="o">}</span>
+                        <span class="c1">// 可以旋转下</span>
+                        <span class="k">if</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">l1</span><span class="o">][</span><span class="n">l2</span><span class="o">+</span><span class="n">size</span><span class="o">-</span><span class="n">left</span><span class="o">][</span><span class="n">left</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">dp</span><span class="o">[</span><span class="n">l1</span><span class="o">+</span><span class="n">left</span><span class="o">][</span><span class="n">l2</span><span class="o">][</span><span class="n">size</span><span class="o">-</span><span class="n">left</span><span class="o">]){</span>
+                            <span class="n">dp</span><span class="o">[</span><span class="n">l1</span><span class="o">][</span><span class="n">l2</span><span class="o">][</span><span class="n">size</span><span class="o">]</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+                            <span class="k">break</span><span class="o">;</span>
+                        <span class="o">}</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">][</span><span class="mi">0</span><span class="o">][</span><span class="n">n</span><span class="o">];</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+
+<span class="cm"> */</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-08 23:11:27</p>
+        <p>Site Generated 2020-01-09 10:20:10</p>
       </span>
     </div>
 
