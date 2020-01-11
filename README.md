@@ -6,6 +6,8 @@
 
 * 《程序员代码面试指南》: <a href="https://www.nowcoder.com/ta/programmer-code-interview-guide?page=1" target="_blank">牛客网刷题地址</a>
 
+* 第一遍总结：<a href="https://blog.csdn.net/qq_26437925/article/details/103935101" target="_blank">csdn总结</a>
+
 # 解题思路(全)
 
 Java
@@ -21,8 +23,6 @@ $ simiki p # 本地运行：http://127.0.0.1:8000/code/
 # 部署到 https://doctording.github.io/code/
 $ ghp-import -p -m "Update output documentation" -r origin -b gh-pages output
 ```
-
-可参考： https://blog.csdn.net/u013041398/article/details/73958706
 
 # tool.py处理git提交
 
