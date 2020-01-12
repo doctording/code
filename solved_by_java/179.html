@@ -29,7 +29,7 @@
 <li><a href="#ac">ac</a><ul>
 <li><a href="#_1">并查集</a></li>
 <li><a href="#tarjan">Tarjan算法</a><ul>
-<li><a href="#_2">过程</a></li>
+<li><a href="#code">code</a></li>
 </ul>
 </li>
 </ul>
@@ -337,31 +337,123 @@
 <p>Tarjan算法是基于对图<strong>深度优先</strong>搜索的算法，每个强连通分量为搜索树中的一棵子树。搜索时，把当前搜索树中未处理的节点加入一个堆栈，回溯时可以判断栈顶到栈中的节点是否为一个强连通分量</p>
 <ul>
 <li>定义<code>DFN(u)</code>为节点u搜索的次序编号(时间戳)，一旦某个点被DFS到后，这个时间戳就不再改变（且每个点只有唯一的时间戳）</li>
-<li>定义<code>Low(u)</code>为u或u的子树能够追溯到的最早的栈中节点的次序号<br />
+<li>定义<code>Low(u)</code>为u或u的子树能够追溯到的最早的栈中节点的次序号,low[ ]相等的点相当于在一个强连通量上<br />
 则当<code>DFN(u)=Low(u)</code>时，以u为根的搜索子树上所有节点是一个强连通分量</li>
-<li>初始时：dfn[ ] = low[ ]</li>
+<li>初始时：dfn[ ] = low[ ] = ++count</li>
 </ul>
-<h3 id="_2">过程</h3>
-<p>1 2 4 6</p>
-<p>从1进入 dfn［1］＝ low［1］＝ 1<br />
-入栈 1<br />
-由1进入2 dfn［2］＝low［2］＝ 2<br />
-入栈 1 2<br />
-之后由2进入4 dfn［4］＝low［4］＝ 3<br />
-入栈 1 2 4<br />
-之后由4进入 6 dfn［6］＝low［6］＝ 4</p>
-<p>入栈 1 2 4 6</p>
-<p>回溯到6，6无出度，之后判断 dfn［6］＝＝low［6］<br />
-说明6是个强连通分量的根节点：6及6以后的点出栈并输出</p>
-<p>回溯到4，此时找到栈中的1，low[4] = min(low[4], dfn[1])=1</p>
-<p>接着1到2，low[2] = min(low[2], low[4]) = 1</p>
-<p>回溯2回到1，low[1] = min(low[1], low[2]) = 1</p>
+<p>4节点，最早回溯到1，1的次序是dfn[1] = 1, 所以，low[4] = 1</p>
+<h3 id="code">code</h3>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="c1">// 有向边</span>
+<span class="kd">class</span> <span class="nc">Edge</span><span class="o">{</span>
+    <span class="kt">boolean</span> <span class="n">inStack</span><span class="o">;</span> <span class="c1">// 是否栈中</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">next</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">mod</span> <span class="o">=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span> <span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">29</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">1001</span><span class="o">;</span>
+
+    <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">dfn</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">N</span><span class="o">];</span>
+    <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">low</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">N</span><span class="o">];</span>
+    <span class="kd">static</span> <span class="n">Edge</span><span class="o">[]</span> <span class="n">edges</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Edge</span><span class="o">[</span><span class="n">N</span><span class="o">];</span>
+
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">u</span><span class="o">,</span> <span class="kt">int</span> <span class="n">v</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">edges</span><span class="o">[</span><span class="n">u</span><span class="o">]</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">edges</span><span class="o">[</span><span class="n">u</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Edge</span><span class="o">();</span>
+            <span class="n">edges</span><span class="o">[</span><span class="n">u</span><span class="o">].</span><span class="na">next</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">edges</span><span class="o">[</span><span class="n">v</span><span class="o">]</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">edges</span><span class="o">[</span><span class="n">v</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Edge</span><span class="o">();</span>
+            <span class="n">edges</span><span class="o">[</span><span class="n">v</span><span class="o">].</span><span class="na">next</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="o">}</span>
+        <span class="n">edges</span><span class="o">[</span><span class="n">u</span><span class="o">].</span><span class="na">next</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">v</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">sta</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">tarjan</span><span class="o">(</span><span class="kt">int</span> <span class="n">now</span><span class="o">){</span>
+        <span class="n">dfn</span><span class="o">[</span><span class="n">now</span><span class="o">]</span> <span class="o">=</span> <span class="n">low</span><span class="o">[</span><span class="n">now</span><span class="o">]</span> <span class="o">=</span> <span class="o">++</span> <span class="n">count</span><span class="o">;</span>
+        <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">now</span><span class="o">);</span>
+        <span class="n">edges</span><span class="o">[</span><span class="n">now</span><span class="o">].</span><span class="na">inStack</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">Integer</span> <span class="nl">v:</span> <span class="n">edges</span><span class="o">[</span><span class="n">now</span><span class="o">].</span><span class="na">next</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">dfn</span><span class="o">[</span><span class="n">v</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">){</span> <span class="c1">// v 没有被访问过，递归 v</span>
+                <span class="n">tarjan</span><span class="o">(</span><span class="n">v</span><span class="o">);</span>
+                <span class="n">low</span><span class="o">[</span><span class="n">now</span><span class="o">]</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">low</span><span class="o">[</span><span class="n">now</span><span class="o">],</span> <span class="n">low</span><span class="o">[</span><span class="n">v</span><span class="o">]);</span> <span class="c1">// 回溯取最小，v是now的next</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">edges</span><span class="o">[</span><span class="n">v</span><span class="o">].</span><span class="na">inStack</span><span class="o">){</span> <span class="c1">// 在栈中, 则取其次序号dfn判断</span>
+                <span class="n">low</span><span class="o">[</span><span class="n">now</span><span class="o">]</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">low</span><span class="o">[</span><span class="n">now</span><span class="o">],</span> <span class="n">dfn</span><span class="o">[</span><span class="n">v</span><span class="o">]);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">low</span><span class="o">[</span><span class="n">now</span><span class="o">]</span> <span class="o">==</span> <span class="n">dfn</span><span class="o">[</span><span class="n">now</span><span class="o">]){</span>
+            <span class="kt">int</span> <span class="n">cur</span><span class="o">;</span>
+            <span class="k">do</span><span class="o">{</span>
+                <span class="n">cur</span> <span class="o">=</span> <span class="n">sta</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+                <span class="n">edges</span><span class="o">[</span><span class="n">cur</span><span class="o">].</span><span class="na">inStack</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">cur</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">while</span> <span class="o">(</span><span class="n">cur</span> <span class="o">!=</span> <span class="n">now</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">line</span><span class="o">;</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">strArr</span><span class="o">;</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+            <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">u</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+            <span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+            <span class="n">add</span><span class="o">(</span><span class="n">u</span><span class="o">,</span> <span class="n">v</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">edges</span><span class="o">[</span><span class="n">i</span><span class="o">]!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">edges</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">next</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="o">!</span> <span class="n">edges</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">next</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">Collections</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">edges</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">next</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">tarjan</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">6 8</span>
+<span class="cm">1 3</span>
+<span class="cm">1 2</span>
+<span class="cm">2 4</span>
+<span class="cm">3 4</span>
+<span class="cm">3 5</span>
+<span class="cm">4 6</span>
+<span class="cm">4 1</span>
+<span class="cm">5 6</span>
+
+<span class="cm">1  ------&gt; 3  -----&gt; 5</span>
+<span class="cm">| ^        |         |</span>
+<span class="cm">|    \     |         |</span>
+<span class="cm">|      \   |         |</span>
+<span class="cm">V        \ V         V</span>
+<span class="cm">2 -------&gt; 4  -----&gt; 6</span>
+<span class="cm"> */</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-11 12:10:24</p>
+        <p>Site Generated 2020-01-12 12:30:23</p>
       </span>
     </div>
 
