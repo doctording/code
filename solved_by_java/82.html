@@ -34,7 +34,7 @@
 <li><a href="#3">情况3（一般情况）</a></li>
 </ul>
 </li>
-<li><a href="#k-s-k-l-k-l">k &gt; s &amp;&amp; k &lt;= l 或者 k &gt; l</a></li>
+<li><a href="#k-s-k-l">k &gt; s &amp;&amp; k &lt;= l</a></li>
 </ul>
 </li>
 </ul>
@@ -229,7 +229,7 @@
 </pre></div>
 
 
-<h3 id="k-s-k-l-k-l">k &gt; s &amp;&amp; k &lt;= l 或者 k &gt; l</h3>
+<h3 id="k-s-k-l">k &gt; s &amp;&amp; k &lt;= l</h3>
 <div class="hlcode"><pre><span class="err">求</span> <span class="mi">7</span><span class="n">th</span> <span class="err">即</span><span class="n">k</span><span class="o">=</span><span class="mi">7</span>
 
 <span class="mi">1</span> <span class="mi">8</span> <span class="mi">28</span> <span class="mi">29</span> <span class="mi">30</span> <span class="o">(</span><span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="o">)</span>
@@ -244,13 +244,13 @@
 
 
 <p>其中如果：sArr[s-1] &lt; lArr[k-s-1]，那么就是lArr[k-s-1]</p>
-<p>否则lArr的前面部分是可以排除的</p>
+<p>否则lArr的前面部分是可以排除的,即(0, s-1, sArr, k-s, k-s-1 + s, lArr)</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-15 00:29:02</p>
+        <p>Site Generated 2020-01-15 00:49:54</p>
       </span>
     </div>
 
