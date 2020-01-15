@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>85 Manacher算法 求str中最长回文子串的长度 - 程序员代码面试指南</title>
+    <title>085 Manacher算法 求str中最长回文子串的长度 - 程序员代码面试指南</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,20 +16,33 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;85 Manacher算法 求str中最长回文子串的长度
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;085 Manacher算法 求str中最长回文子串的长度
     <span class="updated">Page Updated&nbsp;
       2019-12-04 12:59
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">85 Manacher算法 求str中最长回文子串的长度</div>
+<div class="page_title">085 Manacher算法 求str中最长回文子串的长度</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
-<li><a href="#ac">ac</a></li>
+<li><a href="#ac">ac</a><ul>
+<li><a href="#_i-index_left">_i &lt; index_left</a></li>
+<li><a href="#_i-index_left_1">非 _i &lt; index_left (利用对称性)</a><ul>
+<li><a href="#_i_left-index_left">_i_left &lt; index_left</a></li>
+</ul>
+</li>
+<li><a href="#_i_left-index_left_1">_i_left &gt; index_left</a></li>
+<li><a href="#_i_left-index_left_2">_i_left == index_left</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <h1 id="ac">ac</h1>
+<ul>
+<li><code>左大</code>为关于某个点最大回文串的左位置</li>
+<li><code>右大</code>为关于某个点最大回文串的右位置</li>
+</ul>
 <div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
@@ -52,6 +65,7 @@
             <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="o">(</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">i</span><span class="o">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span><span class="sc">&#39;#&#39;</span> <span class="o">:</span> <span class="n">ch</span><span class="o">[</span><span class="n">chi</span><span class="o">++];</span>
         <span class="o">}</span>
         <span class="c1">//  p[i] 表示 以i位置为中心的回文半径长（其长度减去1，表示在原字符串中以i为中心的回文长度）</span>
+        <span class="c1">// 包括自己，往外扩的时候，能够成回文的半径长</span>
         <span class="kt">int</span><span class="o">[]</span> <span class="n">p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">len</span><span class="o">];</span>
         <span class="c1">// 表示 回文半径最长的位置的下一个位置（pR总是比上一个pR值要大的）</span>
         <span class="kt">int</span> <span class="n">pR</span><span class="o">;</span>
@@ -64,7 +78,7 @@
         <span class="n">pR</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
         <span class="c1">// index = 1 的情况</span>
         <span class="n">p</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
-        <span class="n">index</span> <span class="o">=</span><span class="mi">1</span><span class="o">;</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
         <span class="n">pR</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
 
         <span class="kt">int</span> <span class="n">maxlen</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
@@ -72,7 +86,7 @@
             <span class="kt">int</span> <span class="n">_i</span> <span class="o">=</span> <span class="n">index</span> <span class="o">-</span> <span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">index</span><span class="o">);</span>   <span class="c1">//i的对称位置i&#39;</span>
             <span class="kt">int</span> <span class="n">index_left</span> <span class="o">=</span> <span class="n">index</span> <span class="o">-</span> <span class="n">p</span><span class="o">[</span><span class="n">index</span><span class="o">]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>  <span class="c1">// index的左大</span>
             <span class="kt">int</span> <span class="n">index_right</span> <span class="o">=</span> <span class="n">pR</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>    <span class="c1">// index的右大</span>
-            <span class="kt">int</span> <span class="n">_i_left</span> <span class="o">=</span> <span class="n">_i</span> <span class="o">-</span> <span class="n">p</span><span class="o">[</span><span class="n">_i</span><span class="o">]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>    <span class="c1">//i的对称位置i&#39;的左大</span>
+            <span class="kt">int</span> <span class="n">_i_left</span> <span class="o">=</span> <span class="n">_i</span> <span class="o">-</span> <span class="n">p</span><span class="o">[</span><span class="n">_i</span><span class="o">]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>    <span class="c1">// i的对称位置i&#39;的左大</span>
 
             <span class="k">if</span> <span class="o">(</span><span class="n">_i</span> <span class="o">&lt;</span> <span class="n">index_left</span><span class="o">)</span> <span class="o">{</span>
                 <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
@@ -124,12 +138,56 @@
 <span class="cm">#a#b#c#1#2#3#4#3#2#1#a#b#</span>
 <span class="cm"> */</span>
 </pre></div>
+
+
+<h2 id="_i-index_left"><code>_i &lt; index_left</code></h2>
+<div class="hlcode"><pre>            <span class="n">index</span>
+                  <span class="n">p</span><span class="o">[</span><span class="n">index</span><span class="o">]</span>        <span class="n">pR</span>
+    <span class="n">index_left</span>    <span class="n">index_right</span>
+<span class="n">_i</span>                                    <span class="n">i</span>
+</pre></div>
+
+
+<p>只能从<code>i</code>左右不断的判断相等求</p>
+<h2 id="_i-index_left_1">非 <code>_i &lt; index_left</code> (利用对称性)</h2>
+<h3 id="_i_left-index_left">_i_left &lt; index_left</h3>
+<div class="hlcode"><pre>                     <span class="n">index</span>
+                                    <span class="n">p</span><span class="o">[</span><span class="n">index</span><span class="o">]</span>  <span class="n">pR</span>
+    <span class="n">index_left</span>                      <span class="n">index_right</span>
+              <span class="n">_i</span>               <span class="n">i</span>
+<span class="n">_i_left</span>
+
+  <span class="n">a</span>                   <span class="n">c</span>                          <span class="n">b</span>
+
+<span class="n">a</span> <span class="o">!=</span> <span class="n">b</span> <span class="err">而</span> <span class="n">a</span> <span class="o">==</span> <span class="n">c</span> <span class="err">所以</span> <span class="n">b</span> <span class="o">!=</span> <span class="n">c</span>
+<span class="err">那么</span> <span class="n">p</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="err">最大也就是到</span><span class="n">b</span><span class="err">，也即</span> <span class="n">index_right</span> <span class="o">-</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+
+
+<h2 id="_i_left-index_left_1">_i_left &gt; index_left</h2>
+<div class="hlcode"><pre>                      <span class="n">index</span>
+                                      <span class="n">p</span><span class="o">[</span><span class="n">index</span><span class="o">]</span>      <span class="n">pR</span>
+<span class="n">index_left</span>                            <span class="n">index_right</span>
+                <span class="n">_i</span>               <span class="n">i</span>
+   <span class="n">_i_left</span>
+
+  <span class="n">a</span>                     <span class="n">c</span>                     <span class="n">b</span>
+
+<span class="n">a</span> <span class="o">!=</span> <span class="n">c</span> <span class="err">而</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span> <span class="err">所以</span> <span class="n">b</span> <span class="o">!=</span> <span class="n">c</span>
+
+<span class="n">c</span><span class="err">到</span><span class="n">i</span><span class="err">距离，即</span> <span class="n">a</span><span class="err">到</span><span class="n">_i</span><span class="err">距离</span><span class="o">,</span><span class="err">则有</span>
+<span class="n">p</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">[</span><span class="n">_i</span><span class="o">]</span>
+</pre></div>
+
+
+<h2 id="_i_left-index_left_2">_i_left == index_left</h2>
+<p>可以知道至少是i到pR-1,进一步往外扩去求解</p>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-15 00:49:54</p>
+        <p>Site Generated 2020-01-15 22:41:02</p>
       </span>
     </div>
 
