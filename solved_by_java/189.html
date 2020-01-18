@@ -30,7 +30,7 @@
 </ul>
 </div>
 <h1 id="ac">ac</h1>
-<div class="hlcode"><pre><span class="err">给定一个可能含有重复值的数组</span> <span class="n">arr</span><span class="err">，找到每一个</span> <span class="n">i</span> <span class="err">位置左边和右边离</span> <span class="n">i</span> <span class="err">位置最近且值比</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="err">小的位置。返回所有位置相应的信息。</span>
+<div class="hlcode"><pre><span class="err">给定一个可能含有重复值的数组</span><span class="n">arr</span><span class="err">，找到每一个</span><span class="n">i</span><span class="err">位置左边和右边离</span><span class="n">i</span><span class="err">位置最近，且值比</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="err">小的位置。返回所有位置相应的信息。</span>
 </pre></div>
 
 
@@ -58,7 +58,7 @@
         <span class="kt">int</span><span class="o">[][]</span> <span class="n">res</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n</span><span class="o">][</span><span class="mi">2</span><span class="o">];</span>
         <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
            <span class="n">res</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="c1">// 左小</span>
-           <span class="n">res</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="c1">// 又小</span>
+           <span class="n">res</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="c1">// 右小</span>
         <span class="o">}</span>
         <span class="c1">// 还是单调递增栈，不过相同的元素用了一个list结构</span>
         <span class="n">ArrayDeque</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span> <span class="n">stack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayDeque</span><span class="o">&lt;&gt;();</span>
@@ -130,7 +130,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-18 18:44:53</p>
+        <p>Site Generated 2020-01-18 22:21:20</p>
       </span>
     </div>
 
