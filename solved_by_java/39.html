@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>39 数组中未出现的最小正整数 - 程序员代码面试指南</title>
+    <title>039 数组中未出现的最小正整数(缺失的第一个正数) - 程序员代码面试指南</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,20 +16,21 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;39 数组中未出现的最小正整数
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;039 数组中未出现的最小正整数(缺失的第一个正数)
     <span class="updated">Page Updated&nbsp;
       2019-11-12 23:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">39 数组中未出现的最小正整数</div>
+<div class="page_title">039 数组中未出现的最小正整数(缺失的第一个正数)</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ac">ac</a></li>
 </ul>
 </div>
 <h1 id="ac">ac</h1>
+<p>leetCode同: https://leetcode-cn.com/problems/first-missing-positive/solution/que-shi-de-di-yi-ge-zheng-shu-by-doctording-4/</p>
 <p>划分区域，内部交换</p>
 <ul>
 <li>时间复杂度<code>O(n)</code></li>
@@ -59,6 +60,7 @@
         <span class="kt">int</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="c1">// [1, l]</span>
         <span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="n">n</span><span class="o">;</span> <span class="c1">// [r, n]</span>
         <span class="c1">// arr[l] - 1 位置 的值等于 arr[l]，相当于 该位置值确定好了</span>
+        <span class="c1">// arr[l] 理论上要等于 l+1, 即 arr[l]-1 要等于 l; l位置的值要为 l+1</span>
         <span class="k">while</span> <span class="o">(</span><span class="n">l</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">)</span> <span class="o">{</span>
             <span class="k">if</span> <span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">l</span><span class="o">]</span> <span class="o">==</span> <span class="n">l</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
                 <span class="n">l</span><span class="o">++;</span>
@@ -88,7 +90,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-18 17:28:34</p>
+        <p>Site Generated 2020-01-18 18:44:53</p>
       </span>
     </div>
 
