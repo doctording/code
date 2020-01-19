@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/code/favicon.ico" type="image/x-icon">
     <link rel="alternate" type="application/atom+xml" href="atom.xml" title="Atom feed">
-    <title>34  - 程序员代码面试指南</title>
+    <title>34 打印N个数组整体最大的TopK - 程序员代码面试指南</title>
     <meta name="keywords" content="algorithm，python"/>
     <meta name="description" content="for python and algorithm"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -16,20 +16,32 @@
     <div id="container">
       
 <div id="header">
-  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;34 
+  <div class="post-nav"><a href="/code/">Home</a>&nbsp;&#187;&nbsp;<a href="/code/#solved_by_java">solved_by_java</a>&nbsp;&#187;&nbsp;34 打印N个数组整体最大的TopK
     <span class="updated">Page Updated&nbsp;
       2019-11-11 23:00
     </span></div>
 </div>
 <div class="clearfix"></div>
 
-<div class="page_title">34 </div>
+<div class="page_title">34 打印N个数组整体最大的TopK</div>
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ac">ac(小根堆求解)</a></li>
 </ul>
 </div>
 <h1 id="ac">ac(小根堆求解)</h1>
+<div class="hlcode"><pre> <span class="err">有</span><span class="n">N</span><span class="err">个长度不一的数组，所有的数组都是有序的，请从大到小打印这</span><span class="n">N</span><span class="err">个数组整体最大的前</span><span class="n">K</span><span class="err">个数。</span>
+<span class="err">例如，输入含有</span><span class="n">N</span><span class="err">行元素的二维数组可以代表</span><span class="n">N</span><span class="err">个一维数组。</span>
+<span class="mi">219</span><span class="o">,</span> <span class="mi">405</span><span class="o">,</span> <span class="mi">538</span><span class="o">,</span> <span class="mi">845</span><span class="o">,</span> <span class="mi">971</span>
+<span class="mi">148</span><span class="o">,</span> <span class="mi">558</span>
+<span class="mi">52</span><span class="o">,</span> <span class="mi">99</span><span class="o">,</span> <span class="mi">348</span><span class="o">,</span> <span class="mi">691</span>
+<span class="err">再输入整数</span><span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="err">，则打印：</span>
+<span class="n">Top</span> <span class="mi">5</span><span class="o">:</span> <span class="mi">971</span><span class="o">,</span> <span class="mi">845</span><span class="o">,</span> <span class="mi">691</span><span class="o">,</span> <span class="mi">558</span><span class="o">,</span> <span class="mi">538</span>
+<span class="o">[</span><span class="err">要求</span><span class="o">]</span>
+<span class="err">时间复杂度为</span><span class="n">O</span><span class="o">(</span><span class="n">klogk</span><span class="o">)</span><span class="err">，空间复杂度为</span><span class="n">O</span><span class="o">(</span><span class="n">klogk</span><span class="o">)</span>
+</pre></div>
+
+
 <div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.util.PriorityQueue</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
 
@@ -92,7 +104,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-18 22:21:20</p>
+        <p>Site Generated 2020-01-19 10:12:16</p>
       </span>
     </div>
 
