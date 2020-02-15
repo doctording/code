@@ -27,7 +27,10 @@
 
   <div class="toc"><span class="toctitle">Table of Contents</span><ul>
 <li><a href="#ac">ac</a><ul>
-<li><a href="#_1">说明</a></li>
+<li><a href="#_1">动态规划过程</a></li>
+<li><a href="#_2">空间压缩为一维</a></li>
+<li><a href="#ac1">ac1</a></li>
+<li><a href="#ac2">ac2</a></li>
 </ul>
 </li>
 </ul>
@@ -111,7 +114,7 @@
 </pre></div>
 
 
-<h2 id="_1">说明</h2>
+<h2 id="_1">动态规划过程</h2>
 <div class="hlcode"><pre><span class="mi">1</span><span class="n">A2C3D4B56</span>
 <span class="n">B1D23CA45B6A</span>
 </pre></div>
@@ -151,12 +154,97 @@
 
 
 <p>回溯从右下角开始，回溯的过程就是<code>dp[i][j]</code>选择的过程</p>
+<h2 id="_2">空间压缩为一维</h2>
+<h2 id="ac1">ac1</h2>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+   <span class="cm">/*</span>
+<span class="cm">         &quot;&quot; a c e</span>
+<span class="cm">      &quot;&quot;  0 0 0 0</span>
+<span class="cm">       a  0 1 1 1</span>
+<span class="cm">       b  0 1 1 1</span>
+<span class="cm">       c  0 1 2 2</span>
+<span class="cm">       d  0 1 2 2</span>
+<span class="cm">       e  0 1 2 3</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">longestCommonSubsequence</span><span class="o">(</span><span class="n">String</span> <span class="n">text1</span><span class="o">,</span> <span class="n">String</span> <span class="n">text2</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n1</span> <span class="o">=</span> <span class="n">text1</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">n2</span> <span class="o">=</span> <span class="n">text2</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">s1</span> <span class="o">=</span> <span class="n">text1</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">text2</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="c1">// dp[i][j]</span>
+        <span class="c1">// s1[0..i] s2[0...j]</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n2</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">dpTmp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n2</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n1</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="c1">// 上一行的 dp[j-1]</span>
+            <span class="kt">int</span> <span class="n">last_pre_j_1</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+            <span class="c1">// 上一行的 dp[j]</span>
+            <span class="kt">int</span> <span class="n">last_pre_j</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+            <span class="c1">// 遍历求解</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">j</span><span class="o">&lt;=</span><span class="n">n2</span><span class="o">;</span><span class="n">j</span><span class="o">++){</span>
+                <span class="kt">int</span> <span class="n">tmpJ</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="n">tmpJ</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">tmpJ</span><span class="o">,</span> <span class="n">last_pre_j</span><span class="o">);</span>
+                <span class="n">tmpJ</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">tmpJ</span><span class="o">,</span> <span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">]);</span> <span class="c1">// 当前的dp[j-1]</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">s1</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">==</span> <span class="n">s2</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">]){</span>
+                    <span class="n">tmpJ</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">last_pre_j_1</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">tmpJ</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="c1">// 更新</span>
+                <span class="n">last_pre_j_1</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">n2</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">last_pre_j</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">];</span>
+                <span class="o">}</span>
+                <span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">tmpJ</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">dp</span><span class="o">[</span><span class="n">n2</span><span class="o">];</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<h2 id="ac2">ac2</h2>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="cm">/*</span>
+<span class="cm">         &quot;&quot; a c e</span>
+<span class="cm">      &quot;&quot;  0 0 0 0</span>
+<span class="cm">       a  0 1 1 1</span>
+<span class="cm">       b  0 1 1 1</span>
+<span class="cm">       c  0 1 2 2</span>
+<span class="cm">       d  0 1 2 2</span>
+<span class="cm">       e  0 1 2 3</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">longestCommonSubsequence</span><span class="o">(</span><span class="n">String</span> <span class="n">text1</span><span class="o">,</span> <span class="n">String</span> <span class="n">text2</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n1</span> <span class="o">=</span> <span class="n">text1</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">n2</span> <span class="o">=</span> <span class="n">text2</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">s1</span> <span class="o">=</span> <span class="n">text1</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="kt">char</span><span class="o">[]</span> <span class="n">s2</span> <span class="o">=</span> <span class="n">text2</span><span class="o">.</span><span class="na">toCharArray</span><span class="o">();</span>
+        <span class="c1">// dp[i][j]</span>
+        <span class="c1">// s1[0..i] s2[0...j]</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n2</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">dpTmp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">n2</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n1</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">k</span><span class="o">&lt;=</span><span class="n">n2</span><span class="o">;</span><span class="n">k</span><span class="o">++){</span>
+                <span class="n">dpTmp</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="n">dp</span><span class="o">[</span><span class="n">k</span><span class="o">];</span>
+            <span class="o">}</span>
+            <span class="c1">// 更新</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">j</span><span class="o">&lt;=</span><span class="n">n2</span><span class="o">;</span><span class="n">j</span><span class="o">++){</span>
+                <span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">],</span> <span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">]);</span>
+                <span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">],</span> <span class="n">dpTmp</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">]);</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">s1</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">==</span> <span class="n">s2</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">]){</span>
+                    <span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">dpTmp</span><span class="o">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">dp</span><span class="o">[</span><span class="n">j</span><span class="o">]);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">dp</span><span class="o">[</span><span class="n">n2</span><span class="o">];</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-01-25 21:29:07</p>
+        <p>Site Generated 2020-02-15 15:58:34</p>
       </span>
     </div>
 
