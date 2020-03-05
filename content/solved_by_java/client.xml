@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config mode="client" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
+    <servers>
+        <server ip="172.22.3.99" port="2280" http-port="8080" />
+        <server ip="172.22.3.124" port="2280" http-port="8080" />
+        <server ip="172.22.3.59" port="2280" http-port="8080" />
+        <server ip="172.22.3.116" port="2280" http-port="8080" />
+    </servers>
+</config>
