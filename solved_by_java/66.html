@@ -56,6 +56,7 @@
             <span class="n">rank</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
         <span class="o">}</span>
     <span class="o">}</span>
+
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">find</span><span class="o">(</span><span class="kt">int</span> <span class="n">x</span><span class="o">){</span>
         <span class="k">return</span> <span class="n">x</span><span class="o">==</span><span class="n">p</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">?</span> <span class="nl">x:</span><span class="o">(</span><span class="n">p</span><span class="o">[</span><span class="n">x</span><span class="o">]</span> <span class="o">=</span> <span class="n">find</span><span class="o">(</span><span class="n">p</span><span class="o">[</span><span class="n">x</span><span class="o">]));</span>
     <span class="o">}</span>
@@ -67,7 +68,10 @@
         <span class="k">if</span><span class="o">(</span><span class="n">f1</span> <span class="o">==</span> <span class="n">f2</span><span class="o">){</span>
             <span class="k">return</span><span class="o">;</span>
         <span class="o">}</span>
-        <span class="c1">// 按秩合并两个集合,rank小的作为父节点，以减少树的层数</span>
+        <span class="cm">/**</span>
+<span class="cm">         * 按秩合并两个集合,rank大的作为父节点，以减少树的层数</span>
+<span class="cm">         * 秩较小的作为子树，放到秩较大的节点下面</span>
+<span class="cm">         */</span>
         <span class="k">if</span><span class="o">(</span><span class="n">rank</span><span class="o">[</span><span class="n">f1</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">rank</span><span class="o">[</span><span class="n">f2</span><span class="o">]){</span>
             <span class="n">p</span><span class="o">[</span><span class="n">f2</span><span class="o">]</span> <span class="o">=</span> <span class="n">f1</span><span class="o">;</span>
         <span class="o">}</span><span class="k">else</span><span class="o">{</span>
@@ -132,7 +136,7 @@
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-02-15 15:58:34</p>
+        <p>Site Generated 2020-03-05 13:18:30</p>
       </span>
     </div>
 
