@@ -29,7 +29,10 @@
 <li><a href="#ac">ac</a><ul>
 <li><a href="#_1">并查集</a></li>
 <li><a href="#tarjan">Tarjan算法</a><ul>
-<li><a href="#code">code</a></li>
+<li><a href="#tarjan_1">tarjan算法简单例子图解法</a></li>
+<li><a href="#code">code编码</a></li>
+<li><a href="#code_1">完整code</a></li>
+<li><a href="#code2">完整code2</a></li>
 </ul>
 </li>
 </ul>
@@ -136,7 +139,7 @@
            <span class="kt">int</span> <span class="n">aRank</span> <span class="o">=</span> <span class="n">rankMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">aFa</span><span class="o">);</span>
            <span class="kt">int</span> <span class="n">bRank</span> <span class="o">=</span> <span class="n">rankMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">bFa</span><span class="o">);</span>
            <span class="k">if</span><span class="o">(</span><span class="n">aRank</span> <span class="o">&lt;</span> <span class="n">bRank</span><span class="o">){</span>
-               <span class="n">fatherMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">aFa</span><span class="o">,</span> <span class="n">bFa</span><span class="o">);</span> <span class="c1">// aFa 接到 bFa下面，bFa作为父根</span>
+               <span class="n">fatherMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">aFa</span><span class="o">,</span> <span class="n">bFa</span><span class="o">);</span> <span class="c1">// aFa 接到 bFa下面，bFa作为父根，即秩大的作为根</span>
            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">aRank</span> <span class="o">&gt;</span> <span class="n">bRank</span><span class="o">){</span>
                <span class="n">fatherMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">bFa</span><span class="o">,</span> <span class="n">aFa</span><span class="o">);</span>
            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
@@ -323,7 +326,30 @@
 <h2 id="_1">并查集</h2>
 <p>66题《并查集的实现》</p>
 <h2 id="tarjan">Tarjan算法</h2>
-<p>如果两个顶点可以相互通达，则称两个顶点强连通(strongly connected)。如果有向图G的每两个顶点都强连通，称G是一个强连通图。强连通图有向图的极大强连通子图，称为强连通分量(strongly connected components)。</p>
+<ul>
+<li>
+<p>无向图中，从i能到达j，则称i,j连通</p>
+</li>
+<li>
+<p>如果两个顶点可以相互通达，则称两个顶点强连通(strongly connected)。</p>
+</li>
+<li>
+<p>如果<strong>有向图</strong>G的每两个顶点都强连通，称G是一个<code>强连通图</code>。</p>
+</li>
+<li>
+<p>有向图的极大强连通子图，称为<code>强连通分量</code>(strongly connected components)。</p>
+</li>
+</ul>
+<h3 id="tarjan_1">tarjan算法简单例子图解法</h3>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/code/master/content/solved_by_java/imgs/tarjan_1.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/code/master/content/solved_by_java/imgs/tarjan_2.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/code/master/content/solved_by_java/imgs/tarjan_3.png" /></p>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/code/master/content/solved_by_java/imgs/tarjan_4.png" /></p>
+<ul>
+<li>复杂点的</li>
+</ul>
+<p><img alt="" src="https://raw.githubusercontent.com/doctording/code/master/content/solved_by_java/imgs/tarjan_5.png" /></p>
+<h3 id="code">code编码</h3>
 <p>如下： 子图{1,2,3,4}为一个强连通分量，因为顶点1,2,3,4两两可达。{5},{6}也分别是两个强连通分量</p>
 <div class="hlcode"><pre><span class="mi">1</span>  <span class="o">------&gt;</span> <span class="mi">3</span>  <span class="o">-----&gt;</span> <span class="mi">5</span>
 <span class="o">|</span> <span class="o">^</span>        <span class="o">|</span>         <span class="o">|</span>
@@ -335,14 +361,16 @@
 
 
 <p>Tarjan算法是基于对图<strong>深度优先</strong>搜索的算法，每个强连通分量为搜索树中的一棵子树。搜索时，把当前搜索树中未处理的节点加入一个堆栈，回溯时可以判断栈顶到栈中的节点是否为一个强连通分量</p>
+<p>dfs方式1: 先输出自己，然后访问与自己相关的点，不断递归（类似先序）<br />
+dfs方式2: 访问完与自己相关的点，不断递归，再输出自己（类似后序）</p>
 <ul>
 <li>定义<code>DFN(u)</code>为节点u搜索的次序编号(时间戳)，一旦某个点被DFS到后，这个时间戳就不再改变（且每个点只有唯一的时间戳）</li>
-<li>定义<code>Low(u)</code>为u或u的子树能够追溯到的最早的栈中节点的次序号,low[ ]相等的点相当于在一个强连通量上<br />
+<li>定义<code>Low(u)</code>为u或u的子树能够追溯到的最早的栈中节点的次序号,Low[ ]相等的点相当于在一个强连通量上<br />
 则当<code>DFN(u)=Low(u)</code>时，以u为根的搜索子树上所有节点是一个强连通分量</li>
 <li>初始时：dfn[ ] = low[ ] = ++count</li>
 </ul>
 <p>4节点，最早回溯到1，1的次序是dfn[1] = 1, 所以，low[4] = 1</p>
-<h3 id="code">code</h3>
+<h3 id="code_1">完整code</h3>
 <div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
@@ -448,12 +476,123 @@
 <span class="cm">2 -------&gt; 4  -----&gt; 6</span>
 <span class="cm"> */</span>
 </pre></div>
+
+
+<h3 id="code2">完整code2</h3>
+<div class="hlcode"><pre><span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="c1">// 有向边</span>
+<span class="kd">class</span> <span class="nc">Edge</span><span class="o">{</span>
+    <span class="kt">boolean</span> <span class="n">inStack</span><span class="o">;</span> <span class="c1">// 是否栈中</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">next</span><span class="o">;</span> <span class="c1">// 指向的节点</span>
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Scanner</span> <span class="n">sc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">in</span><span class="o">));</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="n">mod</span> <span class="o">=</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span> <span class="n">Math</span><span class="o">.</span><span class="na">pow</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">29</span><span class="o">);</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">1001</span><span class="o">;</span>
+
+    <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">dfn</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">N</span><span class="o">];</span>
+    <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">low</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">N</span><span class="o">];</span>
+    <span class="kd">static</span> <span class="n">Edge</span><span class="o">[]</span> <span class="n">edges</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Edge</span><span class="o">[</span><span class="n">N</span><span class="o">];</span>
+
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">u</span><span class="o">,</span> <span class="kt">int</span> <span class="n">v</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">edges</span><span class="o">[</span><span class="n">u</span><span class="o">]</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+            <span class="n">edges</span><span class="o">[</span><span class="n">u</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Edge</span><span class="o">();</span>
+            <span class="n">edges</span><span class="o">[</span><span class="n">u</span><span class="o">].</span><span class="na">next</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">edges</span><span class="o">[</span><span class="n">v</span><span class="o">]</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">edges</span><span class="o">[</span><span class="n">v</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Edge</span><span class="o">();</span>
+            <span class="n">edges</span><span class="o">[</span><span class="n">v</span><span class="o">].</span><span class="na">next</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="o">}</span>
+        <span class="n">edges</span><span class="o">[</span><span class="n">u</span><span class="o">].</span><span class="na">next</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">v</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">static</span> <span class="n">Stack</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">sta</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Stack</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">static</span> <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">dfs</span><span class="o">(</span><span class="kt">int</span> <span class="n">now</span><span class="o">){</span>
+        <span class="c1">// 访问并入栈</span>
+        <span class="n">dfn</span><span class="o">[</span><span class="n">now</span><span class="o">]</span> <span class="o">=</span> <span class="n">low</span><span class="o">[</span><span class="n">now</span><span class="o">]</span> <span class="o">=</span> <span class="o">++</span> <span class="n">count</span><span class="o">;</span>
+        <span class="n">sta</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">now</span><span class="o">);</span>
+        <span class="n">edges</span><span class="o">[</span><span class="n">now</span><span class="o">].</span><span class="na">inStack</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="c1">// dfs遍历</span>
+        <span class="k">for</span><span class="o">(</span><span class="n">Integer</span> <span class="nl">v:</span> <span class="n">edges</span><span class="o">[</span><span class="n">now</span><span class="o">].</span><span class="na">next</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">dfn</span><span class="o">[</span><span class="n">v</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">){</span> <span class="c1">// v 没有被访问过，递归 v</span>
+                <span class="n">dfs</span><span class="o">(</span><span class="n">v</span><span class="o">);</span>
+                <span class="c1">// 回溯，取最小的能回到的low</span>
+                <span class="n">low</span><span class="o">[</span><span class="n">now</span><span class="o">]</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">low</span><span class="o">[</span><span class="n">now</span><span class="o">],</span> <span class="n">low</span><span class="o">[</span><span class="n">v</span><span class="o">]);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">edges</span><span class="o">[</span><span class="n">v</span><span class="o">].</span><span class="na">inStack</span><span class="o">){</span>
+                <span class="c1">// 否则访问的是在栈中的，当前访问的看能否回到栈中最小的</span>
+                <span class="n">low</span><span class="o">[</span><span class="n">now</span><span class="o">]</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">min</span><span class="o">(</span><span class="n">low</span><span class="o">[</span><span class="n">now</span><span class="o">],</span> <span class="n">low</span><span class="o">[</span><span class="n">v</span><span class="o">]);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="c1">// 如果dfs 和 low 相等了，表示一个强联通分量构成</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">low</span><span class="o">[</span><span class="n">now</span><span class="o">]</span> <span class="o">==</span> <span class="n">dfn</span><span class="o">[</span><span class="n">now</span><span class="o">]){</span>
+            <span class="kt">int</span> <span class="n">cur</span><span class="o">;</span>
+            <span class="k">do</span><span class="o">{</span>
+                <span class="n">cur</span> <span class="o">=</span> <span class="n">sta</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+                <span class="c1">// 消除inStack, 但是dfs不消除</span>
+                <span class="n">edges</span><span class="o">[</span><span class="n">cur</span><span class="o">].</span><span class="na">inStack</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">cur</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">while</span> <span class="o">(</span><span class="n">cur</span> <span class="o">!=</span> <span class="n">now</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">line</span><span class="o">;</span>
+        <span class="n">String</span><span class="o">[]</span> <span class="n">strArr</span><span class="o">;</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+        <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+        <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">();</span>
+            <span class="n">strArr</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+            <span class="kt">int</span> <span class="n">u</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+            <span class="kt">int</span> <span class="n">v</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">strArr</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+            <span class="n">add</span><span class="o">(</span><span class="n">u</span><span class="o">,</span> <span class="n">v</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">edges</span><span class="o">[</span><span class="n">i</span><span class="o">]!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">edges</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">next</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="o">!</span> <span class="n">edges</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">next</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">Collections</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">edges</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">next</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">dfs</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+<span class="cm">/*</span>
+<span class="cm">6 8</span>
+<span class="cm">1 3</span>
+<span class="cm">1 2</span>
+<span class="cm">2 4</span>
+<span class="cm">3 4</span>
+<span class="cm">3 5</span>
+<span class="cm">4 6</span>
+<span class="cm">4 1</span>
+<span class="cm">5 6</span>
+
+<span class="cm">6</span>
+<span class="cm">5</span>
+<span class="cm">3 4 2 1</span>
+<span class="cm"> */</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-03-05 13:18:30</p>
+        <p>Site Generated 2020-03-21 13:31:08</p>
       </span>
     </div>
 
