@@ -32,6 +32,7 @@
 <li><a href="#ac-code">ac code</a></li>
 </ul>
 </li>
+<li><a href="#leetcode51">leetcode(51题)</a></li>
 </ul>
 </li>
 </ul>
@@ -256,12 +257,85 @@
 <span class="cm">92</span>
 <span class="cm">*/</span>
 </pre></div>
+
+
+<h2 id="leetcode51">leetcode(51题)</h2>
+<p><a target="_blank" href="https://leetcode-cn.com/problems/n-queens/comments/">https://leetcode-cn.com/problems/n-queens/comments/</a></p>
+<div class="hlcode"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="nf">solveNQueens</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">upperLimit</span> <span class="o">=</span> <span class="o">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">n</span><span class="o">)</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span> <span class="c1">// 最后n位是1,表示能放置的，dfs过程中不变</span>
+        <span class="kt">int</span> <span class="n">colLimit</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">leftLimit</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">rightLimit</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">rows</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+        <span class="n">dfs</span><span class="o">(</span><span class="n">n</span><span class="o">,</span> <span class="n">rows</span><span class="o">,</span><span class="mi">0</span><span class="o">,</span> <span class="n">upperLimit</span><span class="o">,</span> <span class="n">colLimit</span><span class="o">,</span> <span class="n">leftLimit</span><span class="o">,</span> <span class="n">rightLimit</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">ans</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="n">String</span> <span class="nf">getOneRow</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="kt">int</span> <span class="n">col</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">((</span><span class="n">col</span> <span class="o">&gt;&gt;&gt;</span> <span class="n">i</span><span class="o">)</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                <span class="n">num</span> <span class="o">=</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">StringBuffer</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuffer</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">num</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;.&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;Q&quot;</span><span class="o">);</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;.&quot;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="n">ans</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+    <span class="c1">// 列，左斜线，右斜线</span>
+    <span class="kt">void</span> <span class="nf">dfs</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">rows</span><span class="o">,</span> <span class="kt">int</span> <span class="n">curRow</span><span class="o">,</span> <span class="kt">int</span> <span class="n">upperLimit</span><span class="o">,</span> <span class="kt">int</span> <span class="n">colLimit</span><span class="o">,</span> <span class="kt">int</span> <span class="n">leftLimit</span><span class="o">,</span> <span class="kt">int</span> <span class="n">rightLimit</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">colLimit</span> <span class="o">==</span> <span class="n">upperLimit</span> <span class="o">&amp;&amp;</span> <span class="n">curRow</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">){</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">colLimit</span> <span class="o">==</span> <span class="n">upperLimit</span> <span class="o">&amp;&amp;</span> <span class="n">curRow</span> <span class="o">==</span> <span class="n">n</span><span class="o">){</span>
+            <span class="c1">// 构造一个结果</span>
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">one</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+                <span class="kt">int</span> <span class="n">col</span> <span class="o">=</span> <span class="n">rows</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                <span class="n">String</span> <span class="n">rowStr</span> <span class="o">=</span> <span class="n">getOneRow</span><span class="o">(</span><span class="n">n</span><span class="o">,</span> <span class="n">col</span><span class="o">);</span>
+                <span class="n">one</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">rowStr</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">ans</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">one</span><span class="o">);</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">// 已经不能放的取反,剩下的就是能放的, 能放的进行dfs</span>
+        <span class="kt">int</span> <span class="n">canPos</span> <span class="o">=</span> <span class="o">~(</span><span class="n">colLimit</span> <span class="o">|</span> <span class="n">leftLimit</span> <span class="o">|</span> <span class="n">rightLimit</span><span class="o">);</span>
+        <span class="n">canPos</span> <span class="o">=</span> <span class="n">canPos</span> <span class="o">&amp;</span> <span class="n">upperLimit</span><span class="o">;</span>
+
+        <span class="k">while</span> <span class="o">(</span><span class="n">canPos</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="c1">// 取最右边的一个1</span>
+            <span class="kt">int</span> <span class="n">rightPos</span> <span class="o">=</span> <span class="n">canPos</span> <span class="o">&amp;</span> <span class="o">(~</span><span class="n">canPos</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="n">canPos</span> <span class="o">-=</span> <span class="n">rightPos</span><span class="o">;</span>
+
+            <span class="kt">int</span> <span class="n">nextColLimit</span> <span class="o">=</span> <span class="n">colLimit</span> <span class="o">|</span> <span class="n">rightPos</span><span class="o">;</span>
+            <span class="kt">int</span> <span class="n">nextLeftLimit</span> <span class="o">=</span> <span class="o">(</span><span class="n">leftLimit</span> <span class="o">|</span> <span class="n">rightPos</span><span class="o">)</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="o">;</span>
+            <span class="kt">int</span> <span class="n">nextRightLimit</span> <span class="o">=</span> <span class="o">(</span><span class="n">rightLimit</span> <span class="o">|</span>  <span class="n">rightPos</span><span class="o">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span><span class="o">;</span>
+
+            <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">rows</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+            <span class="n">rows</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">rightPos</span><span class="o">);</span>
+            <span class="n">dfs</span><span class="o">(</span><span class="n">n</span><span class="o">,</span> <span class="n">rows</span><span class="o">,</span> <span class="n">curRow</span> <span class="o">+</span> <span class="mi">1</span><span class="o">,</span> <span class="n">upperLimit</span><span class="o">,</span> <span class="n">nextColLimit</span><span class="o">,</span> <span class="n">nextLeftLimit</span><span class="o">,</span> <span class="n">nextRightLimit</span><span class="o">);</span>
+            <span class="n">rows</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">len</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
     </div>
     <div id="footer">
       <span>
         <p>Copyright © 2020 doctording.
         Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.</p>
-        <p>Site Generated 2020-04-05 16:19:17</p>
+        <p>Site Generated 2020-04-12 23:09:14</p>
       </span>
     </div>
 
